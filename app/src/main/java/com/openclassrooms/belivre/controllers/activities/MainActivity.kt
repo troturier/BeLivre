@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                .setTheme(R.style.FirebaseAuthUiCustom)
+                .setLogo(R.drawable.logo)
                 .setIsSmartLockEnabled(false)
                 .build(),
             rcSignIn)

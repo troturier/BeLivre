@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_screen</item>
+    </style>
+
+    <style name="FirebaseAuthUiCustom" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:weightSum">100</item>
+    </style>
+
+    <style name="FirebaseUI.AuthMethodPicker.Logo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">270dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
 </resources>
