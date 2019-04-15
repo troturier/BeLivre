@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "460473448544",
+    "firebase_url": "https://belivre-93f92.firebaseio.com",
+    "project_id": "belivre-93f92",
+    "storage_bucket": "belivre-93f92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460473448544:android:6f9984ef2d76d580",
+        "android_client_info": {
+          "package_name": "com.openclassrooms.belivre"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "460473448544-fsugqb4h9mrumic7m09tectql5sfe39a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.openclassrooms.belivre",
+            "certificate_hash": "fa4e54160f1dcf4f093ee9c49709eb77fbf5d55e"
+          }
+        },
+        {
+          "client_id": "460473448544-12jpvnd7d4ljpvor52s6suqqok1nuagr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDLxr1t6YOf5SmplshQk7NnT1N4cXdfzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "460473448544-12jpvnd7d4ljpvor52s6suqqok1nuagr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
