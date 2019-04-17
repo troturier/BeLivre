@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import io.fabric.sdk.android.Fabric
+import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +34,11 @@ class MainActivity : AppCompatActivity() {
         val currentUser = mAuth?.currentUser
 
         if(currentUser == null) startSignInActivity()
-        else updateUI(currentUser)
+        else {
+            updateUI(currentUser)
+            val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
+            startActivity(intent)
+        }
     }
 
     // 2 - Launch Sign-In Activity
@@ -73,6 +78,8 @@ class MainActivity : AppCompatActivity() {
                 // Successfully signed in
                 val user : FirebaseUser = FirebaseAuth.getInstance().currentUser!!
                 updateUI(user)
+                val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
+                startActivity(intent)
             } else {
                 startSignInActivity()
             }
