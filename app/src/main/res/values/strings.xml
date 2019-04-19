@@ -6,4 +6,9 @@
     <string name="last_name">Last Name</string>
     <string name="display_name">Display Name</string>
     <string name="profile_picture">Profile picture</string>
+    <string name="update_error">An error occurred while updating</string>
+    <string name="update_success">Update successfully completed</string>
+    <string name="select_city_first">Please select a city first</string>
+    <string name="no_api_key">No API key defined</string>
+    <string name="profile">Profile</string>
 </resources>

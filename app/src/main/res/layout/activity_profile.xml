@@ -82,14 +82,11 @@
                 android:layout_marginTop="10dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/colorAccent">
-
-            <com.google.android.material.textfield.TextInputEditText
+                app:boxStrokeColor="@color/colorAccent" android:id="@+id/cityTIL">
+            <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Country"
-                    android:id="@+id/countryEt"
-                    android:clickable="false"/>
+                    android:layout_height="wrap_content" android:id="@+id/cityET" android:layout_marginTop="10dp"
+                    android:hint="City" android:padding="15dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

@@ -5,5 +5,5 @@ data class User (
     var lastname: String? = null,
     var firstname: String? = null,
     var email: String? = null,
-    var cityId: Int? = 0,
+    var cityId: String? = "",
     var profilePicURL : String? = null  )

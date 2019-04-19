@@ -24,12 +24,14 @@ android {
             resValue 'string', "facebook_application_id", belivre_facebook_application_id
             resValue 'string', "twitter_consumer_key", belivre_twitter_consumer_key
             resValue 'string', "twitter_consumer_secret", belivre_twitter_consumer_secret
+            resValue 'string', "belivre_google_map_key", belivre_google_map_key
         }
         debug {
             resValue 'string', "facebook_app_id", belivre_facebook_app_id
             resValue 'string', "facebook_application_id", belivre_facebook_application_id
             resValue 'string', "twitter_consumer_key", belivre_twitter_consumer_key
             resValue 'string', "twitter_consumer_secret", belivre_twitter_consumer_secret
+            resValue 'string', "belivre_google_map_key", belivre_google_map_key
         }
     }
     buildToolsVersion '28.0.3'
@@ -60,9 +62,11 @@ dependencies {
 
     implementation 'com.github.brotoo25:firestore-livedata:0.0.6'
 
+    implementation 'com.google.android.libraries.places:places:1.1.0'
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha03'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha03'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
     // GLIDE
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
