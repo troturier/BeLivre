@@ -9,6 +9,7 @@ import com.crashlytics.android.Crashlytics
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.belivre.R
 import io.fabric.sdk.android.Fabric
 import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
-        setContentView(com.openclassrooms.belivre.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
         mAuth = FirebaseAuth.getInstance()
 

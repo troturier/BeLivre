@@ -58,6 +58,8 @@ dependencies {
     // Firestore
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
 
+    implementation 'com.github.brotoo25:firestore-livedata:0.0.6'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha03'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha03'
@@ -69,6 +71,8 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 }
 
 kapt {
