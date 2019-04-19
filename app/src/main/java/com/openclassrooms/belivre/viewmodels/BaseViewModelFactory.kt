@@ -1,4 +1,4 @@
-package com.openclassrooms.belivre.database.viewmodels
+package com.openclassrooms.belivre.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

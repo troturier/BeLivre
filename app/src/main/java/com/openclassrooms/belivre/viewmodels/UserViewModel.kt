@@ -1,7 +1,8 @@
-package com.openclassrooms.belivre.database.viewmodels
+package com.openclassrooms.belivre.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.kiwimob.firestore.livedata.livedata
@@ -23,9 +24,13 @@ class UserViewModel : ViewModel() {
             .livedata(User::class.java)
     }
 
-    fun addUser(user : User){
-        db.collection("users")
+    fun addUser(user : User) : Task<Void> {
+        return db.collection("users")
             .document(user.id!!)
             .set(user, SetOptions.merge())
+    }
+
+    companion object{
+        const val TAG = "UserViewModel"
     }
 }

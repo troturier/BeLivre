@@ -16,7 +16,7 @@
             android:paddingStart="30dp">
         <ImageView
                 android:layout_width="150dp"
-                android:layout_height="wrap_content" app:srcCompat="@android:drawable/sym_def_app_icon"
+                android:layout_height="150dp" app:srcCompat="@android:drawable/sym_def_app_icon"
                 android:id="@+id/profilePic" android:layout_gravity="center|center_vertical"
                 android:contentDescription="@string/profile_picture"/>
         <TextView
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:id="@+id/emailEt"
-                    android:clickable="false"/>
+                    android:clickable="false" android:editable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
