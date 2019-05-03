@@ -27,6 +27,7 @@ import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
+import com.openclassrooms.belivre.utils.*
 
 
 class ProfileActivity : AppCompatActivity(), LifecycleOwner {
@@ -74,8 +75,14 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         validateProfileFormFAB.setOnClickListener { validateForm() }
 
         cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
-    }
 
+        userVM.toastMessage.observe(this, Observer { res ->
+            if (res != null) {
+                val message = getString(res)
+                toast(message)
+            }
+        })
+    }
     private fun updateUI(userRetrived: User?){
         if(userRetrived == null){
             names = currentUser?.displayName?.split(" ")
@@ -124,21 +131,10 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             user?.cityId = city?.id
             cityVM.addCity(city!!)
             userVM.addUser(user!!)
-                .addOnSuccessListener {
-                    Log.i(UserViewModel.TAG, getString(R.string.update_success))
-                    this.toast(getString(R.string.update_success))
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(UserViewModel.TAG, getString(R.string.update_error), exception)
-                    this.toast(getString(R.string.update_error))
-                }
         }
         else
             this.toast(getString(R.string.select_city_first))
     }
-
-    private fun Context.toast(message: CharSequence) =
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
