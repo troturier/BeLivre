@@ -3,8 +3,10 @@ package com.openclassrooms.belivre.controllers.activities
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
@@ -19,15 +21,18 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.utils.GlideApp
+import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
-import com.openclassrooms.belivre.utils.*
 
 
 class ProfileActivity : AppCompatActivity(), LifecycleOwner {
@@ -51,6 +56,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         ViewModelProviders.of(this, BaseViewModelFactory { CityViewModel() }).get(CityViewModel::class.java)
     }
 
+    private var filePath: Uri? = null
+
+    private lateinit var storage: FirebaseStorage
+    private lateinit var storageReference: StorageReference
+    private lateinit var ref: StorageReference
+
     //////////////////////////////////////////////
     // ---------- FIREBASE USER --------------- //
     //////////////////////////////////////////////
@@ -67,6 +78,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         // Retrieving FirebaseAuth instance and current user
         val mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth?.currentUser
+
+        storage = FirebaseStorage.getInstance()
+        storageReference = storage.reference
 
         // Setup Places Client
         val apiKey = getString(R.string.belivre_google_map_key)
@@ -88,6 +102,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         // City field action setup (Google Places API)
         cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
 
+        profilePic.setOnClickListener { chooseImage() }
     }
 
     //////////////////////////////////////////////
@@ -108,6 +123,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             user = userRetrived
             if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer { city:City? -> cityET.setText(city!!.name); this.city = city
             })
+            ref = storageReference.child("images/profilePictures/${this.user!!.id.toString()}")
         }
 
         lastNameEt.setText(user!!.lastname)
@@ -116,11 +132,20 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         displayName.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
 
-        Glide.with(this)
-            .load(user!!.profilePicURL)
-            .fitCenter()
-            .circleCrop()
-            .into(profilePic)
+        if(user!!.profilePicURL.equals("images/profilePictures/${this.user!!.id.toString()}")){
+            GlideApp.with(this)
+                .load(ref)
+                .fitCenter()
+                .circleCrop()
+                .into(profilePic)
+        }
+        else {
+            Glide.with(this)
+                .load(user!!.profilePicURL)
+                .fitCenter()
+                .circleCrop()
+                .into(profilePic)
+        }
     }
 
     //////////////////////////////////////////////
@@ -166,6 +191,35 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             this.toast(getString(R.string.empty_field))
     }
 
+    private fun chooseImage() {
+      intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+      startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+    }
+
+    private fun uploadImage() {
+
+        progressBar.visibility = View.VISIBLE
+        Toast.makeText(this, "Upload in progress..", Toast.LENGTH_SHORT).show()
+
+        ref.putFile(this.filePath!!)
+            .addOnSuccessListener {
+                progressBar.visibility = View.INVISIBLE
+                Toast.makeText(this, "Image successfully uploaded!", Toast.LENGTH_SHORT).show()
+                user!!.profilePicURL = "images/profilePictures/${this.user!!.id.toString()}"
+            }
+            .addOnFailureListener { e ->
+                progressBar.visibility = View.INVISIBLE
+                Toast.makeText(this, "Failed " + e.message, Toast.LENGTH_SHORT).show()
+            }
+            .addOnProgressListener { taskSnapshot ->
+                val progress = 100.0 * taskSnapshot.bytesTransferred / taskSnapshot
+                    .totalByteCount
+                progressBar.progress = progress.toInt()
+            }
+    }
+
     //////////////////////////////////////////////
     // -------- ON ACTIVITY RESULT ------------ //
     //////////////////////////////////////////////
@@ -189,6 +243,15 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             }
             cityET.clearFocus()
         }
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null){
+            filePath = data.data
+            Glide.with(this)
+                .load(filePath)
+                .fitCenter()
+                .circleCrop()
+                .into(profilePic)
+            uploadImage()
+        }
     }
 
 
@@ -196,6 +259,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         const val TAG = "ProfileActivity"
 
         const val AUTOCOMPLETE_REQUEST_CODE = 1
+
+        const val PICK_IMAGE_REQUEST = 71
 
         fun newIntent(context: Context): Intent {
             return Intent(context, ProfileActivity::class.java)
