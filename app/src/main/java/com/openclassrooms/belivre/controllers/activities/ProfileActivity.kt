@@ -32,21 +32,31 @@ import com.openclassrooms.belivre.utils.*
 
 class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
-    private var user: User? = null
+    //////////////////////////////////////////////
+    // ---------- MODELS / DATA --------------- //
+    //////////////////////////////////////////////
 
+    private var user: User? = null
+    private var names: List<String>? = null
     private var city: City? = null
+
+    //////////////////////////////////////////////
+    // ----------- VIEW MODELS ---------------- //
+    //////////////////////////////////////////////
 
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
-    
     private val cityVM: CityViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { CityViewModel() }).get(CityViewModel::class.java)
     }
 
+    //////////////////////////////////////////////
+    // ---------- FIREBASE USER --------------- //
+    //////////////////////////////////////////////
+
     private var currentUser : FirebaseUser? = null
 
-    private var names: List<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,35 +64,41 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         supportActionBar?.title = getString(R.string.profile)
 
+        // Retrieving FirebaseAuth instance and current user
         val mAuth = FirebaseAuth.getInstance()
-
         currentUser = mAuth?.currentUser
 
-        val apiKey = getString(R.string.belivre_google_map_key)
-
-        if (apiKey.isNullOrEmpty()) {
-            Toast.makeText(this, getString(R.string.no_api_key), Toast.LENGTH_LONG).show()
-            return
-        }
-
         // Setup Places Client
-        if (!Places.isInitialized()) {
-            Places.initialize(applicationContext, apiKey)
-        }
+        val apiKey = getString(R.string.belivre_google_map_key)
+        if (apiKey.isNullOrEmpty()) Toast.makeText(this, getString(R.string.no_api_key), Toast.LENGTH_LONG).show()
+        else { if (!Places.isInitialized()) Places.initialize(applicationContext, apiKey) }
 
+        // Retrieving user from Firestore and configuring Toast message observer
         userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> this.updateUI(user)})
-
-        validateProfileFormFAB.setOnClickListener { validateForm() }
-
-        cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
-
         userVM.toastMessage.observe(this, Observer { res ->
             if (res != null) {
                 val message = getString(res)
                 toast(message)
             }
         })
+
+        // FAB action setup
+        validateProfileFormFAB.setOnClickListener { validateForm() }
+
+        // City field action setup (Google Places API)
+        cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
+
     }
+
+    //////////////////////////////////////////////
+    // --------------- UI --------------------- //
+    //////////////////////////////////////////////
+
+    /**
+     * Updates UI elements based on user information retrieved from FireStore
+     *
+     * @param userRetrived User retrieved from FireStore
+     */
     private fun updateUI(userRetrived: User?){
         if(userRetrived == null){
             names = currentUser?.displayName?.split(" ")
@@ -90,7 +106,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         }
         else{
             user = userRetrived
-            if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer { city:City? -> updateCity(city!!) })
+            if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer { city:City? -> cityET.setText(city!!.name); this.city = city
+            })
         }
 
         lastNameEt.setText(user!!.lastname)
@@ -106,10 +123,14 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             .into(profilePic)
     }
 
-    private fun updateCity(city: City){
-        cityET.setText(city.name)
-    }
+    //////////////////////////////////////////////
+    // -------- GOOGLE PLACES API ------------- //
+    //////////////////////////////////////////////
 
+    /**
+     * Launches the autocompletion activity of Google Places API
+     *
+     */
     private fun startAutoCompleteActivity(){
         // Set the fields to specify which types of place data to
         // return after the user has made a selection.
@@ -124,8 +145,17 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
+    //////////////////////////////////////////////
+    // --------- FORM VALIDATION -------------- //
+    //////////////////////////////////////////////
+
+    /**
+     * Retrieves the values of the different fields of the activity and updates the current user
+     * If one of the field is empty, an error message appears
+     *
+     */
     private fun validateForm(){
-        if(cityET != null) {
+        if(cityET != null && !lastNameEt.text.toString().isEmpty() && !firstNameEt.text.toString().isEmpty()) {
             user?.lastname = lastNameEt.text?.toString()
             user?.firstname = firstNameEt.text?.toString()
             user?.cityId = city?.id
@@ -133,8 +163,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             userVM.addUser(user!!)
         }
         else
-            this.toast(getString(R.string.select_city_first))
+            this.toast(getString(R.string.empty_field))
     }
+
+    //////////////////////////////////////////////
+    // -------- ON ACTIVITY RESULT ------------ //
+    //////////////////////////////////////////////
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

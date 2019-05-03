@@ -15,4 +15,5 @@
     <string name="user_add_success">User successfully added</string>
     <string name="user_updated_success">User successfully updated</string>
     <string name="user_updated_fail">An error occurred during the update</string>
+    <string name="empty_field">One or more field is empty</string>
 </resources>

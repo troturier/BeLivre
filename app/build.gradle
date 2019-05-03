@@ -59,14 +59,16 @@ dependencies {
     implementation 'com.twitter.sdk.android:twitter-core:3.2.0'
     // Firestore
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
+    //Firebase Storage
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
 
     implementation 'com.github.brotoo25:firestore-livedata:0.0.6'
 
     implementation 'com.google.android.libraries.places:places:1.1.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
     // GLIDE
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
