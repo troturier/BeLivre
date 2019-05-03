@@ -224,7 +224,6 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
       startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
-
     private fun chooseImageFromCamera(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -253,7 +252,6 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 }
         }
     }
-
 
     private fun uploadImage() {
 
@@ -338,8 +336,6 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 }
             }
         }
-
-
 
         dialog.show()
     }

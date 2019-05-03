@@ -9,13 +9,11 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.QuerySnapshot
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.repositories.CityRepository
-import com.openclassrooms.belivre.utils.SingleLiveEvent
 
 class CityViewModel : ViewModel() {
-    val TAG = "CITY_VIEW_MODEL"
-    var cityRepository = CityRepository()
-    var cities : MutableLiveData<List<City>> = MutableLiveData()
-    var city : MutableLiveData<City> = MutableLiveData()
+    private var cityRepository = CityRepository()
+    private var cities : MutableLiveData<List<City>> = MutableLiveData()
+    private var city : MutableLiveData<City> = MutableLiveData()
 
     // save city to firebase
     fun addCity(city: City){
@@ -34,9 +32,9 @@ class CityViewModel : ViewModel() {
                 return@EventListener
             }
 
-            var cityList : MutableList<City> = mutableListOf()
+            val cityList : MutableList<City> = mutableListOf()
             for (doc in value!!) {
-                var city = doc.toObject(City::class.java)
+                val city = doc.toObject(City::class.java)
                 cityList.add(city)
             }
             cities.value = cityList
@@ -46,8 +44,8 @@ class CityViewModel : ViewModel() {
     }
 
     // get realtime updates from firebase regarding city
-    fun getCity(uid: String): LiveData<City>{
-        cityRepository.getCity(uid).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
+    fun getCity(id: String): LiveData<City>{
+        cityRepository.getCity(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 cities.value = null
@@ -59,10 +57,14 @@ class CityViewModel : ViewModel() {
         return city
     }
 
-    // delete an city from firebase
+    // delete a city from firebase
     fun deleteCity(city: City){
         cityRepository.deleteCity(city).addOnFailureListener {
             Log.e(TAG,"Failed to delete City")
         }
+    }
+
+    companion object {
+        const val TAG = "CITY_VIEW_MODEL"
     }
 }

@@ -14,10 +14,9 @@ import com.openclassrooms.belivre.utils.SingleLiveEvent
 
 class UserViewModel : ViewModel(){
 
-    val TAG = "USER_VIEW_MODEL"
-    var userRepository = UserRepository()
-    var users : MutableLiveData<List<User>> = MutableLiveData()
-    var user : MutableLiveData<User> = MutableLiveData()
+    private var userRepository = UserRepository()
+    private var users : MutableLiveData<List<User>> = MutableLiveData()
+    private var user : MutableLiveData<User> = MutableLiveData()
 
     internal val toastMessage = SingleLiveEvent<Int>()
 
@@ -25,7 +24,7 @@ class UserViewModel : ViewModel(){
     fun addUser(user: User){
         userRepository.addUser(user)
         .addOnFailureListener {
-            toastMessage.value = R.string.user_updated_fail
+            toastMessage.value = R.string.update_fail
         }
         .addOnSuccessListener {
             toastMessage.value = R.string.user_updated_success
@@ -41,9 +40,9 @@ class UserViewModel : ViewModel(){
                 return@EventListener
             }
 
-            var userList : MutableList<User> = mutableListOf()
+            val userList : MutableList<User> = mutableListOf()
             for (doc in value!!) {
-                var user = doc.toObject(User::class.java)
+                val user = doc.toObject(User::class.java)
                 userList.add(user)
             }
             users.value = userList
@@ -71,6 +70,10 @@ class UserViewModel : ViewModel(){
         userRepository.deleteUser(user).addOnFailureListener {
             Log.e(TAG,"Failed to delete User")
         }
+    }
+
+    companion object {
+        const val TAG = "USER_VIEW_MODEL"
     }
 
 }
