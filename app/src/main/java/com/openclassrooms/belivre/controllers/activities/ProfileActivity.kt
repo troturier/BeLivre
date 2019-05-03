@@ -1,15 +1,23 @@
 package com.openclassrooms.belivre.controllers.activities
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.StrictMode
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -34,6 +42,7 @@ import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.add_media_dialog.view.*
+import java.io.File
 import java.util.*
 
 
@@ -64,11 +73,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var storageReference: StorageReference
     private lateinit var ref: StorageReference
 
-    private lateinit var addMediaGalleryIB:ImageButton
-    private lateinit var addMediaCamera:ImageButton
-    private lateinit var addMediaUpload:Button
-    private lateinit var addMediaCancel:ImageButton
     private lateinit var addMediaIV:ImageView
+    private lateinit var filePathURI : Uri
 
     //////////////////////////////////////////////
     // ---------- FIREBASE USER --------------- //
@@ -218,6 +224,37 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
       startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
     }
 
+
+    private fun chooseImageFromCamera(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),2)
+        }
+    else {
+        val packageManager = Objects.requireNonNull(this).packageManager
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            val mainDirectory = File(Environment.getExternalStorageDirectory(), "DCIM")
+            if (!mainDirectory.exists()) mainDirectory.mkdirs()
+            val calendar = Calendar.getInstance()
+            filePathURI = Uri.fromFile(File(mainDirectory, "IMG_" + calendar.timeInMillis))
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, filePathURI)
+            val builder = StrictMode.VmPolicy.Builder()
+            StrictMode.setVmPolicy(builder.build())
+            startActivityForResult(intent, 2)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if(requestCode == 2){
+                if (!grantResults.isEmpty() || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    chooseImageFromCamera()
+                }
+        }
+    }
+
+
     private fun uploadImage() {
 
         progressBar.visibility = View.VISIBLE
@@ -228,6 +265,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 progressBar.visibility = View.INVISIBLE
                 Toast.makeText(this, "Image successfully uploaded!", Toast.LENGTH_SHORT).show()
                 user!!.profilePicURL = "images/profilePictures/${this.user!!.id.toString()}"
+                Glide.with(this)
+                    .load(ref)
+                    .fitCenter()
+                    .circleCrop()
+                    .into(profilePic)
+
             }
             .addOnFailureListener { e ->
                 progressBar.visibility = View.INVISIBLE
@@ -246,8 +289,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.add_media_dialog, null)
 
-        addMediaGalleryIB = dialogView.add_media_gallery
-        addMediaGalleryIB.setOnClickListener { chooseImageFromGallery() }
+        dialogView.add_media_gallery.setOnClickListener { chooseImageFromGallery() }
+        dialogView.add_media_camera.setOnClickListener { chooseImageFromCamera() }
 
         addMediaIV = dialogView.add_media_iv
 
@@ -331,7 +374,14 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .fitCenter()
                 .circleCrop()
                 .into(addMediaIV)
-            //uploadImage()
+        }
+        if(resultCode == RESULT_OK && requestCode == CAMERA_IMAGE_REQUEST){
+            val filePath = filePathURI.path
+            Glide.with(this)
+                .load(filePath)
+                .fitCenter()
+                .circleCrop()
+                .into(addMediaIV)
         }
     }
 
@@ -342,6 +392,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         const val AUTOCOMPLETE_REQUEST_CODE = 1
 
         const val PICK_IMAGE_REQUEST = 71
+        const val CAMERA_IMAGE_REQUEST = 2
 
         fun newIntent(context: Context): Intent {
             return Intent(context, ProfileActivity::class.java)
