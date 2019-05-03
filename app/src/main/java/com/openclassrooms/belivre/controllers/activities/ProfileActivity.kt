@@ -1,13 +1,14 @@
 package com.openclassrooms.belivre.controllers.activities
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.add_media_dialog.view.*
 import java.util.*
 
 
@@ -61,6 +63,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
     private lateinit var ref: StorageReference
+
+    private lateinit var addMediaGalleryIB:ImageButton
+    private lateinit var addMediaCamera:ImageButton
+    private lateinit var addMediaUpload:Button
+    private lateinit var addMediaCancel:ImageButton
+    private lateinit var addMediaIV:ImageView
 
     //////////////////////////////////////////////
     // ---------- FIREBASE USER --------------- //
@@ -102,7 +110,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         // City field action setup (Google Places API)
         cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
 
-        profilePic.setOnClickListener { chooseImage() }
+        profilePic.setOnClickListener { createAddMediaDialog() }
     }
 
     //////////////////////////////////////////////
@@ -139,9 +147,17 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .circleCrop()
                 .into(profilePic)
         }
-        else {
+        else if (!user!!.profilePicURL!!.isEmpty()){
             Glide.with(this)
                 .load(user!!.profilePicURL)
+                .fitCenter()
+                .circleCrop()
+                .into(profilePic)
+        }
+        else {
+            user!!.profilePicURL = ""
+            Glide.with(this)
+                .load(R.drawable.ic_avatar)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
@@ -191,7 +207,11 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             this.toast(getString(R.string.empty_field))
     }
 
-    private fun chooseImage() {
+    //////////////////////////////////////////////
+    // ---------- PROFILE PICTURE ------------- //
+    //////////////////////////////////////////////
+
+    private fun chooseImageFromGallery() {
       intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -218,6 +238,67 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     .totalByteCount
                 progressBar.progress = progress.toInt()
             }
+    }
+
+    private fun createAddMediaDialog(){
+        filePath = null
+
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.add_media_dialog, null)
+
+        addMediaGalleryIB = dialogView.add_media_gallery
+        addMediaGalleryIB.setOnClickListener { chooseImageFromGallery() }
+
+        addMediaIV = dialogView.add_media_iv
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("Upload", null)
+            .setNeutralButton("Cancel"){ _, _ ->  }
+            .setNegativeButton("Use default", null)
+
+        val dialog = alertDialog.create()
+        dialog.setOnShowListener {
+            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            okButton.setOnClickListener {
+                if(filePath != null) {
+                    uploadImage()
+                    dialog.dismiss()
+                }
+                else {
+                    AlertDialog.Builder(this)
+                        .setTitle("Error")
+                        .setMessage("Please select a picture first")
+                        .setPositiveButton("Ok"){ _, _ ->  }
+                        .show()
+                }
+            }
+
+            val defaultButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            defaultButton.setOnClickListener {
+                if(!currentUser!!.photoUrl.toString().isEmpty()) {
+                    user!!.profilePicURL = currentUser!!.photoUrl.toString()
+                    Glide.with(this)
+                        .load(user!!.profilePicURL)
+                        .fitCenter()
+                        .circleCrop()
+                        .into(profilePic)
+                    dialog.dismiss()
+                }
+                else {
+                    user!!.profilePicURL = ""
+                    Glide.with(this)
+                        .load(R.drawable.ic_avatar)
+                        .fitCenter()
+                        .circleCrop()
+                        .into(profilePic)
+                }
+            }
+        }
+
+
+
+        dialog.show()
     }
 
     //////////////////////////////////////////////
@@ -249,8 +330,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .load(filePath)
                 .fitCenter()
                 .circleCrop()
-                .into(profilePic)
-            uploadImage()
+                .into(addMediaIV)
+            //uploadImage()
         }
     }
 

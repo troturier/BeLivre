@@ -16,4 +16,9 @@
     <string name="user_updated_success">User successfully updated</string>
     <string name="user_updated_fail">An error occurred during the update</string>
     <string name="empty_field">One or more field is empty</string>
+    <string name="choose_your_profile_picture">Choose your profile picture</string>
+    <string name="path_to_media">Path to media</string>
+    <string name="cancel">Cancel</string>
+    <string name="upload">Upload</string>
+    <string name="use_default_profile_picture">Use default Profile Picture</string>
 </resources>
