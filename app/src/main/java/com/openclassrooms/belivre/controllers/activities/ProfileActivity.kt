@@ -1,6 +1,7 @@
 package com.openclassrooms.belivre.controllers.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -21,7 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
+import com.bumptech.glide.signature.ObjectKey
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -149,21 +150,24 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         if(user!!.profilePicURL.equals("images/profilePictures/${this.user!!.id.toString()}")){
             GlideApp.with(this)
                 .load(ref)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
         }
         else if (!user!!.profilePicURL!!.isEmpty()){
-            Glide.with(this)
+            GlideApp.with(this)
                 .load(user!!.profilePicURL)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
         }
         else {
             user!!.profilePicURL = ""
-            Glide.with(this)
+            GlideApp.with(this)
                 .load(R.drawable.ic_avatar)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
@@ -229,18 +233,18 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA),2)
         }
-    else {
-        val packageManager = Objects.requireNonNull(this).packageManager
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            val mainDirectory = File(Environment.getExternalStorageDirectory(), "DCIM")
-            if (!mainDirectory.exists()) mainDirectory.mkdirs()
-            val calendar = Calendar.getInstance()
-            filePathURI = Uri.fromFile(File(mainDirectory, "IMG_" + calendar.timeInMillis))
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, filePathURI)
-            val builder = StrictMode.VmPolicy.Builder()
-            StrictMode.setVmPolicy(builder.build())
-            startActivityForResult(intent, 2)
+        else {
+            val packageManager = Objects.requireNonNull(this).packageManager
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                val mainDirectory = File(Environment.getExternalStorageDirectory().absolutePath, "DCIM")
+                if (!mainDirectory.exists()) mainDirectory.mkdirs()
+                val calendar = Calendar.getInstance()
+                filePathURI = Uri.fromFile(File(mainDirectory, "IMG_" + calendar.timeInMillis))
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, filePathURI)
+                val builder = StrictMode.VmPolicy.Builder()
+                StrictMode.setVmPolicy(builder.build())
+                startActivityForResult(intent, 2)
             }
         }
     }
@@ -263,8 +267,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 progressBar.visibility = View.INVISIBLE
                 Toast.makeText(this, "Image successfully uploaded!", Toast.LENGTH_SHORT).show()
                 user!!.profilePicURL = "images/profilePictures/${this.user!!.id.toString()}"
-                Glide.with(this)
-                    .load(ref)
+                GlideApp.with(this)
+                    .load(filePath)
+                    .signature(ObjectKey(System.currentTimeMillis().toString()))
                     .fitCenter()
                     .circleCrop()
                     .into(profilePic)
@@ -281,6 +286,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             }
     }
 
+    @SuppressLint("InflateParams")
     private fun createAddMediaDialog(){
         filePath = null
 
@@ -319,18 +325,20 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             defaultButton.setOnClickListener {
                 if(!currentUser!!.photoUrl.toString().isEmpty()) {
                     user!!.profilePicURL = currentUser!!.photoUrl.toString()
-                    Glide.with(this)
+                    GlideApp.with(this)
                         .load(user!!.profilePicURL)
                         .fitCenter()
+                        .signature(ObjectKey(System.currentTimeMillis().toString()))
                         .circleCrop()
                         .into(profilePic)
                     dialog.dismiss()
                 }
                 else {
                     user!!.profilePicURL = ""
-                    Glide.with(this)
+                    GlideApp.with(this)
                         .load(R.drawable.ic_avatar)
                         .fitCenter()
+                        .signature(ObjectKey(System.currentTimeMillis().toString()))
                         .circleCrop()
                         .into(profilePic)
                 }
@@ -365,16 +373,18 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         }
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null){
             filePath = data.data
-            Glide.with(this)
+            GlideApp.with(this)
                 .load(filePath)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
                 .circleCrop()
                 .into(addMediaIV)
         }
         if(resultCode == RESULT_OK && requestCode == CAMERA_IMAGE_REQUEST){
-            val filePath = filePathURI.path
-            Glide.with(this)
+            filePath = filePathURI
+            GlideApp.with(this)
                 .load(filePath)
+                .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
                 .circleCrop()
                 .into(addMediaIV)

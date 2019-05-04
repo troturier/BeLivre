@@ -58,11 +58,11 @@ class FirebaseImageLoader : ModelLoader<StorageReference, InputStream> {
             digest.update(mRef.path.toByteArray(Charset.defaultCharset()))
         }
 
-        override fun equals(o: Any?): Boolean {
-            if (this === o) return true
-            if (o == null || javaClass != o.javaClass) return false
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other == null || javaClass != other.javaClass) return false
 
-            val key = o as FirebaseStorageKey?
+            val key = other as FirebaseStorageKey?
 
             return mRef == key!!.mRef
         }
@@ -120,6 +120,6 @@ class FirebaseImageLoader : ModelLoader<StorageReference, InputStream> {
 
     companion object {
 
-        private val TAG = "FirebaseImageLoader"
+        private const val TAG = "FirebaseImageLoader"
     }
 }
