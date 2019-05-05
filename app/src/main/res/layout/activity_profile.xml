@@ -15,24 +15,30 @@
             android:background="@color/backgroundFilter"
             android:id="@+id/profileLL">
 
-        <ProgressBar
-                android:id="@+id/progressBar"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="false"
-                android:max="100"
-                android:minHeight="10dp"
-                android:minWidth="200dp"
-                android:progress="1"
-                android:visibility="invisible"/>
+                android:layout_height="wrap_content" android:layout_marginTop="10dp">
 
-        <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp" app:srcCompat="@android:drawable/sym_def_app_icon"
-                android:id="@+id/profilePic" android:layout_gravity="center|center_vertical"
-                android:contentDescription="@string/profile_picture" android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp" android:layout_marginTop="10dp"/>
+            <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp" app:srcCompat="@android:drawable/sym_def_app_icon"
+                    android:id="@+id/profilePic" android:layout_gravity="center|center_vertical"
+                    android:contentDescription="@string/profile_picture" android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"/>
+            <com.github.lzyzsd.circleprogress.CircleProgress
+                    android:id="@+id/progressBar"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center|center_vertical"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    tools:visibility="invisible"
+                    android:visibility="invisible"
+                    app:circle_text_color="@color/colorPrimaryDark"
+                    app:circle_unfinished_color="@color/donut_background"
+                    app:circle_finished_color="@color/colorAccent"/>
+        </FrameLayout>
+
         <TextView
                 android:text="@string/display_name"
                 android:layout_width="match_parent"
@@ -90,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:id="@+id/emailEt"
-                    android:clickable="false" android:editable="false"
+                    android:clickable="false"
             />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
@@ -105,7 +111,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/cityET" android:layout_marginTop="10dp"
-                    android:hint="City" android:padding="15dp"/>
+                    android:hint="@string/city" android:padding="15dp" android:inputType="" android:importantForAutofill="no" tools:targetApi="o"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

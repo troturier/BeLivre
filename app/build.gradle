@@ -83,6 +83,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
     implementation 'com.android.support:multidex:1.0.3'
 }
 

@@ -24,4 +24,5 @@
     <string name="cancel">Cancel</string>
     <string name="upload">Upload</string>
     <string name="use_default_profile_picture">Use default Profile Picture</string>
+    <string name="city">City</string>
 </resources>
