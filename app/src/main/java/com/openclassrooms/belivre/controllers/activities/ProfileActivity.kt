@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -75,6 +76,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var ref: StorageReference
 
     private lateinit var addMediaIV:ImageView
+    private lateinit var circularProgressDrawable: CircularProgressDrawable
     private lateinit var filePathURI : Uri
 
     //////////////////////////////////////////////
@@ -118,6 +120,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         cityET.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) startAutoCompleteActivity()}
 
         profilePic.setOnClickListener { createAddMediaDialog() }
+
+        circularProgressDrawable = CircularProgressDrawable(this)
+        circularProgressDrawable.strokeWidth = 10f
+        circularProgressDrawable.centerRadius = 90f
+        circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
+        circularProgressDrawable.start()
     }
 
     //////////////////////////////////////////////
@@ -151,6 +159,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             GlideApp.with(this)
                 .load(ref)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
+                .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
@@ -159,6 +168,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             GlideApp.with(this)
                 .load(user!!.profilePicURL)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
+                .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
@@ -168,6 +178,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             GlideApp.with(this)
                 .load(R.drawable.ic_avatar)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
+                .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
@@ -270,6 +281,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 GlideApp.with(this)
                     .load(filePath)
                     .signature(ObjectKey(System.currentTimeMillis().toString()))
+                    .placeholder(circularProgressDrawable)
                     .fitCenter()
                     .circleCrop()
                     .into(profilePic)
@@ -328,6 +340,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     GlideApp.with(this)
                         .load(user!!.profilePicURL)
                         .fitCenter()
+                        .placeholder(circularProgressDrawable)
                         .signature(ObjectKey(System.currentTimeMillis().toString()))
                         .circleCrop()
                         .into(profilePic)
@@ -338,6 +351,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     GlideApp.with(this)
                         .load(R.drawable.ic_avatar)
                         .fitCenter()
+                        .placeholder(circularProgressDrawable)
                         .signature(ObjectKey(System.currentTimeMillis().toString()))
                         .circleCrop()
                         .into(profilePic)
@@ -377,6 +391,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .load(filePath)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
+                .placeholder(circularProgressDrawable)
                 .circleCrop()
                 .into(addMediaIV)
         }
@@ -386,6 +401,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .load(filePath)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .fitCenter()
+                .placeholder(circularProgressDrawable)
                 .circleCrop()
                 .into(addMediaIV)
         }
