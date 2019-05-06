@@ -155,33 +155,31 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         displayName.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
 
-        if(user!!.profilePicURL.equals("images/profilePictures/${this.user!!.id.toString()}")){
-            GlideApp.with(this)
+        when {
+            user!!.profilePicURL.equals("images/profilePictures/${this.user!!.id.toString()}") -> GlideApp.with(this)
                 .load(ref)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
-        }
-        else if (!user!!.profilePicURL!!.isEmpty()){
-            GlideApp.with(this)
+            user!!.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
                 .load(user!!.profilePicURL)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
                 .into(profilePic)
-        }
-        else {
-            user!!.profilePicURL = ""
-            GlideApp.with(this)
-                .load(R.drawable.ic_avatar)
-                .signature(ObjectKey(System.currentTimeMillis().toString()))
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .circleCrop()
-                .into(profilePic)
+            else -> {
+                user!!.profilePicURL = ""
+                GlideApp.with(this)
+                    .load(R.drawable.ic_avatar)
+                    .signature(ObjectKey(System.currentTimeMillis().toString()))
+                    .placeholder(circularProgressDrawable)
+                    .fitCenter()
+                    .circleCrop()
+                    .into(profilePic)
+            }
         }
     }
 
@@ -217,12 +215,13 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
      *
      */
     private fun validateForm(){
-        if(cityET != null && !lastNameEt.text.toString().isEmpty() && !firstNameEt.text.toString().isEmpty()) {
+        if(cityET.text.toString().isNotEmpty() && lastNameEt.text.toString().isNotEmpty() && firstNameEt.text.toString().isNotEmpty()) {
             user?.lastname = lastNameEt.text?.toString()
             user?.firstname = firstNameEt.text?.toString()
             user?.cityId = city?.id
             cityVM.addCity(city!!)
             userVM.addUser(user!!)
+            finish()
         }
         else
             this.toast(getString(R.string.empty_field))
@@ -262,7 +261,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if(requestCode == 2){
-                if (!grantResults.isEmpty() || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     chooseImageFromCamera()
                 }
         }
@@ -335,7 +334,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
             val defaultButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             defaultButton.setOnClickListener {
-                if(!currentUser!!.photoUrl.toString().isEmpty()) {
+                if(currentUser!!.photoUrl.toString().isNotEmpty()) {
                     user!!.profilePicURL = currentUser!!.photoUrl.toString()
                     GlideApp.with(this)
                         .load(user!!.profilePicURL)
@@ -404,6 +403,14 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 .placeholder(circularProgressDrawable)
                 .circleCrop()
                 .into(addMediaIV)
+        }
+    }
+
+    override fun onBackPressed() {
+        val rc = intent.getIntExtra("requestCode", 0)
+        if(rc == 123){}
+        else{
+            super.onBackPressed()
         }
     }
 

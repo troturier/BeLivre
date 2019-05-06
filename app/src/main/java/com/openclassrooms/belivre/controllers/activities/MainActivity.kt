@@ -3,24 +3,34 @@ package com.openclassrooms.belivre.controllers.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.crashlytics.android.Crashlytics
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.belivre.R
+import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.UserViewModel
 import io.fabric.sdk.android.Fabric
 import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleOwner {
 
 
     //FOR DATA
     // 1 - Identifier for Sign-In Activity
     private val rcSignIn = 123
+
+    private var currentUser: FirebaseUser? = null
+
+    private val userVM: UserViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
+    }
 
     private var mAuth: FirebaseAuth? = null
 
@@ -32,12 +42,20 @@ class MainActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = mAuth?.currentUser
+        currentUser = mAuth?.currentUser
 
         if(currentUser == null) startSignInActivity()
-        else {
-            updateUI(currentUser)
+        else { userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)}) }
+    }
+
+    private fun checkUserProfileComplete(user: User?){
+        if(user == null
+            || user.profilePicURL!!.isEmpty()
+            || user.cityId!!.isEmpty()
+            || user.firstname!!.isEmpty()
+            || user.lastname!!.isEmpty()){
             val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
+            intent.putExtra("requestCode", rcSignIn)
             startActivity(intent)
         }
     }
@@ -63,24 +81,13 @@ class MainActivity : AppCompatActivity() {
             rcSignIn)
     }
 
-    private fun updateUI(user: FirebaseUser){
-        val displayName = findViewById<TextView>(R.id.username)
-        val email = findViewById<TextView>(R.id.email)
-
-        displayName.text = user.displayName
-        email.text = user.email
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == rcSignIn) {
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user : FirebaseUser = FirebaseAuth.getInstance().currentUser!!
-                updateUI(user)
-                val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
-                startActivity(intent)
+                userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User -> checkUserProfileComplete(user)})
             } else {
                 startSignInActivity()
             }
