@@ -10,7 +10,6 @@
     <string name="update_success">Update successfully completed</string>
     <string name="select_city_first">Please select a city first</string>
     <string name="no_api_key">No API key defined</string>
-    <string name="profile">Profile</string>
     <string name="city_add_success">City successfully added</string>
     <string name="user_add_success">User successfully added</string>
     <string name="user_updated_success">User successfully updated</string>
@@ -25,4 +24,10 @@
     <string name="upload">Upload</string>
     <string name="use_default_profile_picture">Use default Profile Picture</string>
     <string name="city">City</string>
+    <string name="settings">Settings</string>
+    <string name="profile">Profile</string>
+    <string name="my_library">My Library</string>
+    <string name="username">Username</string>
+    <string name="home">Home</string>
+    <string name="home_page">You are already on the home page</string>
 </resources>

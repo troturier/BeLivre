@@ -13,12 +13,17 @@ import android.os.Environment
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -30,6 +35,7 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
@@ -44,6 +50,7 @@ import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.add_media_dialog.view.*
+import kotlinx.android.synthetic.main.nav_header.*
 import java.io.File
 import java.util.*
 
@@ -54,6 +61,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     // ---------- MODELS / DATA --------------- //
     //////////////////////////////////////////////
 
+    private var rc: Int? = null
     private var user: User? = null
     private var names: List<String>? = null
     private var city: City? = null
@@ -71,13 +79,14 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
     private var filePath: Uri? = null
 
-    private lateinit var storage: FirebaseStorage
     private lateinit var storageReference: StorageReference
     private lateinit var ref: StorageReference
 
     private lateinit var addMediaIV:ImageView
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     private lateinit var filePathURI : Uri
+
+    private lateinit var mDrawerLayout: DrawerLayout
 
     //////////////////////////////////////////////
     // ---------- FIREBASE USER --------------- //
@@ -96,8 +105,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         val mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth?.currentUser
 
-        storage = FirebaseStorage.getInstance()
-        storageReference = storage.reference
+        storageReference = FirebaseStorage.getInstance().reference
 
         // Setup Places Client
         val apiKey = getString(R.string.belivre_google_map_key)
@@ -113,6 +121,43 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             }
         })
 
+        rc = intent.getIntExtra("requestCode", 0)
+
+        // Action Bar --------------------------------------------------
+        if(rc != 123) {
+            val toolbar: Toolbar = findViewById(R.id.toolbar_profile)
+            setSupportActionBar(toolbar)
+
+            val actionbar: ActionBar? = supportActionBar
+            actionbar?.apply {
+                setDisplayHomeAsUpEnabled(true)
+                setHomeAsUpIndicator(R.drawable.ic_menu)
+            }
+
+            mDrawerLayout = findViewById(R.id.drawer_layout_profile)
+
+            val navigationView: NavigationView = findViewById(R.id.nav_view_profile)
+            navigationView.setNavigationItemSelectedListener { menuItem ->
+                // set item as selected to persist highlight
+                menuItem.isChecked = true
+                // close drawer when item is tapped
+                mDrawerLayout.closeDrawers()
+                // Handle navigation view item clicks here.
+                when (menuItem.itemId) {
+                    R.id.nav_home -> {
+                        val intent = MainActivity.newIntent(this)
+                        startActivity(intent)
+                    }
+                    R.id.nav_setting -> {
+                        this.toast(getString(R.string.settings))
+                    }
+                    R.id.nav_library -> {
+                        this.toast(getString(R.string.my_library))
+                    }
+                }
+                true
+            }
+        }
         // FAB action setup
         validateProfileFormFAB.setOnClickListener { validateForm() }
 
@@ -147,6 +192,38 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer { city:City? -> cityET.setText(city!!.name); this.city = city
             })
             ref = storageReference.child("images/profilePictures/${this.user!!.id.toString()}")
+
+            if(rc != 123) {
+                when {
+                    user!!.profilePicURL.equals("images/profilePictures/${user!!.id.toString()}") -> GlideApp.with(this)
+                        .load(ref)
+                        .signature(ObjectKey(System.currentTimeMillis().toString()))
+                        .placeholder(circularProgressDrawable)
+                        .fitCenter()
+                        .circleCrop()
+                        .into(drawer_imageview_profile)
+                    user!!.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
+                        .load(user!!.profilePicURL)
+                        .signature(ObjectKey(System.currentTimeMillis().toString()))
+                        .placeholder(circularProgressDrawable)
+                        .fitCenter()
+                        .circleCrop()
+                        .into(drawer_imageview_profile)
+                    else -> {
+                        user!!.profilePicURL = ""
+                        GlideApp.with(this)
+                            .load(R.drawable.ic_avatar)
+                            .signature(ObjectKey(System.currentTimeMillis().toString()))
+                            .placeholder(circularProgressDrawable)
+                            .fitCenter()
+                            .circleCrop()
+                            .into(drawer_imageview_profile)
+                    }
+                }
+
+                drawer_username.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
+                drawer_email.text = user!!.email
+            }
         }
 
         lastNameEt.setText(user!!.lastname)
@@ -180,6 +257,18 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     .circleCrop()
                     .into(profilePic)
             }
+        }
+    }
+
+    //appbar - toolbar button click
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                mDrawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -407,7 +496,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     override fun onBackPressed() {
-        val rc = intent.getIntExtra("requestCode", 0)
+        rc = intent.getIntExtra("requestCode", 0)
         if(rc == 123){}
         else{
             super.onBackPressed()
