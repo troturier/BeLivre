@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/username"
                     android:textColor="@android:color/white"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="bold"/>
 
             <TextView
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/email"
                     android:textColor="@android:color/white"
-                    android:textSize="14dp"/>
+                    android:textSize="14sp"/>
 
         </LinearLayout>
     </LinearLayout>

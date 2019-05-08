@@ -152,7 +152,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                         this.toast(getString(R.string.settings))
                     }
                     R.id.nav_library -> {
-                        this.toast(getString(R.string.my_library))
+                        val intent = LibraryActivity.newIntent(this)
+                        intent.putExtra("user", user)
+                        startActivity(intent)
                     }
                 }
                 true

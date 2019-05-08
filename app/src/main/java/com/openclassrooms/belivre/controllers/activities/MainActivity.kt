@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private var currentUser: FirebaseUser? = null
 
+    private lateinit var user : User
+
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
@@ -84,7 +86,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     this.toast(getString(R.string.settings))
                 }
                 R.id.nav_library -> {
-                    this.toast(getString(R.string.my_library))
+                    val intent = LibraryActivity.newIntent(this)
+                    intent.putExtra("user",user)
+                    startActivity(intent)
                 }
             }
             true
@@ -113,19 +117,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
-    private fun checkUserProfileComplete(user: User?){
-        if(user == null
-            || user.profilePicURL!!.isEmpty()
-            || user.cityId!!.isEmpty()
-            || user.firstname!!.isEmpty()
-            || user.lastname!!.isEmpty()){
+    private fun checkUserProfileComplete(user2: User?){
+        if(user2 == null
+            || user2.profilePicURL!!.isEmpty()
+            || user2.cityId!!.isEmpty()
+            || user2.firstname!!.isEmpty()
+            || user2.lastname!!.isEmpty()){
             val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
             intent.putExtra("requestCode", rcSignIn)
             startActivity(intent)
         }
         else{
-            drawer_username.text = getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1))
-            drawer_email.text = user.email
+            user = user2
+
+            drawer_username.text = getString(R.string.profile_display_name, user2.firstname, user2.lastname?.substring(0,1))
+            drawer_email.text = user2.email
 
             val circularProgressDrawable = CircularProgressDrawable(this)
             circularProgressDrawable.strokeWidth = 10f
@@ -133,25 +139,25 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
             circularProgressDrawable.start()
 
-            val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/${user.id.toString()}")
+            val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/${user2.id.toString()}")
 
             when {
-                user.profilePicURL.equals("images/profilePictures/${user.id.toString()}") -> GlideApp.with(this)
+                user2.profilePicURL.equals("images/profilePictures/${user2.id.toString()}") -> GlideApp.with(this)
                     .load(ref)
                     .signature(ObjectKey(System.currentTimeMillis().toString()))
                     .placeholder(circularProgressDrawable)
                     .fitCenter()
                     .circleCrop()
                     .into(drawer_imageview_profile)
-                user.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
-                    .load(user.profilePicURL)
+                user2.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
+                    .load(user2.profilePicURL)
                     .signature(ObjectKey(System.currentTimeMillis().toString()))
                     .placeholder(circularProgressDrawable)
                     .fitCenter()
                     .circleCrop()
                     .into(drawer_imageview_profile)
                 else -> {
-                    user.profilePicURL = ""
+                    user2.profilePicURL = ""
                     GlideApp.with(this)
                         .load(R.drawable.ic_avatar)
                         .signature(ObjectKey(System.currentTimeMillis().toString()))

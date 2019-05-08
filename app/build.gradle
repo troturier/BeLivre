@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.github.lzyzsd:circleprogress:1.2.1'
 
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
 }
 
 kapt {
