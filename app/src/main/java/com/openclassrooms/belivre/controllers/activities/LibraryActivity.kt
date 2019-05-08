@@ -39,8 +39,10 @@ class LibraryActivity : AppCompatActivity() {
 
         user = intent.getSerializableExtra("user") as User
 
-        // Action Bar --------------------------------------------------
+        updateDrawerUI()
+    }
 
+    private fun updateDrawerUI(){
         val toolbar: Toolbar = this.findViewById(R.id.toolbar_library)
         setSupportActionBar(toolbar)
 

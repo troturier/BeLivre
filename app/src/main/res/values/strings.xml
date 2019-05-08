@@ -30,4 +30,6 @@
     <string name="username">Username</string>
     <string name="home">Home</string>
     <string name="home_page">You are already on the home page</string>
+    <string name="search_book">Search book</string>
+    <string name="add_book">Add book</string>
 </resources>
