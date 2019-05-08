@@ -11,7 +11,8 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/background">
 
         <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
@@ -33,6 +34,7 @@
         <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewpager_library"
                 android:layout_width="match_parent"
+                android:background="@color/backgroundFilter"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 

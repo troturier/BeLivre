@@ -41,7 +41,7 @@ class LibraryActivity : AppCompatActivity() {
 
         // Action Bar --------------------------------------------------
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar_library)
+        val toolbar: Toolbar = this.findViewById(R.id.toolbar_library)
         setSupportActionBar(toolbar)
 
         val actionbar: ActionBar? = supportActionBar
