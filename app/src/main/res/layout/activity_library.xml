@@ -16,7 +16,7 @@
         <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="?attr/colorPrimaryDark"
                 android:theme="?attr/actionBarTheme"
                 android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar_library"
                 app:titleTextColor="@android:color/white" app:title="My Library"/>
@@ -25,6 +25,9 @@
                 android:id="@+id/tabs_library"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabBackground="@drawable/tab_selector_colors"
+                android:theme="?attr/actionBarTheme"
+                app:tabTextColor="@android:color/white"
                 app:tabMode="fixed"/>
 
         <androidx.viewpager.widget.ViewPager
