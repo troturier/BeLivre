@@ -1,4 +1,4 @@
-package com.openclassrooms.belivre
+package com.openclassrooms.belivre.api
 
 import com.openclassrooms.belivre.models.apiModels.BookResults
 import retrofit2.Call

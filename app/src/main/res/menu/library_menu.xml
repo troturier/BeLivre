@@ -6,9 +6,4 @@
     android:title="@string/add_book"
     app:showAsAction="ifRoom"/>
 
-    <item
-    android:id="@+id/search_icon"
-    android:icon="@drawable/ic_search"
-    android:title="@string/search_book"
-    app:showAsAction="ifRoom"/>
 </menu>
