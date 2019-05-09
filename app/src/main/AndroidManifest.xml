@@ -17,6 +17,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".controllers.activities.SearchActivity"
+                android:label="@string/title_activity_search"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity android:name=".controllers.activities.LibraryActivity">
         </activity>
         <activity android:name=".controllers.activities.ProfileActivity">
