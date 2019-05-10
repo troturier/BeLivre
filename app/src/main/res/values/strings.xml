@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">BeLivre</string>
     <string name="profile_display_name">%1$s %2$s.</string>
+    <string name="publisher_search">Publisher : %1$s</string>
+    <string name="authors_search">Authors : %1$s</string>
+    <string name="authors">%1$s, %2$s</string>
+    <string name="categories_search">Categories : %1$s</string>
     <string name="first_name">First Name</string>
     <string name="email">Email</string>
     <string name="last_name">Last Name</string>
@@ -33,4 +37,7 @@
     <string name="search_book">Search book</string>
     <string name="add_book">Add book</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="no_authors">No authors defined</string>
+    <string name="no_publisher">No publisher defined</string>
+    <string name="no_categories">No categories defined</string>
 </resources>
