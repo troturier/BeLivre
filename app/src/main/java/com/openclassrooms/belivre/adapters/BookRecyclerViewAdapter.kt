@@ -9,7 +9,7 @@ import com.openclassrooms.belivre.viewholders.BookViewholder
 import com.openclassrooms.belivre.viewmodels.BookViewModel
 
 
-class BookRecyclerViewAdapter(private val books :MutableList<Book>): RecyclerView.Adapter<BookViewholder>(){
+class BookRecyclerViewAdapter(private val books :MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookViewholder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewholder {
         val inflatedView = parent.inflate(R.layout.search_item_row, false)
@@ -23,5 +23,6 @@ class BookRecyclerViewAdapter(private val books :MutableList<Book>): RecyclerVie
     override fun onBindViewHolder(holder: BookViewholder, position: Int) {
         val itemBook = books[position]
         holder.bindBook(itemBook)
+        holder.itemView.setOnClickListener { clickListener(itemBook, position) }
     }
 }

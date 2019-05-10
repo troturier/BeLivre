@@ -4,19 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.widget.SearchView
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BookRecyclerViewAdapter
 import com.openclassrooms.belivre.api.getBooks
 import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.models.apiModels.BookResults
-import kotlinx.android.synthetic.main.activity_main.*
+import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.BookViewModel
 
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
@@ -28,7 +26,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: BookRecyclerViewAdapter
 
-            override fun onCreate(savedInstanceState: Bundle?) {
+    private val bookVM: BookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         setSupportActionBar(toolbar_search)
@@ -36,9 +38,13 @@ class SearchActivity : AppCompatActivity() {
         linearLayoutManager = LinearLayoutManager(this)
         searchRV.layoutManager = linearLayoutManager
 
+        configureSearchView()
+
+    }
+
+    private fun configureSearchView(){
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {
-
                 return false
             }
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -57,7 +63,11 @@ class SearchActivity : AppCompatActivity() {
                                     val book = Book(b.id, b.volumeInfo.title, b.volumeInfo.authors, b.volumeInfo.categories ,b.volumeInfo.publisher, b.volumeInfo.publishedDate, b.volumeInfo.subtitle, b.volumeInfo.imageLinks?.thumbnail, b.volumeInfo.description)
                                     booksList.add(book)
                                 }
-                                adapter = BookRecyclerViewAdapter(booksList)
+                                adapter = BookRecyclerViewAdapter(booksList){
+                                        item:Book, _: Int ->
+                                    bookVM.addBook(item)
+                                    finish()
+                                }
                                 searchRV.adapter = adapter
                                 adapter.notifyDataSetChanged()
                             }

@@ -31,25 +31,6 @@ class MyBooksFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        /**getBooks(object : Callback<BookResults> {
-            override fun onFailure(call: Call<BookResults>, t: Throwable) {
-                Log.e("testRetrofit", "ERROR")
-            }
-
-            override fun onResponse(call: Call<BookResults>, response: Response<BookResults>) {
-                val books = response.body()!!.items
-                val booksList = mutableListOf<Book>()
-                Log.i("testRetrofit", "Here is the response :")
-                for (b in books) {
-                    val book = Book(b.id, b.volumeInfo.title, b.volumeInfo.authors, b.volumeInfo.publisher, b.volumeInfo.publishedDate, b.volumeInfo.subtitle, b.volumeInfo.imageLinks.thumbnail, b.volumeInfo.description)
-                    booksList.add(book)
-                }
-                for(b in booksList){
-                    bookVM.addBook(b)
-                }
-            }
-        }, "harry potter")*/
-
         setHasOptionsMenu(true)
         // Inflate the layout for this fragment
         return inflater.inflate(com.openclassrooms.belivre.R.layout.fragment_mybooks, container, false)
