@@ -6,8 +6,6 @@ import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.BookViewholder
-import com.openclassrooms.belivre.viewmodels.BookViewModel
-
 
 class BookRecyclerViewAdapter(private val books :MutableList<Book>, private val clickListener: (Book, Int) -> Unit): RecyclerView.Adapter<BookViewholder>(){
 

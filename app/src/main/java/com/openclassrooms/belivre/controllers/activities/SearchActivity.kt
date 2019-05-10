@@ -46,8 +46,6 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar_search)
 
         mAuth = FirebaseAuth.getInstance()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
         currentUser = mAuth?.currentUser
 
         linearLayoutManager = LinearLayoutManager(this)

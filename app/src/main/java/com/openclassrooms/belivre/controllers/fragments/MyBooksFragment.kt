@@ -7,14 +7,23 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
+import com.openclassrooms.belivre.adapters.UserBookRecyclerViewAdapter
 import com.openclassrooms.belivre.api.getBooks
 import com.openclassrooms.belivre.controllers.activities.SearchActivity
 import com.openclassrooms.belivre.models.Book
+import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.models.apiModels.BookResults
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.BookViewModel
+import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import kotlinx.android.synthetic.main.fragment_mybooks.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,17 +32,47 @@ import retrofit2.Response
 /**
  * A simple [Fragment] subclass.
  */
-class MyBooksFragment : Fragment() {
+class MyBooksFragment : Fragment(), LifecycleOwner {
+
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var adapter: UserBookRecyclerViewAdapter
+    private var currentUser: FirebaseUser? = null
+    private var mAuth: FirebaseAuth? = null
 
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val userBookVM: UserBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         // Inflate the layout for this fragment
         return inflater.inflate(com.openclassrooms.belivre.R.layout.fragment_mybooks, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mAuth = FirebaseAuth.getInstance()
+        currentUser = mAuth?.currentUser
+
+        linearLayoutManager = LinearLayoutManager(activity)
+        mybooksRV.layoutManager = linearLayoutManager
+
+        userBookVM.getUserBooksByUserId(currentUser!!.uid).observe(this, Observer { userBooks:List<UserBook>? -> configureRecyclerView(userBooks)})
+
+    }
+
+    private fun configureRecyclerView(userBooks:List<UserBook>?){
+        if(userBooks != null)
+        adapter= UserBookRecyclerViewAdapter(userBooks){
+            item:UserBook, position:Int ->
+            Log.d("MyLibrary", item.title)
+        }
+        mybooksRV.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
