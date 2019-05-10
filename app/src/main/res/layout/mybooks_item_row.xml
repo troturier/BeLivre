@@ -10,7 +10,7 @@
         <ImageView
                 android:layout_width="100dp"
                 android:layout_height="130dp"
-                android:id="@+id/coverSearch" android:layout_marginTop="15dp"
+                android:id="@+id/coverMyBooks" android:layout_marginTop="15dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginBottom="15dp" app:srcCompat="@drawable/ic_launcher_background"/>
         <LinearLayout
@@ -23,23 +23,31 @@
             <TextView
                     android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" android:id="@+id/titleSearch" android:layout_weight="0.25"
-                    android:gravity="center_vertical"/>
+                    android:layout_height="0dp" android:id="@+id/titleMyBooks" android:layout_weight="0.2"
+            />
             <TextView
                     android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" android:id="@+id/categoriesSearch" android:layout_weight="0.25"
-                    android:gravity="center_vertical"/>
+                    android:layout_height="0dp" android:id="@+id/categoriesMyBooks" android:layout_weight="0.2"
+            />
             <TextView
                     android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" android:id="@+id/authorsSearch" android:layout_weight="0.25"
-                    android:gravity="center_vertical"/>
+                    android:layout_height="0dp" android:id="@+id/authorsMyBooks" android:layout_weight="0.2"
+            />
             <TextView
                     android:text="TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp" android:id="@+id/publisherSearch" android:layout_weight="0.25"
-                    android:gravity="center_vertical"/>
+                    android:layout_height="0dp" android:id="@+id/publisherMyBooks" android:layout_weight="0.2"
+            />
+            <RatingBar
+                    android:id="@+id/ratingBarMyBooks"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:stepSize="0.1" android:layout_gravity="left"/>
         </LinearLayout>
     </LinearLayout>
     <View

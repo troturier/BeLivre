@@ -8,13 +8,17 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BookRecyclerViewAdapter
 import com.openclassrooms.belivre.api.getBooks
 import com.openclassrooms.belivre.models.Book
+import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.models.apiModels.BookResults
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.BookViewModel
+import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
@@ -25,15 +29,26 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: BookRecyclerViewAdapter
+    private var currentUser: FirebaseUser? = null
+    private var mAuth: FirebaseAuth? = null
 
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
+    }
+
+    private val userBookVM: UserBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         setSupportActionBar(toolbar_search)
+
+        mAuth = FirebaseAuth.getInstance()
+
+        // Check if user is signed in (non-null) and update UI accordingly.
+        currentUser = mAuth?.currentUser
 
         linearLayoutManager = LinearLayoutManager(this)
         searchRV.layoutManager = linearLayoutManager
@@ -66,6 +81,8 @@ class SearchActivity : AppCompatActivity() {
                                 adapter = BookRecyclerViewAdapter(booksList){
                                         item:Book, _: Int ->
                                     bookVM.addBook(item)
+                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.authors, item.categories, item.publisher, item.coverUrl, null, null, 1)
+                                    userBookVM.addUserBook(userBook)
                                     finish()
                                 }
                                 searchRV.adapter = adapter

@@ -31,8 +31,31 @@ class UserBookViewModel : ViewModel() {
     }
 
     // get realtime updates from firebase regarding saved userbooks
-    fun getUserBooks(userId: String): LiveData<List<UserBook>> {
-        userbookRepository.getUserBooks(userId).addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+    fun getUserBooksByUserId(userId: String): LiveData<List<UserBook>> {
+        userbookRepository.getUserBooks()
+            .whereEqualTo("userId", userId)
+            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                userbooks.value = null
+                return@EventListener
+            }
+
+            val userbookList : MutableList<UserBook> = mutableListOf()
+            for (doc in value!!) {
+                val userbook = doc.toObject(UserBook::class.java)
+                userbookList.add(userbook)
+            }
+            userbooks.value = userbookList
+        })
+
+        return userbooks
+    }
+
+    fun getUserBooksByBookId(bookId: String): LiveData<List<UserBook>> {
+        userbookRepository.getUserBooks()
+            .whereEqualTo("bookId", bookId)
+            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 userbooks.value = null
@@ -51,8 +74,8 @@ class UserBookViewModel : ViewModel() {
     }
 
     // get realtime updates from firebase regarding userbook
-    fun getUserBook(userId: String, id: String): LiveData<UserBook> {
-        userbookRepository.getUserBook(userId, id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
+    fun getUserBook(id: String): LiveData<UserBook> {
+        userbookRepository.getUserBook(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 userbooks.value = null

@@ -13,28 +13,22 @@ class UserBookRepository {
     fun addUserBook(userBook: UserBook): Task<Void> {
         //var
         val documentReference = firestoreDB
-            .collection("users")
-            .document(userBook.userId.toString())
-            .collection("books")
+            .collection("userbooks")
             .document(userBook.id.toString())
 
         return documentReference.set(userBook)
     }
 
     // Get books of a user from firebase
-    fun getUserBooks(userId: String): CollectionReference {
+    fun getUserBooks(): CollectionReference {
         return firestoreDB
-            .collection("users")
-            .document(userId)
-            .collection("books")
+            .collection("userbooks")
     }
 
     // Get book of a user from firebase
-    fun getUserBook(userId: String, id: String): DocumentReference {
+    fun getUserBook(id: String): DocumentReference {
         return firestoreDB
-            .collection("users")
-            .document(userId)
-            .collection("books")
+            .collection("userbooks")
             .document(id)
     }
 
