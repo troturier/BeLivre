@@ -65,14 +65,15 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
 
     }
 
-    private fun configureRecyclerView(userBooks:List<UserBook>?){
-        if(userBooks != null)
-        adapter= UserBookRecyclerViewAdapter(userBooks){
-            item:UserBook, position:Int ->
-            Log.d("MyLibrary", item.title)
+    private fun configureRecyclerView(userBooks:List<UserBook>?) {
+        if (userBooks != null) {
+            val sortedUserBooks = userBooks.sortedWith(compareBy { it.title })
+            adapter = UserBookRecyclerViewAdapter(sortedUserBooks) { item: UserBook, _: Int ->
+                Log.d("MyLibrary", item.title)
+            }
+            mybooksRV.adapter = adapter
+            adapter.notifyDataSetChanged()
         }
-        mybooksRV.adapter = adapter
-        adapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
