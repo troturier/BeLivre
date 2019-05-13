@@ -136,7 +136,7 @@ class DetailActivity : AppCompatActivity() {
             descriptionDetail.text = getString(R.string.no_description)
         }
 
-        reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview -> updateUserReview(review) })
+        reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview? -> updateUserReview(review) })
     }
 
     private fun updateUserReview(reviewP: BookReview?){
