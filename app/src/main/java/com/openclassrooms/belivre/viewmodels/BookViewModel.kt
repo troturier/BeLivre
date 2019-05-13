@@ -16,18 +16,23 @@ class BookViewModel: ViewModel() {
     private var bookRepository = BookRepository()
     private var books : MutableLiveData<List<Book>> = MutableLiveData()
     private var book : MutableLiveData<Book> = MutableLiveData()
+    private var exist : Boolean = false
 
     private val toastMessage = SingleLiveEvent<Int>()
 
     // save book to firebase
     fun addBook(book: Book){
-        bookRepository.addBook(book)
-            .addOnFailureListener {
-                toastMessage.value = R.string.update_fail
+        bookRepository.getBook(book.id!!).addSnapshotListener { value, _ ->
+            if (!value!!.exists()) {
+                bookRepository.addBook(book)
+                    .addOnFailureListener {
+                        toastMessage.value = R.string.update_fail
+                    }
+                    .addOnSuccessListener {
+                        toastMessage.value = R.string.book_updated_success
+                    }
             }
-            .addOnSuccessListener {
-                toastMessage.value = R.string.book_updated_success
-            }
+        }
     }
 
     // get realtime updates from firebase regarding saved books
@@ -62,6 +67,18 @@ class BookViewModel: ViewModel() {
         })
 
         return book
+    }
+
+    fun checkBook(id: String): Boolean {
+        bookRepository.getBook(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@EventListener
+            }
+           exist = value!!.exists()
+        })
+
+        return exist
     }
 
     // delete a book from firebase
