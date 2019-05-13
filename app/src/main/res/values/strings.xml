@@ -48,4 +48,6 @@
     <string name="no_description">No description specified</string>
     <string name="description">Description</string>
     <string name="reviews">Reviews</string>
+    <string name="maxium_char_limit">Maximum characters limit reached - 500/500</string>
+    <string name="count_char">%1$s/500</string>
 </resources>

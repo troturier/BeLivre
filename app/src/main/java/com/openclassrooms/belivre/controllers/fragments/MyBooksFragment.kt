@@ -68,7 +68,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(com.openclassrooms.belivre.R.menu.library_menu, menu)
+        inflater.inflate(R.menu.library_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

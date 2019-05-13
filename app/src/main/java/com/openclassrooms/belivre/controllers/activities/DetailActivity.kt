@@ -1,25 +1,42 @@
 package com.openclassrooms.belivre.controllers.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.Book
+import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.utils.GlideApp
+import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.BookReviewViewModel
 import com.openclassrooms.belivre.viewmodels.BookViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.add_review_dialog.view.*
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var user: User
+    private lateinit var book: Book
 
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
+    }
+
+    private val reviewVM: BookReviewViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { BookReviewViewModel() }).get(BookReviewViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +52,10 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
     }
     
-    private fun updateUI(book: Book){
+    private fun updateUI(bookP: Book){
+
+        book = bookP
+
         //////////////////////////////
         // COVER
         //////////////////////////////
@@ -114,6 +134,74 @@ class DetailActivity : AppCompatActivity() {
         else{
             descriptionDetail.text = getString(R.string.no_description)
         }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun createReviewDialog() {
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.add_review_dialog, null)
+
+        val contentReview = dialogView.contentReviewDialog
+        contentReview.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s!!.length == 500) {
+                    dialogView.textCountReviewDialog.text =
+                        getString(R.string.maxium_char_limit)
+                    dialogView.textCountReviewDialog.setTextColor(Color.RED)
+                } else {
+                    dialogView.textCountReviewDialog.text = getString(R.string.count_char, s.length.toString())
+                    dialogView.textCountReviewDialog.setTextColor(
+                        ContextCompat.getColor(
+                            dialogView.context,
+                            R.color.default_text_color
+                        )
+                    )
+                }
+            }
+        })
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setPositiveButton("Send", null)
+            .setNeutralButton("Cancel") { _, _ -> }
+
+        val dialog = alertDialog.create()
+
+        dialog.setOnShowListener {
+            val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            okButton.setOnClickListener {
+                val bookReview = BookReview(
+                    book.id + user.id,
+                    user.id, book.id,
+                    getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1)),
+                    user.profilePicURL,
+                    String.format("%.1f",dialogView.ratingBarReviewDialog.rating).toDouble(),
+                    dialogView.contentReviewDialog.text.toString())
+                reviewVM.addBookReview(bookReview)
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.write_review_button -> createReviewDialog()
+            R.id.add_to_wishlist -> toast("Wishlist")
+            else -> return false
+        }
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

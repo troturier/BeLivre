@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Rate this book"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/ratingBarReviewDialog"
+            app:layout_constraintTop_toBottomOf="@+id/textView" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="10dp" android:max="5"
+            android:progress="0" android:numStars="5" android:rating="0" android:stepSize="0.1"/>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:ems="10"
+            android:id="@+id/contentReviewDialog" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBarReviewDialog" android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent" android:hint="Write a comment (optional)"
+            android:maxLength="500"/>
+    <TextView
+            android:text="0/500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textCountReviewDialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="11dp" app:layout_constraintTop_toBottomOf="@+id/contentReviewDialog"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
