@@ -40,4 +40,11 @@
     <string name="no_authors">No authors defined</string>
     <string name="no_publisher">No publisher defined</string>
     <string name="no_categories">No categories defined</string>
+    <string name="textview">TextView</string>
+    <string name="cover_picture">Cover Picture</string>
+    <string name="see_offers">See offers</string>
+    <string name="no_published_date">No published date defined</string>
+    <string name="published_date">Published on : %1$s</string>
+    <string name="no_description">No description specified</string>
+    <string name="description">Description</string>
 </resources>

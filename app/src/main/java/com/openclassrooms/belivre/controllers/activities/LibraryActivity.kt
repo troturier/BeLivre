@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 class LibraryActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,5 +134,6 @@ class LibraryActivity : AppCompatActivity() {
         fun newIntent(context: Context): Intent {
             return Intent(context, LibraryActivity::class.java)
         }
+        lateinit var user: User
     }
 }
