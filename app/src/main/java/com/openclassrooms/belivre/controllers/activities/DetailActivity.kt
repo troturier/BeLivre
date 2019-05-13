@@ -30,6 +30,8 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var user: User
     private lateinit var book: Book
+    private var review: BookReview? = null
+    private var mMenu:Menu? = null
 
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
@@ -53,7 +55,6 @@ class DetailActivity : AppCompatActivity() {
     }
     
     private fun updateUI(bookP: Book){
-
         book = bookP
 
         //////////////////////////////
@@ -134,12 +135,26 @@ class DetailActivity : AppCompatActivity() {
         else{
             descriptionDetail.text = getString(R.string.no_description)
         }
+
+        reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview -> updateUserReview(review) })
+    }
+
+    private fun updateUserReview(reviewP: BookReview?){
+        review = reviewP
+        if(review != null){
+            mMenu!!.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_star_review_full)
+        }
     }
 
     @SuppressLint("InflateParams")
     private fun createReviewDialog() {
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.add_review_dialog, null)
+
+        if(review != null){
+            dialogView.ratingBarReviewDialog.rating = review!!.rate!!.toFloat()
+            if (review!!.content != null) dialogView.contentReviewDialog.setText(review!!.content)
+        }
 
         val contentReview = dialogView.contentReviewDialog
         contentReview.addTextChangedListener(object : TextWatcher {
@@ -192,6 +207,7 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
+        mMenu = menu
         return super.onCreateOptionsMenu(menu)
     }
 
