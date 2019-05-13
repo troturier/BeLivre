@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/layout_detail"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent"
+              android:background="@drawable/background"
+              tools:context="com.openclassrooms.belivre.controllers.activities.DetailActivity">
+
+        <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimaryDark"
+                android:theme="@style/ToolbarTheme"
+                android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar_detail"
+                app:titleTextColor="@android:color/white" app:title="Detail"/>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:background="@color/backgroundFilter"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="160dp"
+                        android:id="@+id/coverDetail" android:layout_marginTop="15dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginBottom="15dp" app:srcCompat="@drawable/ic_launcher_background"
+                        android:contentDescription="@string/cover_picture"/>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+                    <TextView
+                            android:text="@string/textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/categoriesDetail"
+                            android:paddingBottom="5dp" android:layout_weight="1"
+                            android:textColor="@android:color/darker_gray" android:textStyle="bold|italic"/>
+                    <TextView
+                            android:text="@string/textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/authorsDetail"
+                            android:paddingBottom="5dp" android:layout_weight="1"/>
+                    <TextView
+                            android:text="@string/textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/publisherDetail"
+                            android:paddingBottom="5dp" android:layout_weight="1"/>
+                    <TextView
+                            android:text="@string/textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/publishedOnDetail"
+                            android:paddingBottom="5dp" android:layout_weight="1"/>
+                    <RatingBar
+                            android:id="@+id/ratingBarDetail"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:stepSize="0.1" android:layout_gravity="start" android:paddingBottom="5dp"
+                            android:layout_weight="1"/>
+                    <Button
+                            android:text="@string/see_offers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/offersDetail"
+                            android:layout_weight="1" android:textColor="@android:color/white"
+                            android:background="@drawable/rounded_button"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+                <TextView
+                        android:text="@string/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/descriptionTitleDetail"
+                        android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
+                        android:layout_marginBottom="2dp"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorPrimary" android:id="@+id/view"
+                        android:layout_marginBottom="10dp"/>
+                <TextView
+                        android:text="@string/textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/descriptionDetail"
+                        android:textColor="@android:color/black"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+                <TextView
+                        android:text="@string/reviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/reviewsTitleDetail"
+                        android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
+                        android:layout_marginBottom="2dp"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorPrimary" android:id="@+id/view2"
+                        android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

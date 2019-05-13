@@ -47,4 +47,5 @@
     <string name="published_date">Published on : %1$s</string>
     <string name="no_description">No description specified</string>
     <string name="description">Description</string>
+    <string name="reviews">Reviews</string>
 </resources>
