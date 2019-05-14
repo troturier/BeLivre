@@ -239,12 +239,16 @@ class DetailActivity : AppCompatActivity() {
         dialog.setOnShowListener {
             val okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             okButton.setOnClickListener {
+                var rateSTR = ("%.1f".format(dialogView.ratingBarReviewDialog.rating))
+                if(rateSTR.contains(",")) rateSTR = rateSTR.replace(",",".")
+                val rateDouble = rateSTR.toDouble()
+
                 val bookReview = BookReview(
                     book.id + user.id,
                     user.id, book.id,
                     getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1)),
                     user.profilePicURL,
-                    String.format("%.1f",dialogView.ratingBarReviewDialog.rating.toDouble()).toDouble(),
+                    rateDouble,
                     dialogView.contentReviewDialog.text.toString())
                 reviewVM.addBookReview(bookReview)
 
