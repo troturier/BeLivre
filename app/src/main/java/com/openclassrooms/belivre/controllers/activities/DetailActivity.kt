@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.belivre.R
+import com.openclassrooms.belivre.adapters.ReviewsRecyclerViewAdapter
 import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.models.User
@@ -33,6 +35,9 @@ class DetailActivity : AppCompatActivity() {
     private var review: BookReview? = null
     private var mMenu:Menu? = null
 
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var adapter: ReviewsRecyclerViewAdapter
+
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
     }
@@ -48,6 +53,9 @@ class DetailActivity : AppCompatActivity() {
         user = intent.getSerializableExtra("user") as User
         
         bookVM.getBook(intent.getStringExtra("id")).observe(this, Observer { book:Book -> updateUI(book) })
+
+        linearLayoutManager = LinearLayoutManager(this)
+        reviewsRecyclerView.layoutManager = linearLayoutManager
 
         setSupportActionBar(toolbar_detail)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -148,6 +156,15 @@ class DetailActivity : AppCompatActivity() {
         if(review != null){
             mMenu!!.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_star_review_full)
         }
+        reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews:List<BookReview>? -> configureRecyclerView(reviews) })
+    }
+
+    private fun configureRecyclerView(reviews:List<BookReview>?){
+        if(reviews != null){
+            adapter = ReviewsRecyclerViewAdapter(reviews)
+            reviewsRecyclerView.adapter = adapter
+            adapter.notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -157,7 +174,10 @@ class DetailActivity : AppCompatActivity() {
 
         if(review != null){
             dialogView.ratingBarReviewDialog.rating = review!!.rate!!.toFloat()
-            if (review!!.content != null) dialogView.contentReviewDialog.setText(review!!.content)
+            if (review!!.content != null){
+                dialogView.contentReviewDialog.setText(review!!.content)
+                dialogView.textCountReviewDialog.text = getString(R.string.count_char, review!!.content!!.length.toString())
+            }
         }
 
         val contentReview = dialogView.contentReviewDialog

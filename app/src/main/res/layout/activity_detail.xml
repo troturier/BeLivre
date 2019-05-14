@@ -105,7 +105,7 @@
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:layout_marginStart="15dp"
+                    android:layout_height="wrap_content" android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
                 <TextView
                         android:text="@string/reviews"
@@ -118,6 +118,9 @@
                         android:layout_height="2dp"
                         android:background="@color/colorPrimary" android:id="@+id/view2"
                         android:layout_marginBottom="10dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/reviewsRecyclerView"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

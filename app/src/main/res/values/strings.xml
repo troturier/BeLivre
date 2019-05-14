@@ -50,4 +50,5 @@
     <string name="reviews">Reviews</string>
     <string name="maxium_char_limit">Maximum characters limit reached - 500/500</string>
     <string name="count_char">%1$s/500</string>
+    <string name="user_profile_picture">User profile picture</string>
 </resources>
