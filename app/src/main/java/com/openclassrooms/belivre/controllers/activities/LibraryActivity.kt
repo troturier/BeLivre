@@ -20,7 +20,6 @@ import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.utils.GlideApp
 import com.openclassrooms.belivre.utils.toast
 import kotlinx.android.synthetic.main.activity_library.*
-import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 
 class LibraryActivity : AppCompatActivity() {
@@ -97,7 +96,7 @@ class LibraryActivity : AppCompatActivity() {
                 .placeholder(circularProgressDrawable)
                 .fitCenter()
                 .circleCrop()
-                .into(drawer_imageview_profile)
+                .into(nav_view.getHeaderView(0).drawer_imageview_profile)
             user.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
                 .load(user.profilePicURL)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
