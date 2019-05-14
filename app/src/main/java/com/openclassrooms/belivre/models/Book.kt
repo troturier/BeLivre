@@ -9,4 +9,5 @@ data class Book (
     var publishedDate: String? = null,
     var subtitle: String? = null,
     var coverUrl: String? = null,
-    var description : String? = null  )
+    var description : String? = null,
+    var rating: Double = 0.0)

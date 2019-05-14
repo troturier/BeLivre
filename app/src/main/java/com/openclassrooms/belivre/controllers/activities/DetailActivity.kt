@@ -32,6 +32,7 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var user: User
     private lateinit var book: Book
+    private var rateSum: Double = 0.0
     private var review: BookReview? = null
     private var mMenu:Menu? = null
 
@@ -159,8 +160,31 @@ class DetailActivity : AppCompatActivity() {
         reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews:List<BookReview>? -> configureRecyclerView(reviews) })
     }
 
+    private fun updateRateSum(reviews: List<BookReview>?, rate: Double){
+        if(reviews == null || reviews.isEmpty()){
+            book.rating = rate
+        }
+        else{
+            rateSum = 0.0
+            for(r in reviews){
+                rateSum += r.rate!!
+            }
+            rateSum = rateSum.div(reviews.size)
+            book.rating = rateSum
+        }
+        bookVM.updateBookRating(book)
+    }
+
     private fun configureRecyclerView(reviews:List<BookReview>?){
-        if(reviews != null){
+        if(reviews != null && reviews.isNotEmpty()){
+            rateSum = 0.0
+            for(r in reviews){
+                rateSum += r.rate!!
+            }
+            rateSum = rateSum.div(reviews.size)
+
+            ratingBarDetail.rating = rateSum.toFloat()
+
             adapter = ReviewsRecyclerViewAdapter(reviews)
             reviewsRecyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
@@ -220,9 +244,12 @@ class DetailActivity : AppCompatActivity() {
                     user.id, book.id,
                     getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1)),
                     user.profilePicURL,
-                    String.format("%.1f",dialogView.ratingBarReviewDialog.rating).toDouble(),
+                    String.format("%.1f",dialogView.ratingBarReviewDialog.rating.toDouble()).toDouble(),
                     dialogView.contentReviewDialog.text.toString())
                 reviewVM.addBookReview(bookReview)
+
+                reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews: List<BookReview>? -> updateRateSum(reviews, bookReview.rate!!)})
+
                 dialog.dismiss()
             }
         }

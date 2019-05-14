@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -73,7 +73,7 @@ class SearchActivity : AppCompatActivity() {
                             Log.i("testRetrofit", "Here is the response :")
                             if (books.isNotEmpty()) {
                                 for (b in books) {
-                                    val book = Book(b.id, b.volumeInfo.title, b.volumeInfo.authors, b.volumeInfo.categories ,b.volumeInfo.publisher, b.volumeInfo.publishedDate, b.volumeInfo.subtitle, b.volumeInfo.imageLinks?.thumbnail, b.volumeInfo.description)
+                                    val book = Book(b.id, b.volumeInfo.title, b.volumeInfo.authors, b.volumeInfo.categories ,b.volumeInfo.publisher, b.volumeInfo.publishedDate, b.volumeInfo.subtitle, b.volumeInfo.imageLinks?.thumbnail, b.volumeInfo.description, 0.0)
                                     booksList.add(book)
                                 }
                                 adapter = BookRecyclerViewAdapter(booksList){

@@ -35,6 +35,16 @@ class BookViewModel: ViewModel() {
         }
     }
 
+    fun updateBookRating(book: Book){
+        bookRepository.updateBookRating(book)
+            .addOnFailureListener {
+                toastMessage.value = R.string.update_fail
+            }
+            .addOnSuccessListener {
+                toastMessage.value = R.string.book_updated_success
+            }
+    }
+
     // get realtime updates from firebase regarding saved books
     fun getBooks(): LiveData<List<Book>>{
         bookRepository.getBooks().addSnapshotListener(EventListener<QuerySnapshot> { value, e ->

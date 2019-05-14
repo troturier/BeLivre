@@ -15,6 +15,13 @@ class BookRepository {
         return documentReference.set(book)
     }
 
+    fun updateBookRating(book: Book): Task<Void>{
+        val documentReference = firestoreDB.collection("books").document(book.id.toString())
+        return documentReference.update(
+            "rating", book.rating
+        )
+    }
+
     // Get books from firebase
     fun getBooks(): CollectionReference {
         return firestoreDB.collection("books")
