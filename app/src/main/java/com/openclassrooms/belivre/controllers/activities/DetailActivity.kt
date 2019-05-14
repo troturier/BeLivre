@@ -84,7 +84,11 @@ class DetailActivity : AppCompatActivity() {
         //////////////////////////////
 
         if (book.publishedDate != null) {
-            publishedOnDetail.text = getString(R.string.published_date, book.publishedDate)
+            if(book.publishedDate.toString().contains("T", false)){
+                val dateSTR = book.publishedDate.toString().split("T")
+                publishedOnDetail.text = getString(R.string.published_date,dateSTR[0])
+            }
+            else publishedOnDetail.text = getString(R.string.published_date, book.publishedDate)
         } else {
             publishedOnDetail.text = getString(R.string.no_published_date)
         }
