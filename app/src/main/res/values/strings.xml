@@ -4,6 +4,7 @@
     <string name="publisher_search">Publisher : %1$s</string>
     <string name="authors_search">Authors : %1$s</string>
     <string name="authors">%1$s, %2$s</string>
+    <string name="reviewCount">(%1$s)</string>
     <string name="categories_search">Categories : %1$s</string>
     <string name="first_name">First Name</string>
     <string name="email">Email</string>
@@ -52,4 +53,5 @@
     <string name="count_char">%1$s/500</string>
     <string name="user_profile_picture">User profile picture</string>
     <string name="book_cover">Book cover</string>
+    <string name="review_count_placeholder">(0)</string>
 </resources>

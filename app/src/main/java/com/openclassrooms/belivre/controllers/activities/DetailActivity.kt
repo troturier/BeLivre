@@ -167,19 +167,16 @@ class DetailActivity : AppCompatActivity() {
         reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews:List<BookReview>? -> configureRecyclerView(reviews) })
     }
 
-    private fun updateRateSum(reviews: List<BookReview>?, rate: Double){
-        if(reviews == null || reviews.isEmpty()){
-            book.rating = rate
-        }
-        else{
+    private fun updateRateSum(reviews: List<BookReview>?){
+        if (reviews != null) {
             rateSum = 0.0
             for(r in reviews){
                 rateSum += r.rate!!
             }
             rateSum = rateSum.div(reviews.size)
             book.rating = rateSum
+            bookVM.updateBookRating(book)
         }
-        bookVM.updateBookRating(book)
     }
 
     private fun configureRecyclerView(reviews:List<BookReview>?){
@@ -187,6 +184,11 @@ class DetailActivity : AppCompatActivity() {
             adapter = ReviewsRecyclerViewAdapter(reviews)
             reviewsRecyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
+
+            reviewCountDetail.text = getString(R.string.reviewCount, reviews.size.toString())
+        }
+        else{
+            reviewCountDetail.text = getString(R.string.reviewCount, "0")
         }
     }
 
@@ -251,7 +253,7 @@ class DetailActivity : AppCompatActivity() {
                     dialogView.contentReviewDialog.text.toString())
                 reviewVM.addBookReview(bookReview)
 
-                reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews: List<BookReview>? -> updateRateSum(reviews, bookReview.rate!!)})
+                reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews: List<BookReview>? -> updateRateSum(reviews)})
 
                 dialog.dismiss()
             }

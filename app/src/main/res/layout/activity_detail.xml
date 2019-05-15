@@ -63,15 +63,31 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/publishedOnDetail"
                             android:paddingBottom="5dp" android:layout_weight="1"/>
-                    <RatingBar
-                            android:id="@+id/ratingBarDetail"
-                            style="?android:attr/ratingBarStyleSmall"
+                    <LinearLayout
+                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:isIndicator="true"
-                            android:numStars="5"
-                            android:stepSize="0.1" android:layout_gravity="start" android:paddingBottom="5dp"
-                            android:layout_weight="1" android:layout_marginBottom="5dp"/>
+                            android:layout_height="match_parent" android:layout_weight="1">
+                        <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                            <RatingBar
+                                    android:id="@+id/ratingBarDetail"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:isIndicator="true"
+                                    android:numStars="5"
+                                    android:stepSize="0.1" android:layout_gravity="start" android:paddingBottom="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:paddingTop="2dp"/>
+                        </LinearLayout>
+                        <TextView
+                                android:text="@string/review_count_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/reviewCountDetail"
+                                android:layout_marginStart="3dp"/>
+                    </LinearLayout>
                     <Button
                             android:text="@string/see_offers"
                             android:layout_width="match_parent"
