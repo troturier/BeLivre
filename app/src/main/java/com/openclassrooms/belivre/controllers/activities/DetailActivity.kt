@@ -149,6 +149,13 @@ class DetailActivity : AppCompatActivity() {
             descriptionDetail.text = getString(R.string.no_description)
         }
 
+        //////////////////////////////
+        // RATING
+        //////////////////////////////
+
+        rateSum = book.rating
+        ratingBarDetail.rating = rateSum.toFloat()
+
         reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview? -> updateUserReview(review) })
     }
 
@@ -177,14 +184,6 @@ class DetailActivity : AppCompatActivity() {
 
     private fun configureRecyclerView(reviews:List<BookReview>?){
         if(reviews != null && reviews.isNotEmpty()){
-            rateSum = 0.0
-            for(r in reviews){
-                rateSum += r.rate!!
-            }
-            rateSum = rateSum.div(reviews.size)
-
-            ratingBarDetail.rating = rateSum.toFloat()
-
             adapter = ReviewsRecyclerViewAdapter(reviews)
             reviewsRecyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
