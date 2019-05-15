@@ -168,7 +168,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun updateRateSum(reviews: List<BookReview>?){
-        if (reviews != null) {
+        if (reviews != null && reviews.isNotEmpty()) {
             rateSum = 0.0
             for(r in reviews){
                 rateSum += r.rate!!
@@ -176,6 +176,13 @@ class DetailActivity : AppCompatActivity() {
             rateSum = rateSum.div(reviews.size)
             book.rating = rateSum
             bookVM.updateBookRating(book)
+        }
+        else{
+            book.rating = 0.0
+            bookVM.updateBookRating(book)
+            adapter = ReviewsRecyclerViewAdapter(reviews)
+            reviewsRecyclerView.adapter = adapter
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -234,6 +241,7 @@ class DetailActivity : AppCompatActivity() {
             .setView(dialogView)
             .setPositiveButton("Send", null)
             .setNeutralButton("Cancel") { _, _ -> }
+            .setNegativeButton("Delete", null)
 
         val dialog = alertDialog.create()
 
@@ -256,6 +264,15 @@ class DetailActivity : AppCompatActivity() {
                 reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews: List<BookReview>? -> updateRateSum(reviews)})
 
                 dialog.dismiss()
+            }
+
+            val deleteButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            deleteButton.setOnClickListener{
+                val bookReview = BookReview(book.id + user.id, user.id, book.id)
+                reviewVM.deleteBookReview(bookReview)
+                reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews: List<BookReview>? -> updateRateSum(reviews)})
+                dialog.dismiss()
+                mMenu!!.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_star_review)
             }
         }
         dialog.show()

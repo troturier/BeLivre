@@ -7,7 +7,7 @@ import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.ReviewViewholder
 
-class ReviewsRecyclerViewAdapter(private val reviews :List<BookReview>): RecyclerView.Adapter<ReviewViewholder>(){
+class ReviewsRecyclerViewAdapter(private val reviews :List<BookReview>?): RecyclerView.Adapter<ReviewViewholder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewholder {
         val inflatedView = parent.inflate(R.layout.detail_review_item_row, false)
@@ -15,11 +15,12 @@ class ReviewsRecyclerViewAdapter(private val reviews :List<BookReview>): Recycle
     }
 
     override fun getItemCount(): Int {
-        return reviews.size
+        return if (reviews.isNullOrEmpty()) 0
+        else reviews.size
     }
 
     override fun onBindViewHolder(holder: ReviewViewholder, position: Int) {
-        val itemReview = reviews[position]
+        val itemReview = this.reviews!![position]
         holder.bindReview(itemReview)
     }
 }
