@@ -54,4 +54,10 @@
     <string name="user_profile_picture">User profile picture</string>
     <string name="book_cover">Book cover</string>
     <string name="review_count_placeholder">(0)</string>
+    <string name="what_do_you_want">What do you want to do ?</string>
+    <string name="view_details">View details</string>
+    <string name="delete">Delete</string>
+    <string name="yes">Yes</string>
+    <string name="are_you_sure">Are you sure ?</string>
+    <string name="no">No</string>
 </resources>

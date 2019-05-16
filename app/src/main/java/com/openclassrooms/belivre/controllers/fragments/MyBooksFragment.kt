@@ -61,25 +61,25 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
 
                 val alertDialog = AlertDialog.Builder(this.activity!!)
                     .setTitle(item.title)
-                    .setMessage("What do you want to do ?")
-                    .setPositiveButton("View details"){ dialog, _ ->
+                    .setMessage(getString(R.string.what_do_you_want))
+                    .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                         val intent = DetailActivity.newIntent(activity!!.applicationContext)
                         intent.putExtra("id", item.bookId)
                         intent.putExtra("user", LibraryActivity.user)
                         startActivity(intent)
                         dialog.dismiss()
                     }
-                    .setNeutralButton("Cancel") { _, _ -> }
-                    .setNegativeButton("Delete"){ dialog, _ ->
+                    .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+                    .setNegativeButton(getString(R.string.delete)){ dialog, _ ->
                         val alertDialogC = AlertDialog.Builder(this.activity!!)
-                            .setTitle("Delete")
-                            .setMessage("Are you sure ?")
-                            .setPositiveButton("Yes"){ dialogCS, _ ->
+                            .setTitle(getString(R.string.delete))
+                            .setMessage(getString(R.string.are_you_sure))
+                            .setPositiveButton(getString(R.string.yes)){ dialogCS, _ ->
                                 userBookVM.deleteUserBook(item)
                                 dialogCS.dismiss()
                                 dialog.dismiss()
                             }
-                            .setNegativeButton("No"){ dialogCNS, _ ->
+                            .setNegativeButton(getString(R.string.no)){ dialogCNS, _ ->
                                 dialogCNS.dismiss()
                             }
                         val dialogC = alertDialogC.create()
