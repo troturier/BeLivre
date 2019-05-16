@@ -35,9 +35,7 @@ class UserBookRepository {
     // Delete book from firebase
     fun deleteUserBook(userBook: UserBook): Task<Void> {
         val documentReference =  firestoreDB
-            .collection("users")
-            .document(userBook.userId.toString())
-            .collection("books")
+            .collection("userbooks")
             .document(userBook.id.toString())
 
         return documentReference.delete()

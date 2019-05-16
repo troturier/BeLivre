@@ -3,6 +3,7 @@ package com.openclassrooms.belivre.controllers.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -57,10 +58,37 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         if (userBooks != null) {
             val sortedUserBooks = userBooks.sortedWith(compareBy { it.title })
             adapter = UserBookRecyclerViewAdapter(sortedUserBooks) { item: UserBook, _: Int ->
-                val intent = DetailActivity.newIntent(activity!!.applicationContext)
-                intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
-                startActivity(intent)
+
+                val alertDialog = AlertDialog.Builder(this.activity!!)
+                    .setTitle(item.title)
+                    .setMessage("What do you want to do ?")
+                    .setPositiveButton("View details"){ dialog, _ ->
+                        val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                        intent.putExtra("id", item.bookId)
+                        intent.putExtra("user", LibraryActivity.user)
+                        startActivity(intent)
+                        dialog.dismiss()
+                    }
+                    .setNeutralButton("Cancel") { _, _ -> }
+                    .setNegativeButton("Delete"){ dialog, _ ->
+                        val alertDialogC = AlertDialog.Builder(this.activity!!)
+                            .setTitle("Delete")
+                            .setMessage("Are you sure ?")
+                            .setPositiveButton("Yes"){ dialogCS, _ ->
+                                userBookVM.deleteUserBook(item)
+                                dialogCS.dismiss()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("No"){ dialogCNS, _ ->
+                                dialogCNS.dismiss()
+                            }
+                        val dialogC = alertDialogC.create()
+                        dialogC.show()
+                    }
+
+                val dialog = alertDialog.create()
+
+                dialog.show()
             }
             mybooksRV.adapter = adapter
             adapter.notifyDataSetChanged()
