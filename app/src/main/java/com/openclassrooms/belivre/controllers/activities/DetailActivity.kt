@@ -20,11 +20,12 @@ import com.openclassrooms.belivre.adapters.ReviewsRecyclerViewAdapter
 import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.models.UserWishlistBook
 import com.openclassrooms.belivre.utils.GlideApp
-import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.BookReviewViewModel
 import com.openclassrooms.belivre.viewmodels.BookViewModel
+import com.openclassrooms.belivre.viewmodels.UserWishlistBookViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.add_review_dialog.view.*
 
@@ -36,6 +37,7 @@ class DetailActivity : AppCompatActivity() {
     private var review: BookReview? = null
     private var mMenu:Menu? = null
 
+    private var wishlistBook: UserWishlistBook? = null
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: ReviewsRecyclerViewAdapter
 
@@ -45,6 +47,10 @@ class DetailActivity : AppCompatActivity() {
 
     private val reviewVM: BookReviewViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookReviewViewModel() }).get(BookReviewViewModel::class.java)
+    }
+
+    private val wishlistVM: UserWishlistBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserWishlistBookViewModel() }).get(UserWishlistBookViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,6 +163,16 @@ class DetailActivity : AppCompatActivity() {
         ratingBarDetail.rating = rateSum.toFloat()
 
         reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview? -> updateUserReview(review) })
+
+        wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
+    }
+
+    private fun updateWishlistUI(wishlistBookP : UserWishlistBook?){
+        wishlistBook = wishlistBookP
+        if(wishlistBook != null){
+            mMenu!!.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_add_wishlist_full)
+        }
+        else mMenu!!.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_add_wishlist)
     }
 
     private fun updateUserReview(reviewP: BookReview?){
@@ -287,7 +303,17 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.write_review_button -> createReviewDialog()
-            R.id.add_to_wishlist -> toast("Wishlist")
+            R.id.add_to_wishlist -> {
+                if(wishlistBook == null){
+                    wishlistBook = UserWishlistBook(book.id + user.id, user.id, book.id, book.title, book.authors, book.categories, book.publisher, book.coverUrl)
+                    wishlistVM.addUserWishlistBook(wishlistBook!!)
+                    wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
+                }
+                else{
+                    wishlistVM.deleteUserWishlistBook(wishlistBook!!)
+                    wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
+                }
+            }
             else -> return false
         }
         return true
