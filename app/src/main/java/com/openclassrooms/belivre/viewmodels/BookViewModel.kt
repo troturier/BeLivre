@@ -22,7 +22,7 @@ class BookViewModel: ViewModel() {
 
     // save book to firebase
     fun addBook(book: Book){
-        bookRepository.getBook(book.id!!).addSnapshotListener { value, _ ->
+        bookRepository.getBook(book.id!!).get().addOnSuccessListener { value ->
             if (!value!!.exists()) {
                 bookRepository.addBook(book)
                     .addOnFailureListener {

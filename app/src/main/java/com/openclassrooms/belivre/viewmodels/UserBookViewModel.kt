@@ -22,7 +22,7 @@ class UserBookViewModel : ViewModel() {
 
     // save userbook to firebase
     fun addUserBook(userbook: UserBook){
-        userbookRepository.getUserBook(userbook.id!!).addSnapshotListener { value, e ->
+        userbookRepository.getUserBook(userbook.id!!).get().addOnSuccessListener { value ->
             if (!value!!.exists()) {
                 userbookRepository.addUserBook(userbook)
                     .addOnFailureListener {
