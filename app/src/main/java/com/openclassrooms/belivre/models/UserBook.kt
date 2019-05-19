@@ -5,10 +5,10 @@ data class UserBook (
     var bookId: String? = null,
     var userId: String? = null,
     var title: String? = null,
-    var authors: List<String>? = emptyList(),
-    var categories: List<String>? = emptyList(),
-    var publisher: String? = null,
     var coverUrl: String? = null,
     var lastBorrowerId: String? = null,
+    var lastBorrowerDisplayName: String? = null,
     var lastBorrowedOn: String? = null,
+    var requestSenderId: String? = null,
+    var requestSenderDisplayName: String? = null,
     var status: Int? = null )

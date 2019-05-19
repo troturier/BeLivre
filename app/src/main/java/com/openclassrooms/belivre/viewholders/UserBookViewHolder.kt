@@ -1,7 +1,10 @@
 package com.openclassrooms.belivre.viewholders
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.UserBook
@@ -28,38 +31,43 @@ class UserBookViewHolder (v: View) : RecyclerView.ViewHolder(v), View.OnClickLis
             .error(R.mipmap.error)
             .into(view.coverMyBooks)
         view.titleMyBooks.text = userBook.title
-        if (userBook.publisher != null) {
-            view.publisherMyBooks.text = view.context.getString(R.string.publisher_search, userBook.publisher)
-        } else {
-            view.publisherMyBooks.text = view.context.getString(R.string.no_publisher)
+
+        when(userBook.status){
+            1 -> {
+                view.statusMyBooksValue.text = view.context.getString(R.string.status_1)
+                view.statusMyBooksValue.setTypeface(null, Typeface.BOLD)
+                view.statusMyBooksValue.setTextColor(ContextCompat.getColor(view.context, R.color.colorPrimaryDark))
+            }
+            2 -> {
+                view.statusMyBooksValue.text = view.context.getString(R.string.status_2)
+                view.statusMyBooksValue.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
+                view.alertICMyBooks.visibility = View.VISIBLE
+                view.alertICMyBooks.setColorFilter(ContextCompat.getColor(view.context, R.color.colorAccent))
+            }
+            3 -> {
+                view.statusMyBooksValue.text = view.context.getString(R.string.status_3)
+                view.statusMyBooksValue.setTextColor(Color.DKGRAY)
+            }
+            4 -> {
+                view.statusMyBooksValue.text = view.context.getString(R.string.status_4)
+                view.statusMyBooksValue.setTextColor(Color.RED)
+                view.alertICMyBooks.visibility = View.VISIBLE
+                view.alertICMyBooks.setColorFilter(Color.RED)
+            }
         }
 
-        if (userBook.authors != null) {
-            var authorsSTR = ""
-            for(a in userBook.authors!!){
-                authorsSTR = if (authorsSTR.isEmpty()) {
-                    authorsSTR + a
-                } else {
-                    view.context.getString(R.string.authors, authorsSTR, a)
-                }
-            }
-            view.authorsMyBooks.text = view.context.getString(R.string.authors_search, authorsSTR)
-        } else {
-            view.authorsMyBooks.text = view.context.getString(R.string.no_authors)
+        if(userBook.lastBorrowerId != null){
+            view.lastBorrowerMyBooksValue.text = userBook.lastBorrowerDisplayName
+        }
+        else{
+            view.lastBorrowerMyBooksValue.text = view.context.getString(R.string.not_borrowed_yet)
         }
 
-        if (userBook.categories != null) {
-            var categories = ""
-            for(c in userBook.categories!!){
-                categories = if (categories.isEmpty()) {
-                    categories + c
-                } else {
-                    view.context.getString(R.string.authors, categories, c)
-                }
-            }
-            view.categoriesMyBooks.text = view.context.getString(R.string.categories_search, categories)
-        } else {
-            view.categoriesMyBooks.text = view.context.getString(R.string.no_categories)
+        if(userBook.lastBorrowedOn != null){
+            view.borrowedDateMyBooksValue.text =userBook.lastBorrowedOn
+        }
+        else{
+            view.borrowedDateMyBooksValue.text = view.context.getString(R.string.not_borrowed_yet)
         }
     }
 }

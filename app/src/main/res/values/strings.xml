@@ -60,4 +60,13 @@
     <string name="yes">Yes</string>
     <string name="are_you_sure">Are you sure ?</string>
     <string name="no">No</string>
+    <string name="status_1">Available</string>
+    <string name="status_2">Borrow request pending</string>
+    <string name="status_3">Borrowed</string>
+    <string name="status_4">Waiting for return</string>
+    <string name="not_borrowed_yet">N/A</string>
+    <string name="last_borrower">Last borrower :</string>
+    <string name="borrowed_on">Borrowed on :</string>
+    <string name="status">Status :</string>
+    <string name="alert_icon">Alert icon</string>
 </resources>

@@ -79,7 +79,7 @@ class SearchActivity : AppCompatActivity() {
                                 adapter = BookRecyclerViewAdapter(booksList){
                                         item:Book, _: Int ->
                                     bookVM.addBook(item)
-                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.authors, item.categories, item.publisher, item.coverUrl, null, null, 1)
+                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.coverUrl, null, null, null, null, null, 1)
                                     userBookVM.addUserBook(userBook)
                                     finish()
                                 }
