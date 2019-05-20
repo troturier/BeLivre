@@ -21,6 +21,7 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import kotlinx.android.synthetic.main.borrowed_dialog.view.*
 import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_mybooks.*
 import kotlinx.android.synthetic.main.return_request_dialog.view.*
@@ -67,7 +68,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                 when(item.status){
                     1 -> showAvailableDialog(item)
                     2 -> showRequestDialog(item)
-                    3 -> showAvailableDialog(item)
+                    3 -> showBorrowedDialog(item)
                     4 -> showReturnDialog(item)
                 }
             }
@@ -234,6 +235,32 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             dialogC.show()
         }
 
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showBorrowedDialog(item: UserBook){
+        val layoutInflater = this.layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.borrowed_dialog, null)
+
+        dialogView.borrowedTVDialog.text = getString(R.string.borrowed_dialog_dn, item.lastBorrowerDisplayName)
+
+        dialogView.textView4.text = item.title
+
+        loadProfilePictureIntoImageView(dialogView.borrowedDialogIV, activity!!.application, item.lastBorrowerPicUrl, item.lastBorrowerId!!)
+
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        val dialog = alertDialog.create()
         dialog.show()
     }
 
