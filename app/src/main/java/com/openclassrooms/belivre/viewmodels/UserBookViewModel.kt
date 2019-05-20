@@ -103,6 +103,12 @@ class UserBookViewModel : ViewModel() {
         return exist
     }
 
+    fun updateUserBook(userbook: UserBook){
+        userbookRepository.addUserBook(userbook).addOnFailureListener {
+            Log.e(TAG,"Failed to update UserBook")
+        }
+    }
+
     // delete a userbook from firebase
     fun deleteUserBook(userbook: UserBook){
         userbookRepository.deleteUserBook(userbook).addOnFailureListener {

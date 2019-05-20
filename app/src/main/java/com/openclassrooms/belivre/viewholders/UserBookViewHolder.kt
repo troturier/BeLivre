@@ -37,16 +37,24 @@ class UserBookViewHolder (v: View) : RecyclerView.ViewHolder(v), View.OnClickLis
                 view.statusMyBooksValue.text = view.context.getString(R.string.status_1)
                 view.statusMyBooksValue.setTypeface(null, Typeface.BOLD)
                 view.statusMyBooksValue.setTextColor(ContextCompat.getColor(view.context, R.color.colorPrimaryDark))
+                view.alertICMyBooks.visibility = View.VISIBLE
+                view.alertICMyBooks.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.ic_smiley))
+                view.alertICMyBooks.setColorFilter(ContextCompat.getColor(view.context, R.color.colorPrimaryDark))
             }
             2 -> {
                 view.statusMyBooksValue.text = view.context.getString(R.string.status_2)
                 view.statusMyBooksValue.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
                 view.alertICMyBooks.visibility = View.VISIBLE
+                view.alertICMyBooks.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.ic_info))
                 view.alertICMyBooks.setColorFilter(ContextCompat.getColor(view.context, R.color.colorAccent))
             }
             3 -> {
                 view.statusMyBooksValue.text = view.context.getString(R.string.status_3)
-                view.statusMyBooksValue.setTextColor(Color.DKGRAY)
+                view.statusMyBooksValue.setTextColor(ContextCompat.getColor(view.context, R.color.colorPrimary))
+                view.alertICMyBooks.visibility = View.VISIBLE
+                view.statusMyBooksValue.setTypeface(null, Typeface.ITALIC)
+                view.alertICMyBooks.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.ic_time))
+                view.alertICMyBooks.setColorFilter(ContextCompat.getColor(view.context, R.color.colorPrimary))
             }
             4 -> {
                 view.statusMyBooksValue.text = view.context.getString(R.string.status_4)
