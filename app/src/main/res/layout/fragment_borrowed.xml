@@ -12,7 +12,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+                android:layout_marginEnd="15dp">
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -34,15 +34,16 @@
                     android:layout_height="2dp"
                     android:background="@color/colorPrimary" android:id="@+id/view2BorrowedFragment"
                     android:layout_marginBottom="10dp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/borrrowedRVBorrowedFragment"/>
         </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/borrrowedRVBorrowedFragment"
+                android:paddingBottom="15dp"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+                android:layout_marginEnd="15dp">
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -65,9 +66,10 @@
                     android:layout_height="2dp"
                     android:background="@color/colorPrimary" android:id="@+id/view2"
                     android:layout_marginBottom="10dp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/requestRVBorrowedFragment"/>
         </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/requestRVBorrowedFragment"
+                android:paddingBottom="15dp"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

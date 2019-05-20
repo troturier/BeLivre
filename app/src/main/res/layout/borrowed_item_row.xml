@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                android:id="@+id/coverBorrowed" android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="15dp" app:srcCompat="@drawable/ic_launcher_background"
+                android:contentDescription="@string/book_cover"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+            <TextView
+                    android:text="@string/textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/titleBorrowed"
+                    android:paddingBottom="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:text="@string/owner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/ownerBorrowed"
+                        android:paddingBottom="10dp" android:layout_marginEnd="5dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/ownerBorrowedValue"
+                        android:paddingBottom="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:text="@string/city_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/cityBorrowed"
+                        android:paddingBottom="10dp" android:layout_marginEnd="5dp"
+                        android:paddingTop="2dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/cityBorrowedValue"
+                        android:paddingBottom="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:text="@string/borrowed_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/borrowedDateBorrowed"
+                        android:paddingBottom="10dp" android:layout_marginEnd="5dp"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/borrowedDateBorrowedValue"
+                        android:paddingBottom="10dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" android:id="@+id/view3" android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"/>
+</LinearLayout>
