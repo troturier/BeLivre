@@ -23,7 +23,6 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePicURL : String?, userId: String){
     val circularProgressDrawable = CircularProgressDrawable(context)
     circularProgressDrawable.strokeWidth = 10f
-    circularProgressDrawable.centerRadius = 90f
     circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent))
     circularProgressDrawable.start()
 

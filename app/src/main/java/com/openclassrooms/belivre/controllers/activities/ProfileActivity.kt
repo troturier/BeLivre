@@ -178,9 +178,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         circularProgressDrawable = CircularProgressDrawable(this)
         circularProgressDrawable.strokeWidth = 10f
-        circularProgressDrawable.centerRadius = 90f
         circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
-
+        circularProgressDrawable.start()
     }
 
     //////////////////////////////////////////////
