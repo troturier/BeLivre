@@ -110,6 +110,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         storageReference = FirebaseStorage.getInstance().reference
 
+        ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/${currentUser!!.uid}")
+
         // Setup Places Client
         val apiKey = getString(R.string.belivre_google_map_key)
         if (apiKey.isNullOrEmpty()) Toast.makeText(this, getString(R.string.no_api_key), Toast.LENGTH_LONG).show()
