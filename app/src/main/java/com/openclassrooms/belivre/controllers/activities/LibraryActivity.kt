@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.LibraryPagerAdapter
 import com.openclassrooms.belivre.models.User
@@ -23,6 +24,8 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 class LibraryActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
+
+    private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +72,15 @@ class LibraryActivity : AppCompatActivity() {
                     val intent = MainActivity.newIntent(this)
                     startActivity(intent)
                 }
+                R.id.nav_logout ->{
+                    mAuth!!.signOut()
+                    val intent = MainActivity.newIntent(this)
+                    startActivity(intent)
+                }
             }
             true
         }
+        mAuth = FirebaseAuth.getInstance()
         updateDrawerNavHeader(user, navigationView)
     }
 

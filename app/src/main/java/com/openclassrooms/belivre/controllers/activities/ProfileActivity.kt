@@ -87,6 +87,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var circularProgressDrawable: CircularProgressDrawable
     private lateinit var filePathURI : Uri
 
+    private var mAuth: FirebaseAuth? = null
+
     private lateinit var mDrawerLayout: DrawerLayout
 
     //////////////////////////////////////////////
@@ -103,7 +105,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         supportActionBar?.title = getString(R.string.profile)
 
         // Retrieving FirebaseAuth instance and current user
-        val mAuth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth?.currentUser
 
         storageReference = FirebaseStorage.getInstance().reference
@@ -155,6 +157,11 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     R.id.nav_library -> {
                         val intent = LibraryActivity.newIntent(this)
                         intent.putExtra("user", user)
+                        startActivity(intent)
+                    }
+                    R.id.nav_logout ->{
+                        mAuth!!.signOut()
+                        val intent = MainActivity.newIntent(this)
                         startActivity(intent)
                     }
                 }

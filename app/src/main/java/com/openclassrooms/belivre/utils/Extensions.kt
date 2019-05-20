@@ -12,6 +12,10 @@ import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.belivre.R
 
+
+// 1 - Identifier for Sign-In Activity
+const val rcSignIn = 123
+
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }

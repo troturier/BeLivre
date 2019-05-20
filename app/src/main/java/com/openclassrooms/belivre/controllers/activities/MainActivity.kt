@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
+import com.openclassrooms.belivre.utils.rcSignIn
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserViewModel
@@ -33,8 +34,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
 
     //FOR DATA
-    // 1 - Identifier for Sign-In Activity
-    private val rcSignIn = 123
 
     private var currentUser: FirebaseUser? = null
 
@@ -86,6 +85,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     intent.putExtra("user",user)
                     startActivity(intent)
                 }
+                R.id.nav_logout ->{
+                    mAuth!!.signOut()
+                    startSignInActivity(this)
+                }
             }
             true
         }
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // Check if user is signed in (non-null) and update UI accordingly.
         currentUser = mAuth?.currentUser
 
-        if(currentUser == null) startSignInActivity()
+        if(currentUser == null) startSignInActivity(this)
         else { userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)}) }
     }
 
@@ -131,8 +134,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
-    // 2 - Launch Sign-In Activity
-    private fun startSignInActivity() {
+
+    private fun startSignInActivity(activity: AppCompatActivity) {
         // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
@@ -141,7 +144,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             AuthUI.IdpConfig.TwitterBuilder().build())
 
         // Create and launch sign-in intent
-        startActivityForResult(
+        activity.startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
@@ -161,7 +164,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // Successfully signed in
                 userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)})
             } else {
-                startSignInActivity()
+                startSignInActivity(this)
             }
         }
     }
