@@ -55,7 +55,7 @@
     <string name="book_cover">Book cover</string>
     <string name="review_count_placeholder">(0)</string>
     <string name="what_do_you_want">What do you want to do ?</string>
-    <string name="view_details">View details</string>
+    <string name="view_details">View book details</string>
     <string name="delete">Delete</string>
     <string name="yes">Yes</string>
     <string name="are_you_sure">Are you sure ?</string>
@@ -76,4 +76,8 @@
     <string name="accept">Accept</string>
     <string name="logout">Logout</string>
     <string name="date_pattern">dd/MM/yyyy</string>
+    <string name="are_you_sure_accept_exchange">Are you sure you want to confirm the exchange? (Note that your book will
+        be considered as actually borrowed by this person)
+    </string>
+    <string name="confirm_exchange">Confirm exchange</string>
 </resources>

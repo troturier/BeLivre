@@ -23,6 +23,8 @@ import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_mybooks.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -128,6 +130,37 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
 
         val dialog = alertDialog.create()
+
+        dialogView.acceptButtonRequestDialog.setOnClickListener { v ->
+            val alertDialogC = AlertDialog.Builder(this.activity!!)
+                .setTitle(getString(R.string.confirm_exchange))
+                .setMessage(getString(R.string.are_you_sure_accept_exchange))
+                .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                    item.lastBorrowerId = item.requestSenderId
+                    item.lastBorrowerDisplayName = item.requestSenderDisplayName
+                    item.lastBorrowerPicUrl = item.requestSenderPicUrl
+
+                    val sdf = SimpleDateFormat(getString(R.string.date_pattern), Locale.getDefault())
+                    val currentDate = sdf.format(Date())
+                    item.lastBorrowedOn = currentDate
+
+                    item.status = 3
+
+                    item.requestSenderDisplayName = null
+                    item.requestSenderId = null
+                    item.requestSenderPicUrl = null
+
+                    userBookVM.updateUserBook(item)
+
+                    dialogCS.dismiss()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                    dialogCNS.dismiss()
+                }
+            val dialogC = alertDialogC.create()
+            dialogC.show()
+        }
 
         dialog.show()
     }
