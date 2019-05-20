@@ -44,6 +44,7 @@ import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.utils.GlideApp
+import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.CityViewModel
@@ -196,32 +197,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             ref = storageReference.child("images/profilePictures/${this.user!!.id.toString()}")
 
             if(rc != 123) {
-                when {
-                    user!!.profilePicURL.equals("images/profilePictures/${user!!.id.toString()}") -> GlideApp.with(this)
-                        .load(ref)
-                        .signature(ObjectKey(System.currentTimeMillis().toString()))
-                        .placeholder(circularProgressDrawable)
-                        .fitCenter()
-                        .circleCrop()
-                        .into(drawer_imageview_profile)
-                    user!!.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
-                        .load(user!!.profilePicURL)
-                        .signature(ObjectKey(System.currentTimeMillis().toString()))
-                        .placeholder(circularProgressDrawable)
-                        .fitCenter()
-                        .circleCrop()
-                        .into(drawer_imageview_profile)
-                    else -> {
-                        user!!.profilePicURL = ""
-                        GlideApp.with(this)
-                            .load(R.drawable.ic_avatar)
-                            .signature(ObjectKey(System.currentTimeMillis().toString()))
-                            .placeholder(circularProgressDrawable)
-                            .fitCenter()
-                            .circleCrop()
-                            .into(drawer_imageview_profile)
-                    }
-                }
+
+                loadProfilePictureIntoImageView(drawer_imageview_profile, this, user!!.profilePicURL, user!!.id.toString())
 
                 drawer_username.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
                 drawer_email.text = user!!.email
@@ -234,32 +211,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
         displayName.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
 
-        when {
-            user!!.profilePicURL.equals("images/profilePictures/${this.user!!.id.toString()}") -> GlideApp.with(this)
-                .load(ref)
-                .signature(ObjectKey(System.currentTimeMillis().toString()))
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .circleCrop()
-                .into(profilePic)
-            user!!.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
-                .load(user!!.profilePicURL)
-                .signature(ObjectKey(System.currentTimeMillis().toString()))
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .circleCrop()
-                .into(profilePic)
-            else -> {
-                user!!.profilePicURL = ""
-                GlideApp.with(this)
-                    .load(R.drawable.ic_avatar)
-                    .signature(ObjectKey(System.currentTimeMillis().toString()))
-                    .placeholder(circularProgressDrawable)
-                    .fitCenter()
-                    .circleCrop()
-                    .into(profilePic)
-            }
-        }
+        loadProfilePictureIntoImageView(profilePic, this, user!!.profilePicURL, user!!.id.toString())
     }
 
     //appbar - toolbar button click

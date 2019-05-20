@@ -8,23 +8,19 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.signature.ObjectKey
 import com.crashlytics.android.Crashlytics
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.User
-import com.openclassrooms.belivre.utils.GlideApp
+import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserViewModel
@@ -132,41 +128,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
             drawer_username.text = getString(R.string.profile_display_name, user2.firstname, user2.lastname?.substring(0,1))
             drawer_email.text = user2.email
-
-            val circularProgressDrawable = CircularProgressDrawable(this)
-            circularProgressDrawable.strokeWidth = 10f
-            circularProgressDrawable.centerRadius = 90f
-            circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
-            circularProgressDrawable.start()
-
-            val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/${user2.id.toString()}")
-
-            when {
-                user2.profilePicURL.equals("images/profilePictures/${user2.id.toString()}") -> GlideApp.with(this)
-                    .load(ref)
-                    .signature(ObjectKey(System.currentTimeMillis().toString()))
-                    .placeholder(circularProgressDrawable)
-                    .fitCenter()
-                    .circleCrop()
-                    .into(drawer_imageview_profile)
-                user2.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
-                    .load(user2.profilePicURL)
-                    .signature(ObjectKey(System.currentTimeMillis().toString()))
-                    .placeholder(circularProgressDrawable)
-                    .fitCenter()
-                    .circleCrop()
-                    .into(drawer_imageview_profile)
-                else -> {
-                    user2.profilePicURL = ""
-                    GlideApp.with(this)
-                        .load(R.drawable.ic_avatar)
-                        .signature(ObjectKey(System.currentTimeMillis().toString()))
-                        .placeholder(circularProgressDrawable)
-                        .fitCenter()
-                        .circleCrop()
-                        .into(drawer_imageview_profile)
-                }
-            }
+            loadProfilePictureIntoImageView(drawer_imageview_profile, this, user2.profilePicURL, user2.id.toString())
         }
     }
 

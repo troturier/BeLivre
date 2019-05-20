@@ -18,6 +18,7 @@ import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.controllers.activities.SearchActivity
 import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
@@ -112,6 +113,8 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         val dialogView = layoutInflater.inflate(R.layout.exchange_request_dialog, null)
 
         dialogView.requestSenderTVDialog.text = getString(R.string.request_dialog_dn, item.requestSenderDisplayName)
+
+        loadProfilePictureIntoImageView(dialogView.requestDialogIV, activity!!.application, item.requestSenderPicUrl, item.requestSenderId!!)
 
         val alertDialog = AlertDialog.Builder(this.activity!!)
             .setView(dialogView)
