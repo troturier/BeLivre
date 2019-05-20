@@ -33,16 +33,10 @@ fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePi
             .fitCenter()
             .circleCrop()
             .into(iv)
-        profilePicURL!!.isNotEmpty() -> GlideApp.with(context)
-            .load(profilePicURL)
-            .signature(ObjectKey(System.currentTimeMillis().toString()))
-            .placeholder(circularProgressDrawable)
-            .fitCenter()
-            .circleCrop()
-            .into(iv)
-        else -> {
+        profilePicURL != null ->
+            if(profilePicURL.isNotEmpty() ) {
             GlideApp.with(context)
-                .load(R.drawable.ic_avatar)
+                .load(profilePicURL)
                 .signature(ObjectKey(System.currentTimeMillis().toString()))
                 .placeholder(circularProgressDrawable)
                 .fitCenter()

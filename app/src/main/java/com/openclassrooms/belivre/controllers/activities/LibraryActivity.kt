@@ -11,13 +11,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.LibraryPagerAdapter
 import com.openclassrooms.belivre.models.User
-import com.openclassrooms.belivre.utils.GlideApp
+import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.toast
 import kotlinx.android.synthetic.main.activity_library.*
 import kotlinx.android.synthetic.main.nav_header.view.*
@@ -87,34 +85,8 @@ class LibraryActivity : AppCompatActivity() {
         circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
         circularProgressDrawable.start()
 
-        val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/${user.id.toString()}")
+        loadProfilePictureIntoImageView(nav_view.getHeaderView(0).drawer_imageview_profile, this, user.profilePicURL, user.id.toString())
 
-        when {
-            user.profilePicURL.equals("images/profilePictures/${user.id.toString()}") -> GlideApp.with(this)
-                .load(ref)
-                .signature(ObjectKey(System.currentTimeMillis().toString()))
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .circleCrop()
-                .into(nav_view.getHeaderView(0).drawer_imageview_profile)
-            user.profilePicURL!!.isNotEmpty() -> GlideApp.with(this)
-                .load(user.profilePicURL)
-                .signature(ObjectKey(System.currentTimeMillis().toString()))
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .circleCrop()
-                .into(nav_view.getHeaderView(0).drawer_imageview_profile)
-            else -> {
-                user.profilePicURL = ""
-                GlideApp.with(this)
-                    .load(R.drawable.ic_avatar)
-                    .signature(ObjectKey(System.currentTimeMillis().toString()))
-                    .placeholder(circularProgressDrawable)
-                    .fitCenter()
-                    .circleCrop()
-                    .into(nav_view.getHeaderView(0).drawer_imageview_profile)
-            }
-        }
     }
 
     //appbar - toolbar button click

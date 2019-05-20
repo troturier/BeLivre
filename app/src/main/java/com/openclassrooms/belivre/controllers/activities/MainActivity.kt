@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private fun checkUserProfileComplete(user2: User?){
         if(user2 == null
-            || user2.profilePicURL!!.isEmpty()
             || user2.cityId!!.isEmpty()
             || user2.firstname!!.isEmpty()
             || user2.lastname!!.isEmpty()){

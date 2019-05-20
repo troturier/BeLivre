@@ -173,7 +173,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         circularProgressDrawable.strokeWidth = 10f
         circularProgressDrawable.centerRadius = 90f
         circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
-        circularProgressDrawable.start()
+
     }
 
     //////////////////////////////////////////////
@@ -188,7 +188,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private fun updateUI(userRetrived: User?){
         if(userRetrived == null){
             names = currentUser?.displayName?.split(" ")
-            user = User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", currentUser?.photoUrl.toString())
+            user = if(currentUser?.photoUrl != null) User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", currentUser?.photoUrl.toString())
+            else User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", null)
         }
         else{
             user = userRetrived
@@ -377,7 +378,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
             val defaultButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
             defaultButton.setOnClickListener {
-                if(currentUser!!.photoUrl.toString().isNotEmpty()) {
+                if(currentUser!!.photoUrl.toString().isNotEmpty() && currentUser!!.photoUrl != null) {
                     user!!.profilePicURL = currentUser!!.photoUrl.toString()
                     GlideApp.with(this)
                         .load(user!!.profilePicURL)
@@ -389,14 +390,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                     dialog.dismiss()
                 }
                 else {
-                    user!!.profilePicURL = ""
-                    GlideApp.with(this)
-                        .load(R.drawable.ic_avatar)
-                        .fitCenter()
-                        .placeholder(circularProgressDrawable)
-                        .signature(ObjectKey(System.currentTimeMillis().toString()))
-                        .circleCrop()
-                        .into(profilePic)
+                    user!!.profilePicURL = null
+                    profilePic.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_avatar))
+                    dialog.dismiss()
                 }
             }
         }
