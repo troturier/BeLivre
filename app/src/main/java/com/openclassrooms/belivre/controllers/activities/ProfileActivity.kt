@@ -194,8 +194,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private fun updateUI(userRetrived: User?){
         if(userRetrived == null){
             names = currentUser?.displayName?.split(" ")
-            user = if(currentUser?.photoUrl != null) User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", currentUser?.photoUrl.toString())
-            else User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", null)
+            user = if(currentUser?.photoUrl != null) User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "", null, currentUser?.photoUrl.toString())
+            else User(currentUser?.uid,names?.get(1), names?.get(0), currentUser?.email, "")
         }
         else{
             user = userRetrived
@@ -269,6 +269,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             user?.lastname = lastNameEt.text?.toString()
             user?.firstname = firstNameEt.text?.toString()
             user?.cityId = city?.id
+            user?.cityName = city?.name
             cityVM.addCity(city!!)
             userVM.addUser(user!!)
             finish()

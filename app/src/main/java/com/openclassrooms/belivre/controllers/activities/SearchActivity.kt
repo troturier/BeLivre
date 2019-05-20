@@ -12,6 +12,7 @@ import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BookRecyclerViewAdapter
 import com.openclassrooms.belivre.api.getBooks
 import com.openclassrooms.belivre.models.Book
+import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.models.apiModels.BookResults
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
@@ -27,6 +28,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: BookRecyclerViewAdapter
     private var currentUser: FirebaseUser? = null
+    private lateinit var user: User
     private var mAuth: FirebaseAuth? = null
 
     private val bookVM: BookViewModel by lazy {
@@ -42,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         setSupportActionBar(toolbar_search)
 
+        user = intent.getSerializableExtra("user") as User
         mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth?.currentUser
 
@@ -76,7 +79,18 @@ class SearchActivity : AppCompatActivity() {
                                 adapter = BookRecyclerViewAdapter(booksList){
                                         item:Book, _: Int ->
                                     bookVM.addBook(item)
-                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.coverUrl, null, null, null, null, null,null, null, 1)
+                                    val userBook = UserBook(
+                                        user.id + item.id,
+                                        item.id,
+                                        user.id,
+                                        getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1)),
+                                        user.profilePicURL,
+                                        user.cityId,
+                                        user.cityName,
+                                        item.title,
+                                        item.coverUrl,
+                                        1
+                                        )
                                     userBookVM.addUserBook(userBook)
                                     finish()
                                 }

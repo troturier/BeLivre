@@ -7,5 +7,6 @@ data class User (
     var lastname: String? = null,
     var firstname: String? = null,
     var email: String? = null,
-    var cityId: String? = "",
+    var cityId: String? = null,
+    var cityName: String? = null,
     var profilePicURL : String? = null  ) : Serializable

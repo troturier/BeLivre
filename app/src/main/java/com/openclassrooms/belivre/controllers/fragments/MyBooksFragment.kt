@@ -273,6 +273,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         val id = item.itemId
         if (id == R.id.plus_icon) {
             val intent = Intent(activity, SearchActivity::class.java)
+            intent.putExtra("user", LibraryActivity.user)
             this.startActivity(intent)
             return true
         }
