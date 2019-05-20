@@ -16,7 +16,7 @@
                 android:theme="@style/ToolbarTheme"
                 android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar_detail"
                 app:titleTextColor="@android:color/white" app:title="Detail"/>
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:background="@color/backgroundFilter"
             android:layout_height="match_parent">
@@ -139,5 +139,5 @@
                         android:layout_height="match_parent" android:id="@+id/reviewsRecyclerView"/>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
