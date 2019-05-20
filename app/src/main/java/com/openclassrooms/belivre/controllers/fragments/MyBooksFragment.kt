@@ -23,6 +23,7 @@ import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_mybooks.*
+import kotlinx.android.synthetic.main.return_request_dialog.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,7 +68,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                     1 -> showAvailableDialog(item)
                     2 -> showRequestDialog(item)
                     3 -> showAvailableDialog(item)
-                    4 -> showAvailableDialog(item)
+                    4 -> showReturnDialog(item)
                 }
             }
             mybooksRV.adapter = adapter
@@ -166,6 +167,54 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             val alertDialogC = AlertDialog.Builder(this.activity!!)
                 .setTitle(getString(R.string.refuse_exchange))
                 .setMessage(getString(R.string.are_you_sure_refuse_exchange))
+                .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                    item.status = 1
+
+                    item.requestSenderDisplayName = null
+                    item.requestSenderId = null
+                    item.requestSenderPicUrl = null
+
+                    userBookVM.updateUserBook(item)
+
+                    dialogCS.dismiss()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                    dialogCNS.dismiss()
+                }
+            val dialogC = alertDialogC.create()
+            dialogC.show()
+        }
+
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showReturnDialog(item: UserBook){
+        val layoutInflater = this.layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.return_request_dialog, null)
+
+        dialogView.requestSenderTVReturnDialog.text = getString(R.string.return_dialog_dn, item.requestSenderDisplayName)
+
+        loadProfilePictureIntoImageView(dialogView.requestReturnDialogIV, activity!!.application, item.requestSenderPicUrl, item.requestSenderId!!)
+
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        val dialog = alertDialog.create()
+
+        dialogView.confirmButtonRequestDialog.setOnClickListener {
+            val alertDialogC = AlertDialog.Builder(this.activity!!)
+                .setTitle(getString(R.string.confirm_return))
+                .setMessage(getString(R.string.are_you_sure_accept_return))
                 .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
                     item.status = 1
 

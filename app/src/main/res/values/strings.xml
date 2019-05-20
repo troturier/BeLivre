@@ -70,6 +70,8 @@
     <string name="status">Status :</string>
     <string name="alert_icon">Alert icon</string>
     <string name="request_dialog_dn">%1$s would like to borrow this book</string>
+    <string name="borrowed_dialog_dn">%1$s is currently borrowing your book</string>
+    <string name="return_dialog_dn">%1$s would like to return your book</string>
     <string name="exchange_request_pending">Exchange request pending</string>
     <string name="send_message">Send Message</string>
     <string name="refuse">Refuse</string>
@@ -82,4 +84,8 @@
     <string name="confirm_exchange">Confirm exchange</string>
     <string name="are_you_sure_refuse_exchange">Are you sure you want to refuse the exchange request? (Note that your book will then be considered \"Available\" again)</string>
     <string name="refuse_exchange">Refuse exchange</string>
+    <string name="confirm_return">Confirm return</string>
+    <string name="book_return_request_pending">Book return request pending</string>
+    <string name="are_you_sure_accept_return">Are you sure you want to confirm that your book has been returned to you? (Note that your book will then be considered \"Available\" again)
+    </string>
 </resources>
