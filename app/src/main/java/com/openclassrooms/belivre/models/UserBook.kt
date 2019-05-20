@@ -8,7 +8,9 @@ data class UserBook (
     var coverUrl: String? = null,
     var lastBorrowerId: String? = null,
     var lastBorrowerDisplayName: String? = null,
+    var lastBorrowerPicUrl: String? = null,
     var lastBorrowedOn: String? = null,
     var requestSenderId: String? = null,
     var requestSenderDisplayName: String? = null,
+    var requestSenderPicUrl: String? = null,
     var status: Int? = null )

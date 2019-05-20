@@ -1,7 +1,5 @@
 package com.openclassrooms.belivre.controllers.activities
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
@@ -19,7 +17,6 @@ import com.openclassrooms.belivre.models.apiModels.BookResults
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.BookViewModel
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
-
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,7 +76,7 @@ class SearchActivity : AppCompatActivity() {
                                 adapter = BookRecyclerViewAdapter(booksList){
                                         item:Book, _: Int ->
                                     bookVM.addBook(item)
-                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.coverUrl, null, null, null, null, null, 1)
+                                    val userBook = UserBook(currentUser!!.uid + item.id, item.id, currentUser!!.uid, item.title, item.coverUrl, null, null, null, null, null,null, null, 1)
                                     userBookVM.addUserBook(userBook)
                                     finish()
                                 }
@@ -96,9 +93,5 @@ class SearchActivity : AppCompatActivity() {
         searchView.requestFocus()
     }
 
-    companion object{
-        fun newIntent(context: Context): Intent {
-            return Intent(context, SearchActivity::class.java)
-        }
-    }
+    companion object
 }
