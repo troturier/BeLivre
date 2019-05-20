@@ -70,21 +70,24 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                         dialog.dismiss()
                     }
                     .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
-                    .setNegativeButton(getString(R.string.delete)){ dialog, _ ->
+
+                if (item.status == 1) {
+                    alertDialog.setNegativeButton(getString(R.string.delete)){ dialog, _ ->
                         val alertDialogC = AlertDialog.Builder(this.activity!!)
                             .setTitle(getString(R.string.delete))
                             .setMessage(getString(R.string.are_you_sure))
-                            .setPositiveButton(getString(R.string.yes)){ dialogCS, _ ->
+                            .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
                                 userBookVM.deleteUserBook(item)
                                 dialogCS.dismiss()
                                 dialog.dismiss()
                             }
-                            .setNegativeButton(getString(R.string.no)){ dialogCNS, _ ->
+                            .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
                                 dialogCNS.dismiss()
                             }
                         val dialogC = alertDialogC.create()
                         dialogC.show()
                     }
+                }
 
                 val dialog = alertDialog.create()
 
