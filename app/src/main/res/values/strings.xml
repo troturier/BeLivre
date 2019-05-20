@@ -72,7 +72,7 @@
     <string name="request_dialog_dn">%1$s would like to borrow this book</string>
     <string name="exchange_request_pending">Exchange request pending</string>
     <string name="send_message">Send Message</string>
-    <string name="deny">Deny</string>
+    <string name="refuse">Refuse</string>
     <string name="accept">Accept</string>
     <string name="logout">Logout</string>
     <string name="date_pattern">dd/MM/yyyy</string>
@@ -80,4 +80,6 @@
         be considered as actually borrowed by this person)
     </string>
     <string name="confirm_exchange">Confirm exchange</string>
+    <string name="are_you_sure_refuse_exchange">Are you sure you want to refuse the exchange request? (Note that your book will then be considered \"Available\" again)</string>
+    <string name="refuse_exchange">Refuse exchange</string>
 </resources>

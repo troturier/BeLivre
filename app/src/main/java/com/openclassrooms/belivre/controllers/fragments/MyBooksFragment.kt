@@ -131,7 +131,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
 
         val dialog = alertDialog.create()
 
-        dialogView.acceptButtonRequestDialog.setOnClickListener { v ->
+        dialogView.acceptButtonRequestDialog.setOnClickListener {
             val alertDialogC = AlertDialog.Builder(this.activity!!)
                 .setTitle(getString(R.string.confirm_exchange))
                 .setMessage(getString(R.string.are_you_sure_accept_exchange))
@@ -145,6 +145,29 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                     item.lastBorrowedOn = currentDate
 
                     item.status = 3
+
+                    item.requestSenderDisplayName = null
+                    item.requestSenderId = null
+                    item.requestSenderPicUrl = null
+
+                    userBookVM.updateUserBook(item)
+
+                    dialogCS.dismiss()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                    dialogCNS.dismiss()
+                }
+            val dialogC = alertDialogC.create()
+            dialogC.show()
+        }
+
+        dialogView.refuseExchangeButtonRequestDialog.setOnClickListener {
+            val alertDialogC = AlertDialog.Builder(this.activity!!)
+                .setTitle(getString(R.string.refuse_exchange))
+                .setMessage(getString(R.string.are_you_sure_refuse_exchange))
+                .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                    item.status = 1
 
                     item.requestSenderDisplayName = null
                     item.requestSenderId = null

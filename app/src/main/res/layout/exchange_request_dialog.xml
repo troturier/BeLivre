@@ -48,9 +48,9 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
             android:layout_marginTop="16dp" android:paddingBottom="5dp" android:id="@+id/llrd">
         <Button
-                android:text="@string/deny"
+                android:text="@string/refuse"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content" android:id="@+id/denyExchangeButtonRequestDialog"
+                android:layout_height="wrap_content" android:id="@+id/refuseExchangeButtonRequestDialog"
                 android:background="@drawable/rounded_button_red" android:textColor="@android:color/white"
                 android:paddingStart="8dp" android:layout_weight="50"
                 android:paddingEnd="8dp" android:drawableStart="@drawable/ic_deny"/>
