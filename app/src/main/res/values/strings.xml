@@ -69,4 +69,9 @@
     <string name="borrowed_on">Borrowed on :</string>
     <string name="status">Status :</string>
     <string name="alert_icon">Alert icon</string>
+    <string name="request_dialog_dn">%1$s would like to borrow this book</string>
+    <string name="exchange_request_pending">Exchange request pending</string>
+    <string name="send_message">Send Message</string>
+    <string name="deny">Deny</string>
+    <string name="accept">Accept</string>
 </resources>

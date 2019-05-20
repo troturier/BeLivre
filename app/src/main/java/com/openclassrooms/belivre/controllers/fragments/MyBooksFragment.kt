@@ -1,5 +1,6 @@
 package com.openclassrooms.belivre.controllers.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -19,6 +20,7 @@ import com.openclassrooms.belivre.controllers.activities.SearchActivity
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_mybooks.*
 
 
@@ -58,44 +60,73 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         if (userBooks != null) {
             val sortedUserBooks = userBooks.sortedWith(compareBy { it.title })
             adapter = UserBookRecyclerViewAdapter(sortedUserBooks) { item: UserBook, _: Int ->
-
-                val alertDialog = AlertDialog.Builder(this.activity!!)
-                    .setTitle(item.title)
-                    .setMessage(getString(R.string.what_do_you_want))
-                    .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
-                        val intent = DetailActivity.newIntent(activity!!.applicationContext)
-                        intent.putExtra("id", item.bookId)
-                        intent.putExtra("user", LibraryActivity.user)
-                        startActivity(intent)
-                        dialog.dismiss()
-                    }
-                    .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
-
-                if (item.status == 1) {
-                    alertDialog.setNegativeButton(getString(R.string.delete)){ dialog, _ ->
-                        val alertDialogC = AlertDialog.Builder(this.activity!!)
-                            .setTitle(getString(R.string.delete))
-                            .setMessage(getString(R.string.are_you_sure))
-                            .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
-                                userBookVM.deleteUserBook(item)
-                                dialogCS.dismiss()
-                                dialog.dismiss()
-                            }
-                            .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
-                                dialogCNS.dismiss()
-                            }
-                        val dialogC = alertDialogC.create()
-                        dialogC.show()
-                    }
+                when(item.status){
+                    1 -> showAvailableDialog(item)
+                    2 -> showRequestDialog(item)
+                    3 -> showAvailableDialog(item)
+                    4 -> showAvailableDialog(item)
                 }
-
-                val dialog = alertDialog.create()
-
-                dialog.show()
             }
             mybooksRV.adapter = adapter
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun showAvailableDialog(item: UserBook) {
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setTitle(item.title)
+            .setMessage(getString(R.string.what_do_you_want))
+            .setPositiveButton(getString(R.string.view_details)) { dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        alertDialog.setNegativeButton(getString(R.string.delete)) { dialog, _ ->
+                val alertDialogC = AlertDialog.Builder(this.activity!!)
+                    .setTitle(getString(R.string.delete))
+                    .setMessage(getString(R.string.are_you_sure))
+                    .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                        userBookVM.deleteUserBook(item)
+                        dialogCS.dismiss()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                        dialogCNS.dismiss()
+                    }
+                val dialogC = alertDialogC.create()
+                dialogC.show()
+        }
+
+        val dialog = alertDialog.create()
+
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showRequestDialog(item : UserBook){
+        val layoutInflater = this.layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.exchange_request_dialog, null)
+
+        dialogView.requestSenderTVDialog.text = getString(R.string.request_dialog_dn, item.requestSenderDisplayName)
+
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        val dialog = alertDialog.create()
+
+        dialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

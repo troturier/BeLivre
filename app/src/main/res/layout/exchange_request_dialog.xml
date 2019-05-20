@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/exchange_request_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView2" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+            android:id="@+id/requestDialogIV"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:srcCompat="@drawable/ic_avatar" android:contentDescription="@string/profile_picture"
+            android:layout_marginTop="8dp"/>
+    <TextView
+            android:text="@string/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/requestSenderTVDialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintTop_toBottomOf="@id/requestDialogIV"
+            android:layout_marginTop="16dp" android:textColor="@android:color/black"/>
+    <Button
+            android:text="@string/send_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/messageButtonRequestDialog"
+            app:layout_constraintTop_toBottomOf="@+id/requestSenderTVDialog" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" android:layout_marginTop="16dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button_accent"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/messageButtonRequestDialog"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp">
+        <Button
+                android:text="@string/deny"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/denyExchangeButtonRequestDialog"
+                android:background="@drawable/rounded_button_red" android:textColor="@android:color/white"
+                android:paddingStart="8dp" android:layout_weight="50"
+                android:paddingEnd="8dp" android:drawableStart="@drawable/ic_deny"/>
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="5"/>
+        <Button
+                android:text="@string/accept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/acceptButtonRequestDialog"
+                android:background="@drawable/rounded_button_green" android:textColor="@android:color/white"
+                android:paddingStart="8dp" android:layout_weight="50"
+                android:drawableEnd="@drawable/ic_accept" android:paddingEnd="8dp"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
