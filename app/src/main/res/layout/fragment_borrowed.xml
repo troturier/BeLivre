@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.openclassrooms.belivre.controllers.fragments.BorrowedFragment">
-
-    <TextView
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                       xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent"
+                                       tools:context="com.openclassrooms.belivre.controllers.fragments.BorrowedFragment">
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Borrowed tab"
-            android:textSize="40sp"/>
-
-</FrameLayout>
+            android:layout_height="wrap_content" android:layout_marginTop="10dp">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <ImageView
+                        app:srcCompat="@drawable/ic_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/imageView"
+                        android:tint="@color/colorPrimary" android:contentDescription="@string/borrowed_icon"/>
+                <TextView
+                        android:text="@string/borrowed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/borrowedTitleBorrowedFragment"
+                        android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
+                        android:layout_marginBottom="2dp" android:layout_marginStart="5dp"/>
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimary" android:id="@+id/view2BorrowedFragment"
+                    android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/borrrowedRVBorrowedFragment"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp" android:layout_marginBottom="15dp">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <ImageView
+                        app:srcCompat="@drawable/ic_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/imageView2"
+                        android:tint="@color/colorPrimary" android:contentDescription="@string/request_icon"
+                />
+                <TextView
+                        android:text="@string/requests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/requestTitleBorrowedFragment"
+                        android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
+                        android:layout_marginBottom="2dp" android:layout_marginStart="5dp"/>
+            </LinearLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorPrimary" android:id="@+id/view2"
+                    android:layout_marginBottom="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/requestRVBorrowedFragment"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

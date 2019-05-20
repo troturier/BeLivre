@@ -88,4 +88,8 @@
     <string name="book_return_request_pending">Book return request pending</string>
     <string name="are_you_sure_accept_return">Are you sure you want to confirm that your book has been returned to you? (Note that your book will then be considered \"Available\" again)
     </string>
+    <string name="borrowed_icon">Borrowed Icon</string>
+    <string name="request_icon">Request icon</string>
+    <string name="requests">Requests</string>
+    <string name="borrowed">Borrowed</string>
 </resources>
