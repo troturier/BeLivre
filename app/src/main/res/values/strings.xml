@@ -71,6 +71,7 @@
     <string name="alert_icon">Alert icon</string>
     <string name="request_dialog_dn">%1$s would like to borrow this book</string>
     <string name="borrowed_dialog_dn">%1$s is currently borrowing your book</string>
+    <string name="borrowed_dialog_dn_borrowed_tab">%1$s is the owner of this book</string>
     <string name="return_dialog_dn">%1$s would like to return your book</string>
     <string name="exchange_request_pending">Exchange request pending</string>
     <string name="send_message">Send Message</string>
@@ -94,4 +95,7 @@
     <string name="borrowed">Borrowed</string>
     <string name="owner">Owner :</string>
     <string name="city_title">City :</string>
+    <string name="return_request_message">Are you sure you want to send the owner a return request?
+    </string>
+    <string name="return_request_title">Send a return request</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.openclassrooms.belivre.controllers.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,11 +13,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BorrowedRecyclerViewAdapter
 import com.openclassrooms.belivre.adapters.RequestRecyclerViewAdapter
+import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import kotlinx.android.synthetic.main.borrowed_dialog_borrowed_tab.view.*
 import kotlinx.android.synthetic.main.fragment_borrowed.*
 
 /**
@@ -75,7 +80,7 @@ class BorrowedFragment : Fragment() {
 
             val sortedUserBooksBorrowed = userBooksBorrowed!!.sortedWith(compareBy { it.title })
             adapterBorrowed = BorrowedRecyclerViewAdapter(sortedUserBooksBorrowed) { item: UserBook, _: Int ->
-                activity!!.toast("BORROWED")
+                showBorrowedDialog(item)
             }
             borrowedRVBorrowedFragment.adapter = adapterBorrowed
             adapterBorrowed.notifyDataSetChanged()
@@ -88,5 +93,49 @@ class BorrowedFragment : Fragment() {
             requestRVBorrowedFragment.adapter = adapterRequest
             adapterRequest.notifyDataSetChanged()
         }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showBorrowedDialog(item: UserBook){
+        val layoutInflater = this.layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.borrowed_dialog_borrowed_tab, null)
+
+        dialogView.borrowedTVDialogBorrowedTab.text = getString(R.string.borrowed_dialog_dn_borrowed_tab, item.userDisplayName)
+
+        dialogView.textView5.text = item.title
+
+        loadProfilePictureIntoImageView(dialogView.borrowedDialogIVBorrowedTab, activity!!.application, item.userPicUrl, item.userId!!)
+
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        val dialog = alertDialog.create()
+
+        dialogView.returnRequestButtonBorrowedDialogBorrowedTab.setOnClickListener {
+            val alertDialogC = AlertDialog.Builder(this.activity!!)
+                .setTitle(getString(R.string.return_request_title))
+                .setMessage(getString(R.string.return_request_message))
+                .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                    item.status = 4
+                    userBookVM.updateUserBook(item)
+                    dialogCS.dismiss()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                    dialogCNS.dismiss()
+                }
+            val dialogC = alertDialogC.create()
+            dialogC.show()
+        }
+
+        dialog.show()
     }
 }
