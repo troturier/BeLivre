@@ -17,11 +17,11 @@ import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
-import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.borrowed_dialog_borrowed_tab.view.*
 import kotlinx.android.synthetic.main.fragment_borrowed.*
+import kotlinx.android.synthetic.main.request_dialog_borrowed_tab.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -88,7 +88,7 @@ class BorrowedFragment : Fragment() {
 
             val sortedUserBooksRequest = userBooksRequest!!.sortedWith(compareBy { it.title })
             adapterRequest = RequestRecyclerViewAdapter(sortedUserBooksRequest) { item: UserBook, _: Int ->
-                activity!!.toast("Request")
+                showRequestDialog(item)
             }
             requestRVBorrowedFragment.adapter = adapterRequest
             adapterRequest.notifyDataSetChanged()
@@ -125,6 +125,52 @@ class BorrowedFragment : Fragment() {
                 .setMessage(getString(R.string.return_request_message))
                 .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
                     item.status = 4
+                    userBookVM.updateUserBook(item)
+                    dialogCS.dismiss()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialogCNS, _ ->
+                    dialogCNS.dismiss()
+                }
+            val dialogC = alertDialogC.create()
+            dialogC.show()
+        }
+
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showRequestDialog(item: UserBook){
+        val layoutInflater = this.layoutInflater
+        val dialogView = layoutInflater.inflate(R.layout.request_dialog_borrowed_tab, null)
+
+        dialogView.requestTVDialogBorrowedTab.text = getString(R.string.borrowed_dialog_dn_borrowed_tab, item.userDisplayName)
+
+        if(item.status == 2) dialogView.textView6.text = getString(R.string.exchange_requesst)
+        else dialogView.textView6.text = getString(R.string.return_request)
+
+        loadProfilePictureIntoImageView(dialogView.requestDialogIVBorrowedTab, activity!!.application, item.userPicUrl, item.userId!!)
+
+        val alertDialog = AlertDialog.Builder(this.activity!!)
+            .setView(dialogView)
+            .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.bookId)
+                intent.putExtra("user", LibraryActivity.user)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        val dialog = alertDialog.create()
+
+        dialogView.cancelRequestButtonDialogBorrowedTab.setOnClickListener {
+            val alertDialogC = AlertDialog.Builder(this.activity!!)
+                .setTitle("Cancel your request")
+                .setMessage("Are you sure you want to cancel your request?")
+                .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
+                    if(item.status == 2) item.status = 1
+                    else item.status = 3
                     userBookVM.updateUserBook(item)
                     dialogCS.dismiss()
                     dialog.dismiss()

@@ -98,4 +98,8 @@
     <string name="return_request_message">Are you sure you want to send the owner a return request?
     </string>
     <string name="return_request_title">Send a return request</string>
+    <string name="send_return_request">Send return request</string>
+    <string name="cancel_request">Cancel request</string>
+    <string name="exchange_requesst">Exchange request pending</string>
+    <string name="return_request">Return request pending</string>
 </resources>
