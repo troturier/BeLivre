@@ -92,6 +92,10 @@ class BorrowedFragment : Fragment() {
             }
             requestRVBorrowedFragment.adapter = adapterRequest
             adapterRequest.notifyDataSetChanged()
+
+            borrowedCountBorrowedFragment.text = getString(R.string.reviewCount, sortedUserBooksBorrowed.size.toString())
+            requestCountBorrowedFragment.text = getString(R.string.reviewCount, sortedUserBooksRequest
+                .size.toString())
         }
     }
 

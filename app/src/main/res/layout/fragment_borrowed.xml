@@ -28,6 +28,13 @@
                         android:layout_height="match_parent" android:id="@+id/borrowedTitleBorrowedFragment"
                         android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
                         android:layout_marginBottom="2dp" android:layout_marginStart="5dp"/>
+                <TextView
+                        android:text="@string/borrowed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/borrowedCountBorrowedFragment"
+                        android:textColor="@color/colorPrimary" android:textSize="20sp"
+                        android:layout_marginBottom="2dp" android:layout_marginStart="5dp"
+                        android:gravity="center_vertical"/>
             </LinearLayout>
             <View
                     android:layout_width="match_parent"
@@ -60,6 +67,13 @@
                         android:layout_height="match_parent" android:id="@+id/requestTitleBorrowedFragment"
                         android:textColor="@color/colorPrimary" android:textStyle="bold" android:textSize="24sp"
                         android:layout_marginBottom="2dp" android:layout_marginStart="5dp"/>
+                <TextView
+                        android:text="@string/requests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/requestCountBorrowedFragment"
+                        android:textColor="@color/colorPrimary" android:textSize="20sp"
+                        android:layout_marginBottom="2dp" android:layout_marginStart="5dp"
+                        android:gravity="center_vertical"/>
             </LinearLayout>
             <View
                     android:layout_width="match_parent"
