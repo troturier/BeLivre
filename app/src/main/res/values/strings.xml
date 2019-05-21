@@ -83,11 +83,14 @@
         be considered as actually borrowed by this person)
     </string>
     <string name="confirm_exchange">Confirm exchange</string>
-    <string name="are_you_sure_refuse_exchange">Are you sure you want to refuse the exchange request? (Note that your book will then be considered \"Available\" again)</string>
+    <string name="are_you_sure_refuse_exchange">Are you sure you want to refuse the exchange request? (Note that your
+        book will then be considered \"Available\" again)
+    </string>
     <string name="refuse_exchange">Refuse exchange</string>
     <string name="confirm_return">Confirm return</string>
     <string name="book_return_request_pending">Book return request pending</string>
-    <string name="are_you_sure_accept_return">Are you sure you want to confirm that your book has been returned to you? (Note that your book will then be considered \"Available\" again)
+    <string name="are_you_sure_accept_return">Are you sure you want to confirm that your book has been returned to you?
+        (Note that your book will then be considered \"Available\" again)
     </string>
     <string name="borrowed_icon">Borrowed Icon</string>
     <string name="request_icon">Request icon</string>
@@ -109,4 +112,5 @@
     </string>
     <string name="show_less">Show less</string>
     <string name="show_more">Show more</string>
+    <string name="offers_count">See offers (%1$s)</string>
 </resources>

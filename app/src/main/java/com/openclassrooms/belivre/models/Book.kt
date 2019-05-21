@@ -1,5 +1,7 @@
 package com.openclassrooms.belivre.models
 
+import java.io.Serializable
+
 data class Book (
     var id: String? = null,
     var title: String? = null,
@@ -10,4 +12,4 @@ data class Book (
     var subtitle: String? = null,
     var coverUrl: String? = null,
     var description : String? = null,
-    var rating: Double = 0.0)
+    var rating: Double = 0.0) : Serializable

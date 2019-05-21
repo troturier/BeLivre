@@ -18,15 +18,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.ReviewsRecyclerViewAdapter
-import com.openclassrooms.belivre.models.Book
-import com.openclassrooms.belivre.models.BookReview
-import com.openclassrooms.belivre.models.User
-import com.openclassrooms.belivre.models.UserWishlistBook
+import com.openclassrooms.belivre.models.*
 import com.openclassrooms.belivre.utils.GlideApp
-import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
-import com.openclassrooms.belivre.viewmodels.BookReviewViewModel
-import com.openclassrooms.belivre.viewmodels.BookViewModel
-import com.openclassrooms.belivre.viewmodels.UserWishlistBookViewModel
+import com.openclassrooms.belivre.utils.toast
+import com.openclassrooms.belivre.viewmodels.*
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.add_review_dialog.view.*
 
@@ -54,6 +49,10 @@ class DetailActivity : AppCompatActivity() {
         ViewModelProviders.of(this, BaseViewModelFactory { UserWishlistBookViewModel() }).get(UserWishlistBookViewModel::class.java)
     }
 
+    private val userBookVM: UserBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -72,6 +71,8 @@ class DetailActivity : AppCompatActivity() {
     
     private fun updateUI(bookP: Book){
         book = bookP
+
+        userBookVM.getAvailableUserBooksByBookId(book.id.toString()).observe(this, Observer { userBooks:List<UserBook>? -> configureOffersButton(userBooks) })
 
         //////////////////////////////
         // COVER
@@ -174,6 +175,30 @@ class DetailActivity : AppCompatActivity() {
         reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview? -> updateUserReview(review) })
 
         wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
+    }
+
+    private fun configureOffersButton(userbooks:List<UserBook>?){
+        val sortedList:MutableList<UserBook>? = mutableListOf()
+        if (userbooks != null) {
+            for(ub in userbooks) {
+                if (ub.userId.toString() != user.id.toString()) {
+                    sortedList!!.add(ub)
+                }
+            }
+            offersDetail.setOnClickListener {
+                if (sortedList!!.size > 0) {
+                    val intent = OffersActivity.newIntent(this)
+                    intent.putExtra("book", book)
+                    intent.putExtra("user", user)
+                    startActivity(intent)
+                } else {
+                    toast("Sorry, there is no offer for this book at the moment")
+                }
+            }
+            offersDetail.text = getString(R.string.offers_count, sortedList!!.size.toString())
+        } else {
+            offersDetail.text = getString(R.string.offers_count, sortedList!!.size.toString())
+        }
     }
 
     private fun updateWishlistUI(wishlistBookP : UserWishlistBook?){

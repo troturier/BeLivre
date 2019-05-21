@@ -60,6 +60,7 @@ class UserBookViewModel : ViewModel() {
     fun getAvailableUserBooksByBookId(bookId: String): LiveData<List<UserBook>> {
         userbookRepository.getUserBooks()
             .whereEqualTo("bookId", bookId)
+            .whereEqualTo("status", 1)
             .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
@@ -70,9 +71,7 @@ class UserBookViewModel : ViewModel() {
             val userbookList : MutableList<UserBook> = mutableListOf()
             for (doc in value!!) {
                 val userbook = doc.toObject(UserBook::class.java)
-                if (userbook.status == 1) {
-                    userbookList.add(userbook)
-                }
+                userbookList.add(userbook)
             }
             userbooks.value = userbookList
         })
