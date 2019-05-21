@@ -113,4 +113,7 @@
     <string name="show_less">Show less</string>
     <string name="show_more">Show more</string>
     <string name="offers_count">See offers (%1$s)</string>
+    <string name="send_request">Send request</string>
+    <string name="are_you_sure_request_borrow">Are you sure you want to send the book owner a borrowing request?</string>
+    <string name="send_a_borrowing_request">Send a borrowing request</string>
 </resources>
