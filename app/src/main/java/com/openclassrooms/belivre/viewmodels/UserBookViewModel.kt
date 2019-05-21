@@ -60,7 +60,6 @@ class UserBookViewModel : ViewModel() {
     fun getAvailableUserBooksByBookId(bookId: String): LiveData<List<UserBook>> {
         userbookRepository.getUserBooks()
             .whereEqualTo("bookId", bookId)
-            .whereEqualTo("status", 1)
             .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
@@ -71,29 +70,9 @@ class UserBookViewModel : ViewModel() {
             val userbookList : MutableList<UserBook> = mutableListOf()
             for (doc in value!!) {
                 val userbook = doc.toObject(UserBook::class.java)
-                userbookList.add(userbook)
-            }
-            userbooks.value = userbookList
-        })
-
-        return userbooks
-    }
-
-    fun getBorrowedUserBooksByLastBorrowerId(lastBorrowerId: String): LiveData<List<UserBook>> {
-        userbookRepository.getUserBooks()
-            .whereEqualTo("lastBorrowerId", lastBorrowerId)
-            .whereEqualTo("status", 3)
-            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                userbooks.value = null
-                return@EventListener
-            }
-
-            val userbookList : MutableList<UserBook> = mutableListOf()
-            for (doc in value!!) {
-                val userbook = doc.toObject(UserBook::class.java)
-                userbookList.add(userbook)
+                if (userbook.status == 1) {
+                    userbookList.add(userbook)
+                }
             }
             userbooks.value = userbookList
         })
@@ -104,7 +83,7 @@ class UserBookViewModel : ViewModel() {
     fun getRequestUserBooksByRequestSenderId(requestSenderId: String): LiveData<List<UserBook>> {
         userbookRepository.getUserBooks()
             .whereEqualTo("requestSenderId", requestSenderId)
-            .whereGreaterThanOrEqualTo("status", 2)
+            .whereGreaterThan("status", 1)
             .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)

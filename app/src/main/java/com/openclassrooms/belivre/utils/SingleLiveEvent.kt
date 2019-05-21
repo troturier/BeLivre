@@ -2,8 +2,9 @@ package com.openclassrooms.belivre.utils
 
 
 import androidx.annotation.MainThread
-import androidx.annotation.Nullable
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -20,24 +21,44 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class SingleLiveEvent<T> : MutableLiveData<T>() {
 
-    private val mPending = AtomicBoolean(false)
+    private val pending = AtomicBoolean(false)
+    private val observers = mutableSetOf<Observer<T>>()
+
+    private val internalObserver = Observer<T> { t ->
+        if (pending.compareAndSet(true, false)) {
+            observers.forEach { observer ->
+                observer.onChanged(t)
+            }
+        }
+    }
 
     @MainThread
-    override fun setValue(@Nullable t: T?) {
-        mPending.set(true)
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        observers.add(observer as Observer<T>)
+
+        if (!hasObservers()) {
+            super.observe(owner, internalObserver)
+        }
+    }
+
+    override fun removeObservers(owner: LifecycleOwner) {
+        observers.clear()
+        super.removeObservers(owner)
+    }
+
+    override fun removeObserver(observer: Observer<in T>) {
+        observers.remove(observer)
+        super.removeObserver(observer)
+    }
+
+    @MainThread
+    override fun setValue(t: T?) {
+        pending.set(true)
         super.setValue(t)
     }
 
-    /**
-     * Used for cases where T is Void, to make calls cleaner.
-     */
     @MainThread
     fun call() {
-        setValue(null)
-    }
-
-    companion object {
-
-        private val TAG = "SingleLiveEvent"
+        value = null
     }
 }

@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BorrowedRecyclerViewAdapter
-import com.openclassrooms.belivre.adapters.UserBookRecyclerViewAdapter
+import com.openclassrooms.belivre.adapters.RequestRecyclerViewAdapter
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.toast
@@ -26,7 +26,7 @@ class BorrowedFragment : Fragment() {
     private lateinit var linearLayoutManagerBorrowed: LinearLayoutManager
     private lateinit var linearLayoutManagerRequest: LinearLayoutManager
     private lateinit var adapterBorrowed: BorrowedRecyclerViewAdapter
-    private lateinit var adapterRequest: UserBookRecyclerViewAdapter
+    private lateinit var adapterRequest: RequestRecyclerViewAdapter
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
@@ -51,22 +51,42 @@ class BorrowedFragment : Fragment() {
         currentUser = mAuth?.currentUser
 
         linearLayoutManagerBorrowed = LinearLayoutManager(activity)
-        borrrowedRVBorrowedFragment.layoutManager = linearLayoutManagerBorrowed
+        borrowedRVBorrowedFragment.layoutManager = linearLayoutManagerBorrowed
 
         linearLayoutManagerRequest = LinearLayoutManager(activity)
         requestRVBorrowedFragment.layoutManager = linearLayoutManagerRequest
 
-        userBookVM.getBorrowedUserBooksByLastBorrowerId(LibraryActivity.user.id.toString()).observe(this, Observer { userBooks:List<UserBook>? -> configureBorrowedRecyclerView(userBooks) })
+        userBookVM.getRequestUserBooksByRequestSenderId(LibraryActivity.user.id.toString()).observe(this, Observer{
+                userBooks:List<UserBook>? -> configureBorrowedRecyclerView(userBooks)})
     }
 
     private fun configureBorrowedRecyclerView(userBooks:List<UserBook>?){
         if (userBooks != null) {
-            val sortedUserBooks = userBooks.sortedWith(compareBy { it.title })
-            adapterBorrowed = BorrowedRecyclerViewAdapter(sortedUserBooks) { item: UserBook, _: Int ->
-                activity!!.toast(item.title.toString())
+            val userBooksBorrowed:MutableList<UserBook>? = mutableListOf()
+            val userBooksRequest:MutableList<UserBook>? = mutableListOf()
+
+            for(ub in userBooks){
+                when(ub.status){
+                    3 -> userBooksBorrowed!!.add(ub)
+                    2 -> if(ub.requestSenderId == LibraryActivity.user.id)userBooksRequest!!.add(ub)
+                    4 -> userBooksRequest!!.add(ub)
+                }
             }
-            borrrowedRVBorrowedFragment.adapter = adapterBorrowed
+
+            val sortedUserBooksBorrowed = userBooksBorrowed!!.sortedWith(compareBy { it.title })
+            adapterBorrowed = BorrowedRecyclerViewAdapter(sortedUserBooksBorrowed) { item: UserBook, _: Int ->
+                activity!!.toast("BORROWED")
+            }
+            borrowedRVBorrowedFragment.adapter = adapterBorrowed
             adapterBorrowed.notifyDataSetChanged()
+
+
+            val sortedUserBooksRequest = userBooksRequest!!.sortedWith(compareBy { it.title })
+            adapterRequest = RequestRecyclerViewAdapter(sortedUserBooksRequest) { item: UserBook, _: Int ->
+                activity!!.toast("Request")
+            }
+            requestRVBorrowedFragment.adapter = adapterRequest
+            adapterRequest.notifyDataSetChanged()
         }
     }
 }

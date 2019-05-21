@@ -37,7 +37,7 @@
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/borrrowedRVBorrowedFragment"
+                android:layout_height="match_parent" android:id="@+id/borrowedRVBorrowedFragment"
                 android:paddingBottom="15dp"/>
         <LinearLayout
                 android:orientation="vertical"

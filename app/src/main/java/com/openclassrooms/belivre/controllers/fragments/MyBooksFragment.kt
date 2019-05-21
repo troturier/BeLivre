@@ -148,10 +148,6 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
 
                     item.status = 3
 
-                    item.requestSenderDisplayName = null
-                    item.requestSenderId = null
-                    item.requestSenderPicUrl = null
-
                     userBookVM.updateUserBook(item)
 
                     dialogCS.dismiss()
@@ -170,10 +166,6 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                 .setMessage(getString(R.string.are_you_sure_refuse_exchange))
                 .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
                     item.status = 1
-
-                    item.requestSenderDisplayName = null
-                    item.requestSenderId = null
-                    item.requestSenderPicUrl = null
 
                     userBookVM.updateUserBook(item)
 
@@ -218,10 +210,6 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                 .setMessage(getString(R.string.are_you_sure_accept_return))
                 .setPositiveButton(getString(R.string.yes)) { dialogCS, _ ->
                     item.status = 1
-
-                    item.requestSenderDisplayName = null
-                    item.requestSenderId = null
-                    item.requestSenderPicUrl = null
 
                     userBookVM.updateUserBook(item)
 
