@@ -16,7 +16,7 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent" android:id="@+id/borrowedLL">
                 <ImageView
                         app:srcCompat="@drawable/ic_time"
                         android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent" android:id="@+id/requestLL">
                 <ImageView
                         app:srcCompat="@drawable/ic_info"
                         android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="@color/colorPrimary" android:id="@+id/view2"
+                    android:background="@color/colorPrimary" android:id="@+id/view2RequestBorrowedFragment"
                     android:layout_marginBottom="10dp"/>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView

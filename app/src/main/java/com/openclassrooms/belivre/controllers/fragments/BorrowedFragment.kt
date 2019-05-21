@@ -94,8 +94,29 @@ class BorrowedFragment : Fragment() {
             adapterRequest.notifyDataSetChanged()
 
             borrowedCountBorrowedFragment.text = getString(R.string.reviewCount, sortedUserBooksBorrowed.size.toString())
-            requestCountBorrowedFragment.text = getString(R.string.reviewCount, sortedUserBooksRequest
-                .size.toString())
+            requestCountBorrowedFragment.text = getString(R.string.reviewCount, sortedUserBooksRequest.size.toString())
+
+            if(sortedUserBooksBorrowed.isEmpty()) {
+                borrowedLL.visibility = View.GONE
+                view2BorrowedFragment.visibility = View.GONE
+                borrowedRVBorrowedFragment.visibility = View.GONE
+            }
+            else{
+                borrowedRVBorrowedFragment.visibility = View.VISIBLE
+                borrowedLL.visibility = View.VISIBLE
+                view2BorrowedFragment.visibility = View.VISIBLE
+            }
+
+            if(sortedUserBooksRequest.isEmpty()) {
+                requestRVBorrowedFragment.visibility = View.GONE
+                requestLL.visibility = View.GONE
+                view2RequestBorrowedFragment.visibility = View.GONE
+            }
+            else{
+                requestRVBorrowedFragment.visibility = View.VISIBLE
+                requestLL.visibility = View.VISIBLE
+                view2RequestBorrowedFragment.visibility = View.VISIBLE
+            }
         }
     }
 

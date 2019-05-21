@@ -132,7 +132,7 @@
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/colorPrimary" android:id="@+id/view2"
+                        android:background="@color/colorPrimary" android:id="@+id/view2RequestBorrowedFragment"
                         android:layout_marginBottom="10dp"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
