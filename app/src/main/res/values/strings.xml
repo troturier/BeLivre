@@ -105,6 +105,8 @@
     <string name="icon">Icon</string>
     <string name="you_have_not_added_any_books_to_your_library_yet">You have not added any books to your library yet!
     </string>
-    <string name="you_don_t_have_borrowed_any_book_at_the_moment">You don\'t have borrowed any book at the moment !
+    <string name="you_don_t_have_borrowed_any_book_at_the_moment">You are not borrowing any book at the moment !
     </string>
+    <string name="show_less">Show less</string>
+    <string name="show_more">Show more</string>
 </resources>

@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -150,6 +151,14 @@ class DetailActivity : AppCompatActivity() {
 
         if(book.description != null){
             descriptionDetail.text = book.description
+            if(descriptionDetail.lineCount <= 10){
+                expandButtonLLDetail.visibility = View.GONE
+            }
+            expandButtonDetail.setOnClickListener {
+                if(descriptionDetail.isExpanded) expandButtonDetail.text = getString(R.string.show_more)
+                else expandButtonDetail.text = getString(R.string.show_less)
+                descriptionDetail.toggle()
+            }
         }
         else{
             descriptionDetail.text = getString(R.string.no_description)
@@ -204,6 +213,8 @@ class DetailActivity : AppCompatActivity() {
 
     private fun configureRecyclerView(reviews:List<BookReview>?){
         if(reviews != null && reviews.isNotEmpty()){
+            reviewLLDetail.visibility = View.VISIBLE
+
             adapter = ReviewsRecyclerViewAdapter(reviews)
             reviewsRecyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
@@ -212,6 +223,7 @@ class DetailActivity : AppCompatActivity() {
         }
         else{
             reviewCountDetail.text = getString(R.string.reviewCount, "0")
+            reviewLLDetail.visibility = View.GONE
         }
     }
 
