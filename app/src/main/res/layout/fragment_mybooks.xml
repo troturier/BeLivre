@@ -2,10 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
               tools:context="com.openclassrooms.belivre.controllers.fragments.MyBooksFragment"
               android:orientation="vertical">
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:id="@+id/mybooksRV"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/phMyBooksTab"
+            android:layout_marginTop="150dp">
+        <ImageView
+                app:srcCompat="@drawable/ic_library"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:tint="@color/colorPrimary" android:contentDescription="@string/icon"/>
+        <TextView
+                android:text="@string/you_have_not_added_any_books_to_your_library_yet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="18sp" android:textStyle="bold" android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp" android:layout_marginTop="10dp"/>
+    </LinearLayout>
 </LinearLayout>

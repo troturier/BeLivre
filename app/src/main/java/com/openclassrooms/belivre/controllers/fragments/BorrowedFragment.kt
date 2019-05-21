@@ -117,6 +117,13 @@ class BorrowedFragment : Fragment() {
                 requestLL.visibility = View.VISIBLE
                 view2RequestBorrowedFragment.visibility = View.VISIBLE
             }
+
+            if(sortedUserBooksBorrowed.isEmpty() && sortedUserBooksRequest.isEmpty()){
+                phBorrowedTab.visibility = View.VISIBLE
+            }
+            else{
+                phBorrowedTab.visibility = View.GONE
+            }
         }
     }
 

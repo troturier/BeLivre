@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                                       xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                       xmlns:tools="http://schemas.android.com/tools"
                                        android:layout_width="match_parent"
                                        android:layout_height="match_parent"
-                                       tools:context="com.openclassrooms.belivre.controllers.fragments.BorrowedFragment">
+                                       tools:context="com.openclassrooms.belivre.controllers.fragments.BorrowedFragment"
+                                       android:fillViewport="false" android:clipToPadding="true">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginTop="10dp">
+            android:fillViewport="false"
+            android:layout_height="match_parent" android:layout_marginTop="10dp"
+            android:id="@+id/mainLLBorrowedTab">
         <LinearLayout
+                android:id="@+id/borrowedLL"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp">
+                android:layout_marginEnd="15dp" tools:visibility="gone">
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/borrowedLL">
+                    android:layout_height="match_parent">
                 <ImageView
                         app:srcCompat="@drawable/ic_time"
                         android:layout_width="wrap_content"
@@ -45,16 +50,17 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:id="@+id/borrowedRVBorrowedFragment"
-                android:paddingBottom="15dp"/>
+                android:paddingBottom="15dp" tools:visibility="gone"/>
         <LinearLayout
+                android:id="@+id/requestLL"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp">
+                android:layout_marginEnd="15dp" tools:visibility="gone">
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/requestLL">
+                    android:layout_height="match_parent">
                 <ImageView
                         app:srcCompat="@drawable/ic_info"
                         android:layout_width="wrap_content"
@@ -84,6 +90,25 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:id="@+id/requestRVBorrowedFragment"
-                android:paddingBottom="15dp"/>
+                android:paddingBottom="15dp" tools:visibility="gone">
+        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/phBorrowedTab"
+                android:layout_marginTop="150dp">
+            <ImageView
+                    app:srcCompat="@drawable/ic_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp" android:id="@+id/imageView3"
+                    android:tint="@color/colorPrimary" android:contentDescription="@string/icon"/>
+            <TextView
+                    android:text="@string/you_don_t_have_borrowed_any_book_at_the_moment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/tvPlaceHolderBorrowedTab"
+                    android:textAlignment="center"
+                    android:textSize="18sp" android:textStyle="bold" android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp" android:layout_marginTop="10dp"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

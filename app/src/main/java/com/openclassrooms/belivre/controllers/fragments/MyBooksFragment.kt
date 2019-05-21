@@ -74,6 +74,15 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             }
             mybooksRV.adapter = adapter
             adapter.notifyDataSetChanged()
+
+            if(sortedUserBooks.isEmpty()){
+                mybooksRV.visibility = View.GONE
+                phMyBooksTab.visibility = View.VISIBLE
+            }
+            else{
+                mybooksRV.visibility = View.VISIBLE
+                phMyBooksTab.visibility = View.GONE
+            }
         }
     }
 
