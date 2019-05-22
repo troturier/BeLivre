@@ -20,10 +20,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.rcSignIn
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.nav_header.*
@@ -37,10 +40,16 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private var currentUser: FirebaseUser? = null
 
+    private lateinit var toolbar: Toolbar
+
     private lateinit var user : User
 
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
+    }
+
+    private val userBookVM: UserBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
 
     private var mAuth: FirebaseAuth? = null
@@ -54,7 +63,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // Action Bar --------------------------------------------------
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val actionbar: ActionBar? = supportActionBar
@@ -64,6 +73,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
+
+
 
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -131,6 +142,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             drawer_username.text = getString(R.string.profile_display_name, user2.firstname, user2.lastname?.substring(0,1))
             drawer_email.text = user2.email
             loadProfilePictureIntoImageView(drawer_imageview_profile, this, user2.profilePicURL, user2.id.toString())
+
+            userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this)})
         }
     }
 

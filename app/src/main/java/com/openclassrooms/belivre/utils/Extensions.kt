@@ -1,16 +1,21 @@
 package com.openclassrooms.belivre.utils
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.belivre.R
+import com.openclassrooms.belivre.R.id
+import com.openclassrooms.belivre.models.UserBook
 
 
 // 1 - Identifier for Sign-In Activity
@@ -23,7 +28,7 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePicURL : String?, userId: String){
     val circularProgressDrawable = CircularProgressDrawable(context)
     circularProgressDrawable.strokeWidth = 10f
-    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent))
+    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, com.openclassrooms.belivre.R.color.colorAccent))
     circularProgressDrawable.start()
 
     val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/$userId")
@@ -46,5 +51,31 @@ fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePi
                 .circleCrop()
                 .into(iv)
         }
+    }
+}
+
+fun setBadgeCount(context: Context, res: Int, badgeCount: Int): Drawable {
+    val icon = ContextCompat.getDrawable(context, com.openclassrooms.belivre.R.drawable.ic_badge_drawable) as LayerDrawable?
+    val mainIcon = ContextCompat.getDrawable(context, res)
+    val badge = BadgeDrawable(context)
+    badge.setCount(badgeCount.toString())
+    icon!!.mutate()
+    icon.setDrawableByLayerId(id.ic_badge, badge)
+    icon.setDrawableByLayerId(id.ic_main_icon, mainIcon)
+
+    return icon
+}
+
+fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, appCompatActivity: AppCompatActivity){
+    var alertCount = 0
+    if(userBooks != null){
+        for (ub in userBooks){
+            if(ub.status == 2 || ub.status == 4){
+                alertCount++
+            }
+        }
+        appCompatActivity.supportActionBar!!.setHomeAsUpIndicator(setBadgeCount(context, R.drawable.ic_menu, alertCount))
+        appCompatActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        appCompatActivity.supportActionBar!!.setDisplayShowCustomEnabled(true)
     }
 }

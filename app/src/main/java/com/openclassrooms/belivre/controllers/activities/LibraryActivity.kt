@@ -10,20 +10,30 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.LibraryPagerAdapter
 import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.toast
+import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.activity_library.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 
 class LibraryActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
+
+    private val userBookVM: UserBookViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
+    }
 
     private var mAuth: FirebaseAuth? = null
 
@@ -82,6 +92,8 @@ class LibraryActivity : AppCompatActivity() {
         }
         mAuth = FirebaseAuth.getInstance()
         updateDrawerNavHeader(user, navigationView)
+
+        userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this) })
     }
 
     private fun updateDrawerNavHeader(user: User, nav_view :NavigationView){
