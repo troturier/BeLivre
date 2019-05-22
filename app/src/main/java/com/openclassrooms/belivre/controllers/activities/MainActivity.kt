@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
     private lateinit var toolbar: Toolbar
 
-    private lateinit var user : User
+    lateinit var user : User
 
     private lateinit var libraryCount : TextView
 
