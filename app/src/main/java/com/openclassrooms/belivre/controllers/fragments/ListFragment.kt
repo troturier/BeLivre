@@ -11,8 +11,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.ListRecyclerViewAdapter
+import com.openclassrooms.belivre.controllers.activities.DetailActivity
+import com.openclassrooms.belivre.controllers.activities.LibraryActivity
+import com.openclassrooms.belivre.controllers.activities.MainActivity
 import com.openclassrooms.belivre.models.Book
-import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.BookViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -44,7 +46,10 @@ class ListFragment : Fragment() , LifecycleOwner{
         if(books != null){
             val sortedBooks = books.sortedWith(compareBy{ it.title })
             adapter = ListRecyclerViewAdapter(sortedBooks){ item: Book, _: Int ->
-                activity!!.toast(item.title.toString())
+                val intent = DetailActivity.newIntent(activity!!.applicationContext)
+                intent.putExtra("id", item.id)
+                intent.putExtra("user", MainActivity.user)
+                startActivity(intent)
             }
             listRV_main.adapter = adapter
             adapter.notifyDataSetChanged()

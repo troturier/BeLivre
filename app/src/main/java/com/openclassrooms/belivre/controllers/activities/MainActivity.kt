@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
     private lateinit var toolbar: Toolbar
 
-    lateinit var user : User
-
     private lateinit var libraryCount : TextView
 
     private val userVM: UserViewModel by lazy {
@@ -238,5 +236,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         fun newIntent(context: Context): Intent {
             return Intent(context, com.openclassrooms.belivre.controllers.activities.MainActivity::class.java)
         }
+        lateinit var user : User
     }
 }
