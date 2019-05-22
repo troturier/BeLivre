@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -94,7 +93,7 @@ class LibraryActivity : AppCompatActivity() {
             }
             true
         }
-        libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
+        libraryCount = navigationView.menu.findItem(R.id.nav_library).actionView as TextView
 
         mAuth = FirebaseAuth.getInstance()
         updateDrawerNavHeader(user, navigationView)

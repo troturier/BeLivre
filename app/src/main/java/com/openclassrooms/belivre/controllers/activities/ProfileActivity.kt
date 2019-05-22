@@ -181,7 +181,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 true
             }
 
-            libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
+            libraryCount = navigationView.menu.findItem(R.id.nav_library).actionView as TextView
         }
         // FAB action setup
         validateProfileFormFAB.setOnClickListener { validateForm() }

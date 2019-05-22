@@ -10,7 +10,6 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             true
         }
 
-        libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
+        libraryCount = navigationView.menu.findItem(R.id.nav_library).actionView as TextView
 
         // -------------------------------------------------------------
 
