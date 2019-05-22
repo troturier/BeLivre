@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -44,6 +46,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var user : User
 
+    private lateinit var libraryCount : TextView
+
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
@@ -74,8 +78,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
 
-
-
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             // set item as selected to persist highlight
@@ -103,6 +105,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             }
             true
         }
+
+        libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
 
         // -------------------------------------------------------------
 
@@ -143,7 +147,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             drawer_email.text = user2.email
             loadProfilePictureIntoImageView(drawer_imageview_profile, this, user2.profilePicURL, user2.id.toString())
 
-            userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this)})
+
+            userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount)})
         }
     }
 

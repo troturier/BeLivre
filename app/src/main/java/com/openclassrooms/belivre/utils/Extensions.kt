@@ -1,12 +1,15 @@
 package com.openclassrooms.belivre.utils
 
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -28,7 +31,7 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePicURL : String?, userId: String){
     val circularProgressDrawable = CircularProgressDrawable(context)
     circularProgressDrawable.strokeWidth = 10f
-    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, com.openclassrooms.belivre.R.color.colorAccent))
+    circularProgressDrawable.setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent))
     circularProgressDrawable.start()
 
     val ref = FirebaseStorage.getInstance().reference.child("images/profilePictures/$userId")
@@ -55,7 +58,7 @@ fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePi
 }
 
 fun setBadgeCount(context: Context, res: Int, badgeCount: Int): Drawable {
-    val icon = ContextCompat.getDrawable(context, com.openclassrooms.belivre.R.drawable.ic_badge_drawable) as LayerDrawable?
+    val icon = ContextCompat.getDrawable(context, R.drawable.ic_badge_drawable) as LayerDrawable?
     val mainIcon = ContextCompat.getDrawable(context, res)
     val badge = BadgeDrawable(context)
     badge.setCount(badgeCount.toString())
@@ -66,7 +69,7 @@ fun setBadgeCount(context: Context, res: Int, badgeCount: Int): Drawable {
     return icon
 }
 
-fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, appCompatActivity: AppCompatActivity){
+fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, appCompatActivity: AppCompatActivity, libraryCount: TextView){
     var alertCount = 0
     if(userBooks != null){
         for (ub in userBooks){
@@ -77,5 +80,13 @@ fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, app
         appCompatActivity.supportActionBar!!.setHomeAsUpIndicator(setBadgeCount(context, R.drawable.ic_menu, alertCount))
         appCompatActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         appCompatActivity.supportActionBar!!.setDisplayShowCustomEnabled(true)
+
+        libraryCount.gravity = Gravity.CENTER_VERTICAL
+        libraryCount.setTypeface(null, Typeface.BOLD)
+        libraryCount.setTextColor(ContextCompat.getColor(context, R.color.colorAccent))
+        if (alertCount > 0) {
+            libraryCount.text = alertCount.toString()
+
+        }
     }
 }

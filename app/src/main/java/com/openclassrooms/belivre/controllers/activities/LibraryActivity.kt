@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -30,6 +32,8 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 class LibraryActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
+
+    private lateinit var libraryCount : TextView
 
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
@@ -90,10 +94,12 @@ class LibraryActivity : AppCompatActivity() {
             }
             true
         }
+        libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
+
         mAuth = FirebaseAuth.getInstance()
         updateDrawerNavHeader(user, navigationView)
 
-        userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this) })
+        userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount) })
     }
 
     private fun updateDrawerNavHeader(user: User, nav_view :NavigationView){

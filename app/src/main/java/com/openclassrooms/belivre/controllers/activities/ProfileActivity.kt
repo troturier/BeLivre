@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -89,6 +91,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var storageReference: StorageReference
     private lateinit var ref: StorageReference
+
+    private lateinit var libraryCount : TextView
 
     private lateinit var addMediaIV:ImageView
     private lateinit var circularProgressDrawable: CircularProgressDrawable
@@ -176,6 +180,8 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 }
                 true
             }
+
+            libraryCount = MenuItemCompat.getActionView(navigationView.menu.findItem(R.id.nav_library)) as TextView
         }
         // FAB action setup
         validateProfileFormFAB.setOnClickListener { validateForm() }
@@ -220,7 +226,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 drawer_email.text = user!!.email
             }
 
-            userBookVM.getUserBooksByUserId(user!!.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this) })
+            userBookVM.getUserBooksByUserId(user!!.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount) })
         }
 
         lastNameEt.setText(user!!.lastname)

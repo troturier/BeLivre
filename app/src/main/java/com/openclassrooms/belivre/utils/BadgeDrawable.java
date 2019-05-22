@@ -2,15 +2,11 @@ package com.openclassrooms.belivre.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
+import androidx.core.content.ContextCompat;
+import com.openclassrooms.belivre.R;
 
 
 /**
@@ -31,7 +27,7 @@ public class BadgeDrawable extends Drawable {
     public BadgeDrawable(Context context) {
         mTextSize = dpToPx(context, 8); //text size
         mBadgePaint = new Paint();
-        mBadgePaint.setColor(Color.RED);
+        mBadgePaint.setColor(ContextCompat.getColor(context, R.color.colorAccent));
         mBadgePaint.setAntiAlias(true);
         mBadgePaint.setStyle(Paint.Style.FILL);
         mBadgePaint1 = new Paint();
