@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.crashlytics.android.Crashlytics
@@ -24,9 +25,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
-import com.openclassrooms.belivre.controllers.fragments.ChatFragment
-import com.openclassrooms.belivre.controllers.fragments.ListFragment
-import com.openclassrooms.belivre.controllers.fragments.MapFragment
+import com.openclassrooms.belivre.adapters.MainPagerAdapter
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
@@ -42,10 +41,9 @@ import kotlinx.android.synthetic.main.nav_header.*
 import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
 
 
-class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnTabSelectedListener {
+class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnTabSelectedListener, ViewPager.OnPageChangeListener {
 
     //FOR DATA
-
     private var currentUser: FirebaseUser? = null
 
     private lateinit var toolbar: Toolbar
@@ -143,6 +141,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         bottom_navigation_main.setOnTabSelectedListener(this)
 
         bottom_navigation_main.currentItem = 0
+
+        val adapter = MainPagerAdapter(supportFragmentManager)
+        viewPager_main.adapter = adapter
+
+        viewPager_main.addOnPageChangeListener(this)
     }
 
     //appbar - toolbar button click
@@ -215,19 +218,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
     override fun onTabSelected(position: Int, wasSelected: Boolean): Boolean {
         when(position){
             0 -> {
-                val mapFragment = MapFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.frame_main, mapFragment).commit()
+                viewPager_main.currentItem = 0
             }
             1 -> {
-                val listFragment = ListFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.frame_main, listFragment).commit()
+                viewPager_main.currentItem = 1
             }
             else -> {
-                val chatFragment = ChatFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.frame_main, chatFragment).commit()
+                viewPager_main.currentItem = 2
             }
         }
         return true
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {}
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+    override fun onPageSelected(position: Int) {
+        bottom_navigation_main.currentItem = position
     }
 
     companion object {

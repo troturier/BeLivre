@@ -24,17 +24,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <FrameLayout
+            <androidx.viewpager.widget.ViewPager
                     android:layout_width="match_parent"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    android:layout_height="match_parent" android:background="@color/backgroundFilter"
-                    android:id="@+id/frame_main"/>
-
-
+                    android:layout_height="match_parent" android:id="@+id/viewPager_main"
+                    android:background="@color/backgroundFilter"/>
             <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
                     android:id="@+id/bottom_navigation_main"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:layout_gravity="bottom"/>
+
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
