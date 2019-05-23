@@ -146,6 +146,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         viewPager_main.adapter = adapter
 
         viewPager_main.addOnPageChangeListener(this)
+        viewPager_main.offscreenPageLimit = 2
     }
 
     //appbar - toolbar button click
