@@ -55,7 +55,7 @@ class MapFragment  : Fragment(), OnMapReadyCallback {
         else{
             mMap.isMyLocationEnabled = true
             mFusedLocationProviderClient.lastLocation.addOnSuccessListener(activity!!) { location ->
-                val userPostion = CameraPosition.builder().target(LatLng(location.latitude, location.longitude)).zoom(16f).bearing(0f).build()
+                val userPostion = CameraPosition.builder().target(LatLng(location.latitude, location.longitude)).zoom(12f).bearing(0f).build()
                 mMap.moveCamera(CameraUpdateFactory.newCameraPosition(userPostion))
             }
         }
