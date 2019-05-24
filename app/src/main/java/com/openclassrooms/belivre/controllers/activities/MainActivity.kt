@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
@@ -220,12 +221,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         when(position){
             0 -> {
                 viewPager_main.currentItem = 0
+                toolbar.background = ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimaryDark))
             }
             1 -> {
                 viewPager_main.currentItem = 1
+                toolbar.background = ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary))
             }
             else -> {
                 viewPager_main.currentItem = 2
+                toolbar.background = ColorDrawable(ContextCompat.getColor(this, R.color.colorAccent))
             }
         }
         return true
