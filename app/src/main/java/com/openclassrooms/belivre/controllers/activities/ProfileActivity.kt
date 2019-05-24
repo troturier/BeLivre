@@ -24,7 +24,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -92,7 +91,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var storageReference: StorageReference
     private lateinit var ref: StorageReference
 
-    private lateinit var libraryCount : TextView
+    private var libraryCount : TextView? = null
 
     private lateinit var addMediaIV:ImageView
     private lateinit var circularProgressDrawable: CircularProgressDrawable
@@ -225,8 +224,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
                 drawer_username.text = getString(R.string.profile_display_name, user!!.firstname, user!!.lastname?.substring(0,1))
                 drawer_email.text = user!!.email
             }
-
-            userBookVM.getUserBooksByUserId(user!!.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount) })
+            if(libraryCount != null){
+                userBookVM.getUserBooksByUserId(user!!.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount!!) })
+            }
         }
 
         lastNameEt.setText(user!!.lastname)
