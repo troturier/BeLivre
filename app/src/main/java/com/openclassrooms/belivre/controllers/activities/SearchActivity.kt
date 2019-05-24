@@ -88,6 +88,9 @@ class SearchActivity : AppCompatActivity() {
                                         user.cityId,
                                         user.cityName,
                                         item.title,
+                                        item.authors,
+                                        item.categories,
+                                        item.publisher,
                                         item.coverUrl,
                                         1
                                         )
