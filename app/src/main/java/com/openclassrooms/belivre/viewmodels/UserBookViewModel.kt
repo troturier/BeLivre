@@ -101,6 +101,28 @@ class UserBookViewModel : ViewModel() {
         return userbooks
     }
 
+    fun getUserBooksByCity(cityId: String): LiveData<List<UserBook>> {
+        userbookRepository.getUserBooks()
+            .whereEqualTo("cityId", cityId)
+            .whereEqualTo("status", 1)
+            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    userbooks.value = null
+                    return@EventListener
+                }
+
+                val userbookList : MutableList<UserBook> = mutableListOf()
+                for (doc in value!!) {
+                    val userbook = doc.toObject(UserBook::class.java)
+                    userbookList.add(userbook)
+                }
+                userbooks.value = userbookList
+            })
+
+        return userbooks
+    }
+
     // get realtime updates from firebase regarding userbook
     fun getUserBook(id: String): LiveData<UserBook> {
         userbookRepository.getUserBook(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->

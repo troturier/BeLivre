@@ -19,6 +19,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.openclassrooms.belivre.controllers.activities.CityActivity
+import com.openclassrooms.belivre.controllers.activities.MainActivity
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.CityViewModel
@@ -94,6 +96,15 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
 
                 mMap.addMarker(markerOptions)
+
+                mMap.setOnMarkerClickListener { marker ->
+                    val intent = CityActivity.newIntent(activity!!.applicationContext)
+                    intent.putExtra("cityID", marker.snippet)
+                    intent.putExtra("cityName", marker.title)
+                    intent.putExtra("user", MainActivity.user)
+                    startActivity(intent)
+                    true
+                }
             }
         }
     }
