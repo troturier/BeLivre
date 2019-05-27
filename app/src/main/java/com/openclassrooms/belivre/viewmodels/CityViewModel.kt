@@ -17,10 +17,14 @@ class CityViewModel : ViewModel() {
 
     // save city to firebase
     fun addCity(city: City){
-        cityRepository.addCity(city)
-            .addOnFailureListener {
-                Log.e(TAG,"Failed to add City!")
+        cityRepository.getCity(city.id.toString()).get().addOnSuccessListener { value ->
+            if(!value!!.exists()) {
+                cityRepository.addCity(city)
+                    .addOnFailureListener {
+                        Log.e(TAG, "Failed to add City!")
+                    }
             }
+        }
     }
 
     // get realtime updates from firebase regarding saved cities
