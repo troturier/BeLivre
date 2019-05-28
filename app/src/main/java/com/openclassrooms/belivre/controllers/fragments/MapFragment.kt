@@ -2,7 +2,6 @@ package com.openclassrooms.belivre.controllers.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.ui.IconGenerator
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.controllers.activities.CityActivity
 import com.openclassrooms.belivre.controllers.activities.MainActivity
@@ -100,10 +99,17 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
                 markerOptions.title(city.name!!)
                 markerOptions.snippet(city.id!!.toString())
 
-                val hsv = FloatArray(3)
-                Color.colorToHSV(Color.parseColor("#FF8E39"), hsv)
+                val iconFactory = IconGenerator(activity!!.applicationContext)
+                iconFactory.setStyle(IconGenerator.STYLE_ORANGE)
 
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
+                if (city.availabeUserBooks!! < 100) {
+                    val iconBitmap = iconFactory.makeIcon(city.availabeUserBooks.toString())
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
+                }else{
+                    val iconBitmap = iconFactory.makeIcon("99+")
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
+                }
+
 
                 mMap.setOnMarkerClickListener { marker ->
                     userBookVM.getUserBooksByCity(marker.snippet).observeOnce(this, Observer { startOffersActivity(it, marker)})
