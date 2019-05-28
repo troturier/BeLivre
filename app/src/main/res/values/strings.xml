@@ -126,4 +126,5 @@
     <string name="categories">Categories :</string>
     <string name="authors_title">Authors :</string>
     <string name="publisher">Publisher :</string>
+    <string name="no_book_available">Sorry, there is no book available for this city !</string>
 </resources>
