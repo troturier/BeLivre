@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.UserBookRecyclerViewAdapter
+import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.controllers.activities.SearchActivity
@@ -169,6 +170,13 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             dialogC.show()
         }
 
+        dialogView.messageButtonRequestDialog.setOnClickListener {
+            val intent = ChatActivity.newIntent(activity!!.applicationContext)
+            intent.putExtra("user_id", item.requestSenderId)
+            intent.putExtra("user_name", item.requestSenderDisplayName)
+            startActivity(intent)
+        }
+
         dialogView.refuseExchangeButtonRequestDialog.setOnClickListener {
             val alertDialogC = AlertDialog.Builder(this.activity!!)
                 .setTitle(getString(R.string.refuse_exchange))
@@ -232,6 +240,13 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             dialogC.show()
         }
 
+        dialogView.messageButtonReturnRequestDialog.setOnClickListener {
+            val intent = ChatActivity.newIntent(activity!!.applicationContext)
+            intent.putExtra("user_id", item.requestSenderId)
+            intent.putExtra("user_name", item.requestSenderDisplayName)
+            startActivity(intent)
+        }
+
         dialog.show()
     }
 
@@ -256,6 +271,13 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
                 dialog.dismiss()
             }
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        dialogView.messageButtonBorrowedDialog.setOnClickListener {
+            val intent = ChatActivity.newIntent(activity!!.applicationContext)
+            intent.putExtra("user_id", item.requestSenderId)
+            intent.putExtra("user_name", item.requestSenderDisplayName)
+            startActivity(intent)
+        }
 
         val dialog = alertDialog.create()
         dialog.show()

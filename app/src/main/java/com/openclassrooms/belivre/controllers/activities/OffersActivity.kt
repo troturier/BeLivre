@@ -91,6 +91,13 @@ class OffersActivity : AppCompatActivity(), LifecycleOwner {
 
         val dialog = alertDialog.create()
 
+        dialogView.messageButtonOffersDialog.setOnClickListener {
+            val intent = ChatActivity.newIntent(this)
+            intent.putExtra("user_id", userBook.userId)
+            intent.putExtra("user_name", userBook.userDisplayName)
+            startActivity(intent)
+        }
+
         dialogView.requestButtonOffersDialog.setOnClickListener {
             val alertDialogC = AlertDialog.Builder(this)
                 .setTitle(getString(R.string.send_a_borrowing_request))

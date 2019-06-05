@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.BorrowedRecyclerViewAdapter
 import com.openclassrooms.belivre.adapters.RequestRecyclerViewAdapter
+import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.models.UserBook
@@ -149,6 +150,13 @@ class BorrowedFragment : Fragment() {
             }
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
 
+        dialogView.messageButtonBorrowedDialogBorrowedTab.setOnClickListener {
+            val intent = ChatActivity.newIntent(activity!!.applicationContext)
+            intent.putExtra("user_id", item.userId)
+            intent.putExtra("user_name", item.userDisplayName)
+            startActivity(intent)
+        }
+
         val dialog = alertDialog.create()
 
         dialogView.returnRequestButtonBorrowedDialogBorrowedTab.setOnClickListener {
@@ -193,6 +201,13 @@ class BorrowedFragment : Fragment() {
                 dialog.dismiss()
             }
             .setNeutralButton(getString(R.string.cancel)) { _, _ -> }
+
+        dialogView.messageButtonRequestDialogBorrowedTab.setOnClickListener {
+            val intent = ChatActivity.newIntent(activity!!.applicationContext)
+            intent.putExtra("user_id", item.userId)
+            intent.putExtra("user_name", item.userDisplayName)
+            startActivity(intent)
+        }
 
         val dialog = alertDialog.create()
 
