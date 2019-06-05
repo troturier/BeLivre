@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
@@ -66,6 +68,20 @@ class ChatFragment : Fragment(), LifecycleOwner {
             }
             chatRV_main.adapter = adapter
             adapter.notifyDataSetChanged()
+
+            var count = 0
+            for(ucc in sortedList){
+                if (!ucc.seen){
+                    count++
+                }
+            }
+
+            if (count > 0) {
+                activity!!.findViewById<AHBottomNavigation>(R.id.bottom_navigation_main).setNotification(count.toString(),2)
+                activity!!.findViewById<AHBottomNavigation>(R.id.bottom_navigation_main).setNotificationBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.colorAccent))
+            }else{
+                activity!!.findViewById<AHBottomNavigation>(R.id.bottom_navigation_main).setNotification("", 2)
+            }
         }
     }
 }
