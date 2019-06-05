@@ -4,13 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ListenerRegistration
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.chat.FirestoreUtil
 import com.openclassrooms.belivre.chat.TextMessage
+import com.openclassrooms.belivre.chat.UserChatChannel
+import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.UserChatChannelViewModel
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -20,13 +24,18 @@ import java.util.*
 
 class ChatActivity : AppCompatActivity() {
     private lateinit var currentChannelId: String
-    private var currentUser: FirebaseUser? = null
-    private var mAuth: FirebaseAuth? = null
+    private lateinit var currentUser: User
     private lateinit var otherUserId: String
+    private lateinit var otherUserProfilePic: String
+    private lateinit var otherUserDisplayName: String
 
     private lateinit var messagesListenerRegistration: ListenerRegistration
     private var shouldInitRecyclerView = true
     private lateinit var messagesSection: Section
+
+    private val userChatChannelVM: UserChatChannelViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserChatChannelViewModel() }).get(UserChatChannelViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +46,13 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.title = intent.getStringExtra("user_name")
 
-        mAuth = FirebaseAuth.getInstance()
-        currentUser = mAuth?.currentUser
+        currentUser = intent.getSerializableExtra("current_user") as User
 
         otherUserId = intent.getStringExtra("user_id")
-        FirestoreUtil.getOrCreateChatChannel(otherUserId) { channelId ->
+        otherUserProfilePic = intent.getStringExtra("user_pp")
+        otherUserDisplayName = intent.getStringExtra("user_name")
+
+        FirestoreUtil.getOrCreateChatChannel(this, otherUserId, otherUserProfilePic, otherUserDisplayName, currentUser) { channelId ->
             currentChannelId = channelId
 
             messagesListenerRegistration = FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
@@ -50,7 +61,14 @@ class ChatActivity : AppCompatActivity() {
                 val messageToSend =
                     TextMessage(editText_message.text.toString(), Calendar.getInstance().time,
                         FirebaseAuth.getInstance().currentUser!!.uid,
-                        otherUserId, currentUser?.displayName!!)
+                        otherUserId, getString(R.string.profile_display_name, currentUser.firstname, currentUser.lastname?.substring(0,1)))
+
+                val currentUserCC = UserChatChannel(currentChannelId, otherUserId, otherUserProfilePic, otherUserDisplayName, editText_message.text.toString(), true, Calendar.getInstance().time)
+                val otherUserCC = UserChatChannel(currentChannelId, currentUser.id, currentUser.profilePicURL, getString(R.string.profile_display_name, currentUser.firstname, currentUser.lastname?.substring(0,1)), editText_message.text.toString(), false, Calendar.getInstance().time)
+
+                userChatChannelVM.addUserChatChannel(currentUser.id!!, currentUserCC)
+                userChatChannelVM.addUserChatChannel(otherUserId, otherUserCC)
+
                 editText_message.setText("")
                 FirestoreUtil.sendMessage(messageToSend, channelId)
             }

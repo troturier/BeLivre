@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.chat.recyclerViewItems.TextMessageItem
 import com.openclassrooms.belivre.models.User
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -21,29 +22,34 @@ object FirestoreUtil {
 
     fun removeListener(registration: ListenerRegistration) = registration.remove()
 
-    fun getOrCreateChatChannel(otherUserId: String,
+    fun getOrCreateChatChannel(context: Context, 
+                               userId: String, 
+                               userProfilePic: String, 
+                               userDisplayName: String, 
+                               currentUser: User,
                                onComplete: (channelId: String) -> Unit) {
         currentUserDocRef.collection("engagedChatChannels")
-            .document(otherUserId).get().addOnSuccessListener {
+            .document(userId).get().addOnSuccessListener {
                 if (it.exists()) {
                     onComplete(it["channelId"] as String)
                     return@addOnSuccessListener
                 }
 
-                val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
-
                 val newChannel = chatChannelsCollectionRef.document()
-                newChannel.set(ChatChannel(mutableListOf(currentUserId, otherUserId)))
+                newChannel.set(ChatChannel(mutableListOf(currentUser.id!!, userId)))
 
+                val currentUserChatChannel = UserChatChannel(newChannel.id,userId, userProfilePic, userDisplayName)
+                val otherUserChatChannel = UserChatChannel(newChannel.id, currentUser.id, currentUser.profilePicURL, context.getString(R.string.profile_display_name, currentUser.firstname, currentUser.lastname?.substring(0,1)))
+                
                 currentUserDocRef
                     .collection("engagedChatChannels")
-                    .document(otherUserId)
-                    .set(mapOf("channelId" to newChannel.id))
+                    .document(userId)
+                    .set(currentUserChatChannel)
 
-                firestoreInstance.collection("users").document(otherUserId)
+                firestoreInstance.collection("users").document(userId)
                     .collection("engagedChatChannels")
-                    .document(currentUserId)
-                    .set(mapOf("channelId" to newChannel.id))
+                    .document(currentUser.id!!)
+                    .set(otherUserChatChannel)
 
                 onComplete(newChannel.id)
             }
