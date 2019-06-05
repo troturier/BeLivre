@@ -9,4 +9,5 @@ data class User (
     var email: String? = null,
     var cityId: String? = null,
     var cityName: String? = null,
-    var profilePicURL : String? = null  ) : Serializable
+    var profilePicURL : String? = null,
+    val registrationTokens: MutableList<String> = mutableListOf()) : Serializable

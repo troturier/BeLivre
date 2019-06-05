@@ -1,10 +1,8 @@
 package com.openclassrooms.belivre.models
 
+import java.util.*
+
 data class Message (
-    var id: String? = null,
-    var senderId: String? = null,
-    var receiverId: String? = null,
-    var content: String? = null,
-    var date: String? = null,
-    var read: Boolean? = null
-)
+    val text: String? = null,
+    val time: Date? = null,
+    val senderId : String? = null)
