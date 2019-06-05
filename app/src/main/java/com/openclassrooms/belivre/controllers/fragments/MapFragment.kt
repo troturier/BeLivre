@@ -3,6 +3,7 @@ package com.openclassrooms.belivre.controllers.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,6 @@ import com.openclassrooms.belivre.controllers.activities.CityActivity
 import com.openclassrooms.belivre.controllers.activities.MainActivity
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.models.UserBook
-import com.openclassrooms.belivre.utils.observeOnce
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.CityViewModel
@@ -110,9 +110,20 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconBitmap))
                 }
 
-
                 mMap.setOnMarkerClickListener { marker ->
-                    userBookVM.getUserBooksByCity(marker.snippet).observeOnce(this, Observer { startOffersActivity(it, marker)})
+                    userBookVM.getUserBooksByCityMap(marker.snippet)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val userbookList: MutableList<UserBook> = mutableListOf()
+                                for (document in task.result!!) {
+                                    val userbook = document.toObject(UserBook::class.java)
+                                    userbookList.add(userbook)
+                                }
+                                startOffersActivity(userbookList, marker)
+                            } else {
+                                Log.d(UserBookViewModel.TAG, "Error getting documents: ", task.exception)
+                            }
+                        }
                     true
                 }
 

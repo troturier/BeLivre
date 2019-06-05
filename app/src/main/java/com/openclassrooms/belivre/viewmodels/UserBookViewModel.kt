@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.QuerySnapshot
@@ -121,6 +123,13 @@ class UserBookViewModel : ViewModel() {
             })
 
         return userbooks
+    }
+
+    fun getUserBooksByCityMap(cityId: String): Task<QuerySnapshot> {
+        return userbookRepository.getUserBooks()
+            .whereEqualTo("cityId", cityId)
+            .whereEqualTo("status", 1)
+            .get()
     }
 
     // get realtime updates from firebase regarding userbook
