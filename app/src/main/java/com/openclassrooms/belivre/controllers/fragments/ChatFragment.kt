@@ -57,7 +57,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
             adapter = UserChatRecyclerViewAdapter(sortedList!!){ item: User, _: Int ->
                 val intent = ChatActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("user_id", item.id)
-                intent.putExtra("user_name", getString(R.string.profile_display_name, item.firstname, item.lastname))
+                intent.putExtra("user_name", getString(R.string.profile_display_name, item.firstname, item.lastname?.substring(0,1)))
                 startActivity(intent)
             }
             chatRV_main.adapter = adapter

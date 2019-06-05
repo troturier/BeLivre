@@ -13,7 +13,7 @@ class UserChatViewHolder (v: View) : RecyclerView.ViewHolder(v) {
 
     fun bindUser(user: User){
         this.user = user
-        view.userDNChat.text = view.context.getString(R.string.profile_display_name, user.firstname, user.lastname)
+        view.userDNChat.text = view.context.getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1))
 
         loadProfilePictureIntoImageView(view.userPicChat, view.context, user.profilePicURL, user.id.toString())
     }
