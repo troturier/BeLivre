@@ -13,10 +13,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.UserChatRecyclerViewAdapter
+import com.openclassrooms.belivre.chat.UserChatChannel
 import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.MainActivity
-import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
+import com.openclassrooms.belivre.viewmodels.UserChatChannelViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.fragment_chat.*
 
@@ -26,6 +27,10 @@ class ChatFragment : Fragment(), LifecycleOwner {
     private lateinit var adapter: UserChatRecyclerViewAdapter
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
+
+    private val userChatChannelVM: UserChatChannelViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserChatChannelViewModel() }).get(UserChatChannelViewModel::class.java)
+    }
 
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
@@ -44,22 +49,18 @@ class ChatFragment : Fragment(), LifecycleOwner {
         linearLayoutManager = LinearLayoutManager(activity)
         chatRV_main.layoutManager = linearLayoutManager
 
-        userVM.getUsers().observe(this, Observer { users:List<User>? -> configureChatRecyclerView(users)})
+        userChatChannelVM.getUserChatChannels(currentUser!!.uid).observe(this, Observer { configureChatRecyclerView(it) })
     }
 
-    private fun configureChatRecyclerView(users: List<User>?){
-        if(users != null && currentUser != null){
-            val sortedList:MutableList<User>? = mutableListOf()
-            for(u in users) {
-                if (u.id.toString() != currentUser!!.uid) {
-                    sortedList!!.add(u)
-                }
-            }
-            adapter = UserChatRecyclerViewAdapter(sortedList!!){ item: User, _: Int ->
+    private fun configureChatRecyclerView(userChatChannels: List<UserChatChannel>?){
+        if(userChatChannels != null && currentUser != null){
+            val sortedList = userChatChannels.sortedWith(compareBy { it.time })
+
+            adapter = UserChatRecyclerViewAdapter(sortedList){ item: UserChatChannel, _: Int ->
                 val intent = ChatActivity.newIntent(activity!!.applicationContext)
-                intent.putExtra("user_id", item.id)
-                intent.putExtra("user_name", getString(R.string.profile_display_name, item.firstname, item.lastname?.substring(0,1)))
-                intent.putExtra("user_pp", item.profilePicURL)
+                intent.putExtra("user_id", item.userId)
+                intent.putExtra("user_name", item.displayName)
+                intent.putExtra("user_pp", item.profilePic)
                 intent.putExtra("current_user", MainActivity.user)
                 startActivity(intent)
             }

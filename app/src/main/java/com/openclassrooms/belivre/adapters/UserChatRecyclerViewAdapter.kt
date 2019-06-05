@@ -3,11 +3,11 @@ package com.openclassrooms.belivre.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.belivre.R
-import com.openclassrooms.belivre.models.User
+import com.openclassrooms.belivre.chat.UserChatChannel
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.UserChatViewHolder
 
-class UserChatRecyclerViewAdapter(private val users :List<User>, private val clickListener: (User, Int) -> Unit): RecyclerView.Adapter<UserChatViewHolder>() {
+class UserChatRecyclerViewAdapter(private val userChatChannels :List<UserChatChannel>, private val clickListener: (UserChatChannel, Int) -> Unit): RecyclerView.Adapter<UserChatViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserChatViewHolder {
         val inflatedView = parent.inflate(R.layout.chat_fragment_item_row, false)
@@ -15,12 +15,12 @@ class UserChatRecyclerViewAdapter(private val users :List<User>, private val cli
     }
 
     override fun getItemCount(): Int {
-        return users.size
+        return userChatChannels.size
     }
 
     override fun onBindViewHolder(holder: UserChatViewHolder, position: Int) {
-        val itemUser = users[position]
-        holder.bindUser(itemUser)
-        holder.itemView.setOnClickListener { clickListener(itemUser, position) }
+        val itemUserChatChannel = userChatChannels[position]
+        holder.bindUser(itemUserChatChannel)
+        holder.itemView.setOnClickListener { clickListener(itemUserChatChannel, position) }
     }
 }
