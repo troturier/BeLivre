@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.item_text_message.*
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.wrapContent
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 abstract class MessageItem(private val message: Message)
@@ -22,15 +23,21 @@ abstract class MessageItem(private val message: Message)
     }
 
     private fun setTimeText(viewHolder: ViewHolder) {
-        val dateFormat = SimpleDateFormat
-            .getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
-        viewHolder.textView_message_time.text = dateFormat.format(message.time)
+        val sdfDate = SimpleDateFormat("dd/M/yyyy", Locale.getDefault())
+        val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val currentDate = sdfDate.format(Date())
+        if(sdfDate.format(message.time) == currentDate){
+            viewHolder.textView_message_time.text = sdfTime.format(message.time)
+        }
+        else{
+            viewHolder.textView_message_time.text = sdfDate.format(message.time)
+        }
     }
 
     private fun setMessageRootGravity(viewHolder: ViewHolder) {
         if (message.senderId == FirebaseAuth.getInstance().currentUser?.uid) {
             viewHolder.message_root.apply {
-                backgroundResource = R.drawable.rect_round_white
+                backgroundResource = R.drawable.rect_round_accent_color
                 val lParams = FrameLayout.LayoutParams(wrapContent, wrapContent, Gravity.END)
                 this.layoutParams = lParams
             }

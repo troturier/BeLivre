@@ -22,9 +22,10 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:paddingTop="4dp"
+                android:paddingTop="2dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                tools:text="@string/lorem_ipsum" android:textColor="@android:color/white"/>
+                tools:text="@string/lorem_ipsum" android:textColor="@android:color/white"
+                android:layout_marginBottom="4dp"/>
         <TextView
                 android:id="@+id/textView_message_time"
                 android:layout_width="wrap_content"
@@ -33,6 +34,6 @@
                 android:layout_alignEnd="@id/textView_message_text"
                 android:layout_marginEnd="8dp"
                 android:textSize="12sp"
-                tools:text="3/15/2018 3:00 PM"/>
+                tools:text="3/15/2018 3:00 PM" android:layout_marginBottom="2dp"/>
     </RelativeLayout>
 </FrameLayout>
