@@ -8,6 +8,6 @@ data class UserChatChannel (
     val profilePic: String? = null,
     val displayName: String? = null,
     val lastMessage: String? = null,
-    val seen: Boolean = true,
+    var seen: Boolean = true,
     val time: Date? = null
 )

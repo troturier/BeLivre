@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +23,7 @@ import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var currentChannelId: String
     private lateinit var currentUser: User
     private lateinit var otherUserId: String
@@ -52,8 +53,11 @@ class ChatActivity : AppCompatActivity() {
         otherUserProfilePic = intent.getStringExtra("user_pp")
         otherUserDisplayName = intent.getStringExtra("user_name")
 
+
         FirestoreUtil.getOrCreateChatChannel(this, otherUserId, otherUserProfilePic, otherUserDisplayName, currentUser) { channelId ->
             currentChannelId = channelId
+
+            userChatChannelVM.getUserChatChannel(currentUser.id!!, otherUserId).observe(this, androidx.lifecycle.Observer { updateSeenBoolean(it) })
 
             messagesListenerRegistration = FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
 
@@ -72,6 +76,13 @@ class ChatActivity : AppCompatActivity() {
                 editText_message.setText("")
                 FirestoreUtil.sendMessage(messageToSend, channelId)
             }
+        }
+    }
+
+    private fun updateSeenBoolean(userChatChannel: UserChatChannel?){
+        if (userChatChannel != null) {
+            userChatChannel.seen = true
+            userChatChannelVM.addUserChatChannel(currentUser.id!!, userChatChannel)
         }
     }
 
