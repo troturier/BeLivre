@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:background="@drawable/rect_round_primary_color">
+        tools:ignore="UselessParent">
         <TextView
                 android:id="@+id/textView_message_text"
                 android:layout_width="wrap_content"
@@ -22,10 +22,11 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:paddingTop="2dp"
+                android:paddingTop="5dp"
+                android:background="@drawable/rect_round_primary_color"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 tools:text="@string/lorem_ipsum" android:textColor="@android:color/white"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp" android:paddingBottom="5dp"/>
         <TextView
                 android:id="@+id/textView_message_time"
                 android:layout_width="wrap_content"
