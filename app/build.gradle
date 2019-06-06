@@ -62,6 +62,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:19.0.2'
     //Firebase Storage
     implementation 'com.google.firebase:firebase-storage:17.0.0'
+    //Firebase Messaging
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
     implementation 'com.github.brotoo25:firestore-livedata:0.0.6'
 

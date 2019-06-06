@@ -27,7 +27,7 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var currentChannelId: String
     private lateinit var currentUser: User
     private lateinit var otherUserId: String
-    private lateinit var otherUserProfilePic: String
+    private var otherUserProfilePic: String? = null
     private lateinit var otherUserDisplayName: String
 
     private lateinit var messagesListenerRegistration: ListenerRegistration
@@ -50,7 +50,9 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
         currentUser = intent.getSerializableExtra("current_user") as User
 
         otherUserId = intent.getStringExtra("user_id")
-        otherUserProfilePic = intent.getStringExtra("user_pp")
+        if (intent.hasExtra("user_pp")) {
+            otherUserProfilePic = intent.getStringExtra("user_pp")
+        }
         otherUserDisplayName = intent.getStringExtra("user_name")
 
 

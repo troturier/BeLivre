@@ -46,7 +46,9 @@ class ChatFragment : Fragment(), LifecycleOwner {
         linearLayoutManager = LinearLayoutManager(activity)
         chatRV_main.layoutManager = linearLayoutManager
 
-        userChatChannelVM.getUserChatChannels(currentUser!!.uid).observe(this, Observer { configureChatRecyclerView(it) })
+        if (currentUser != null) {
+            userChatChannelVM.getUserChatChannels(currentUser!!.uid).observe(this, Observer { configureChatRecyclerView(it) })
+        }
     }
 
     private fun configureChatRecyclerView(userChatChannels: List<UserChatChannel>?){

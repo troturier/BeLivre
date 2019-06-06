@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -25,10 +26,12 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.iid.FirebaseInstanceId
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.MainPagerAdapter
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.service.MyFirebaseMessagingService
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.rcSignIn
@@ -119,7 +122,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         currentUser = mAuth?.currentUser
 
         if(currentUser == null) startSignInActivity(this)
-        else { userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)}) }
+        else {
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
+                val newToken = instanceIdResult.token
+                MyFirebaseMessagingService.addTokenToFirestore(newToken)
+                Log.e("newToken", newToken)
+            }
+            userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)})
+        }
 
         configureBottomNav()
     }
@@ -163,10 +173,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
     }
 
     private fun checkUserProfileComplete(user2: User?){
-        if(user2 == null
-            || user2.cityId!!.isEmpty()
-            || user2.firstname!!.isEmpty()
-            || user2.lastname!!.isEmpty()){
+        if(user2?.cityId == null || user2.cityId?.isEmpty()!!
+            || user2.firstname == null || user2.firstname?.isEmpty()!!
+            || user2.lastname == null || user2.lastname?.isEmpty()!!){
             val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
             intent.putExtra("requestCode", rcSignIn)
             startActivity(intent)

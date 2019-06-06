@@ -39,12 +39,14 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
+import com.openclassrooms.belivre.service.MyFirebaseMessagingService
 import com.openclassrooms.belivre.utils.GlideApp
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
@@ -289,6 +291,11 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             user?.cityName = city?.name
             cityVM.addCity(city!!)
             userVM.addUser(user!!)
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
+                val newToken = instanceIdResult.token
+                MyFirebaseMessagingService.addTokenToFirestore(newToken)
+                Log.e("newToken", newToken)
+            }
             finish()
         }
         else

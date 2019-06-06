@@ -24,7 +24,7 @@ object FirestoreUtil {
 
     fun getOrCreateChatChannel(context: Context, 
                                userId: String, 
-                               userProfilePic: String, 
+                               userProfilePic: String? = null,
                                userDisplayName: String, 
                                currentUser: User,
                                onComplete: (channelId: String) -> Unit) {
@@ -92,4 +92,5 @@ object FirestoreUtil {
     fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
         currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
     }
+    //endregion FCM
 }
