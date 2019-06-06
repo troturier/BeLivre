@@ -54,8 +54,15 @@ class ChatFragment : Fragment(), LifecycleOwner {
     private fun configureChatRecyclerView(userChatChannels: List<UserChatChannel>?){
         if(userChatChannels != null && currentUser != null){
             val sortedList = userChatChannels.sortedWith(compareBy { it.time })
+            val sortedList2: MutableList<UserChatChannel> = mutableListOf()
 
-            adapter = UserChatRecyclerViewAdapter(sortedList){ item: UserChatChannel, _: Int ->
+            for (ucc in sortedList){
+                if (!ucc.lastMessage.isNullOrEmpty()){
+                    sortedList2.add(ucc)
+                }
+            }
+
+            adapter = UserChatRecyclerViewAdapter(sortedList2){ item: UserChatChannel, _: Int ->
                 val intent = ChatActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("user_id", item.userId)
                 intent.putExtra("user_name", item.displayName)
@@ -67,7 +74,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
             adapter.notifyDataSetChanged()
 
             var count = 0
-            for(ucc in sortedList){
+            for(ucc in sortedList2){
                 if (!ucc.seen){
                     count++
                 }
