@@ -3,6 +3,7 @@ package com.openclassrooms.belivre.controllers.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +17,7 @@ import com.openclassrooms.belivre.chat.UserChatChannel
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserChatChannelViewModel
+import com.openclassrooms.belivre.viewmodels.UserViewModel
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.Item
@@ -25,7 +27,7 @@ import java.util.*
 
 class ChatActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var currentChannelId: String
-    private lateinit var currentUser: User
+    private var currentUser: User? = null
     private lateinit var otherUserId: String
     private var otherUserProfilePic: String? = null
     private lateinit var otherUserDisplayName: String
@@ -38,6 +40,10 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
         ViewModelProviders.of(this, BaseViewModelFactory { UserChatChannelViewModel() }).get(UserChatChannelViewModel::class.java)
     }
 
+    private val userVM: UserViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -45,9 +51,8 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
         setSupportActionBar(toolbar_chat)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-        supportActionBar!!.title = intent.getStringExtra("user_name")
 
-        currentUser = intent.getSerializableExtra("current_user") as User
+        supportActionBar!!.title = intent.getStringExtra("user_name")
 
         otherUserId = intent.getStringExtra("user_id")
         if (intent.hasExtra("user_pp")) {
@@ -55,28 +60,92 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
         }
         otherUserDisplayName = intent.getStringExtra("user_name")
 
+        if (intent.hasExtra("current_user")) {
+            currentUser = intent.getSerializableExtra("current_user") as User
+            initActivity(currentUser)
+        } else {
+            userVM.getUser(intent.getStringExtra("current_user_id")).observe(this, androidx.lifecycle.Observer { initActivity(it)})
+        }
 
-        FirestoreUtil.getOrCreateChatChannel(this, otherUserId, otherUserProfilePic, otherUserDisplayName, currentUser) { channelId ->
-            currentChannelId = channelId
+    }
 
-            userChatChannelVM.getUserChatChannel(currentUser.id!!, otherUserId).observe(this, androidx.lifecycle.Observer { updateSeenBoolean(it) })
+    private fun initActivity(user: User?){
+        if (currentUser == null && user != null){
+            currentUser = user
+            userChatChannelVM.getUserChatChannel(currentUser?.id!!, otherUserId).observe(this, androidx.lifecycle.Observer { updateSeenBoolean(it) })
+            FirestoreUtil.getOrCreateChatChannel(this, otherUserId, otherUserProfilePic, otherUserDisplayName, currentUser!!) { channelId ->
+                currentChannelId = channelId
+                Log.d("testFCM", "HERE")
+                messagesListenerRegistration =
+                    FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
 
-            messagesListenerRegistration = FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
+                imageView_send.setOnClickListener {
+                    val messageToSend =
+                        TextMessage(
+                            editText_message.text.toString(),
+                            Calendar.getInstance().time,
+                            FirebaseAuth.getInstance().currentUser!!.uid,
+                            otherUserId,
+                            getString(
+                                R.string.profile_display_name,
+                                currentUser!!.firstname,
+                                currentUser!!.lastname?.substring(0, 1)
+                            )
+                        )
 
-            imageView_send.setOnClickListener {
-                val messageToSend =
-                    TextMessage(editText_message.text.toString(), Calendar.getInstance().time,
-                        FirebaseAuth.getInstance().currentUser!!.uid,
-                        otherUserId, getString(R.string.profile_display_name, currentUser.firstname, currentUser.lastname?.substring(0,1)))
+                    val currentUserCC = UserChatChannel(
+                        currentChannelId,
+                        otherUserId,
+                        otherUserProfilePic,
+                        otherUserDisplayName,
+                        editText_message.text.toString(),
+                        true,
+                        Calendar.getInstance().time
+                    )
+                    val otherUserCC = UserChatChannel(
+                        currentChannelId,
+                        currentUser!!.id,
+                        currentUser!!.profilePicURL,
+                        getString(
+                            R.string.profile_display_name,
+                            currentUser!!.firstname,
+                            currentUser!!.lastname?.substring(0, 1)
+                        ),
+                        editText_message.text.toString(),
+                        false,
+                        Calendar.getInstance().time
+                    )
 
-                val currentUserCC = UserChatChannel(currentChannelId, otherUserId, otherUserProfilePic, otherUserDisplayName, editText_message.text.toString(), true, Calendar.getInstance().time)
-                val otherUserCC = UserChatChannel(currentChannelId, currentUser.id, currentUser.profilePicURL, getString(R.string.profile_display_name, currentUser.firstname, currentUser.lastname?.substring(0,1)), editText_message.text.toString(), false, Calendar.getInstance().time)
+                    userChatChannelVM.addUserChatChannel(currentUser!!.id!!, currentUserCC)
+                    userChatChannelVM.addUserChatChannel(otherUserId, otherUserCC)
 
-                userChatChannelVM.addUserChatChannel(currentUser.id!!, currentUserCC)
-                userChatChannelVM.addUserChatChannel(otherUserId, otherUserCC)
+                    editText_message.setText("")
+                    FirestoreUtil.sendMessage(messageToSend, channelId)
+                }
+            }
+        }
+        else{
+            userChatChannelVM.getUserChatChannel(currentUser?.id!!, otherUserId).observe(this, androidx.lifecycle.Observer { updateSeenBoolean(it) })
+            FirestoreUtil.getOrCreateChatChannel(this, otherUserId, otherUserProfilePic, otherUserDisplayName, currentUser!!) { channelId ->
+                currentChannelId = channelId
+                Log.d("testFCM", "HERE")
+                messagesListenerRegistration = FirestoreUtil.addChatMessagesListener(channelId, this, this::updateRecyclerView)
 
-                editText_message.setText("")
-                FirestoreUtil.sendMessage(messageToSend, channelId)
+                imageView_send.setOnClickListener {
+                    val messageToSend =
+                        TextMessage(editText_message.text.toString(), Calendar.getInstance().time,
+                            FirebaseAuth.getInstance().currentUser!!.uid,
+                            otherUserId, getString(R.string.profile_display_name, currentUser!!.firstname, currentUser!!.lastname?.substring(0,1)))
+
+                    val currentUserCC = UserChatChannel(currentChannelId, otherUserId, otherUserProfilePic, otherUserDisplayName, editText_message.text.toString(), true, Calendar.getInstance().time)
+                    val otherUserCC = UserChatChannel(currentChannelId, currentUser!!.id, currentUser!!.profilePicURL, getString(R.string.profile_display_name, currentUser!!.firstname, currentUser!!.lastname?.substring(0,1)), editText_message.text.toString(), false, Calendar.getInstance().time)
+
+                    userChatChannelVM.addUserChatChannel(currentUser!!.id!!, currentUserCC)
+                    userChatChannelVM.addUserChatChannel(otherUserId, otherUserCC)
+
+                    editText_message.setText("")
+                    FirestoreUtil.sendMessage(messageToSend, channelId)
+                }
             }
         }
     }
@@ -84,7 +153,7 @@ class ChatActivity : AppCompatActivity(), LifecycleOwner {
     private fun updateSeenBoolean(userChatChannel: UserChatChannel?){
         if (userChatChannel != null) {
             userChatChannel.seen = true
-            userChatChannelVM.addUserChatChannel(currentUser.id!!, userChatChannel)
+            userChatChannelVM.addUserChatChannel(currentUser!!.id!!, userChatChannel)
         }
     }
 
