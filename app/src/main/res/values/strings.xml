@@ -130,4 +130,5 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
         ut labore et dolore magna aliqua.
     </string>
+    <string name="you_have_not_started_any_conversation_yet">You have not started any conversation yet</string>
 </resources>

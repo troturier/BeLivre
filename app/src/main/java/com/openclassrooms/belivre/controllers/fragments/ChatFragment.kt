@@ -73,6 +73,14 @@ class ChatFragment : Fragment(), LifecycleOwner {
             chatRV_main.adapter = adapter
             adapter.notifyDataSetChanged()
 
+            if(sortedList2.isEmpty()){
+                chatRV_main.visibility = View.GONE
+                phChatTab.visibility = View.VISIBLE
+            }else{
+                chatRV_main.visibility = View.VISIBLE
+                phChatTab.visibility = View.GONE
+            }
+
             var count = 0
             for(ucc in sortedList2){
                 if (!ucc.seen){
