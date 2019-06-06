@@ -174,6 +174,8 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             val intent = ChatActivity.newIntent(activity!!.applicationContext)
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
+            intent.putExtra("user_pp", item.userPicUrl)
+            intent.putExtra("current_user", LibraryActivity.user)
             startActivity(intent)
         }
 
@@ -244,6 +246,8 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             val intent = ChatActivity.newIntent(activity!!.applicationContext)
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
+            intent.putExtra("user_pp", item.userPicUrl)
+            intent.putExtra("current_user", LibraryActivity.user)
             startActivity(intent)
         }
 
@@ -276,6 +280,8 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             val intent = ChatActivity.newIntent(activity!!.applicationContext)
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
+            intent.putExtra("user_pp", item.userPicUrl)
+            intent.putExtra("current_user", LibraryActivity.user)
             startActivity(intent)
         }
 

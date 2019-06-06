@@ -96,6 +96,8 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
             val intent = ChatActivity.newIntent(this)
             intent.putExtra("user_id", userBook.userId)
             intent.putExtra("user_name", userBook.userDisplayName)
+            intent.putExtra("user_pp", userBook.userPicUrl)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 

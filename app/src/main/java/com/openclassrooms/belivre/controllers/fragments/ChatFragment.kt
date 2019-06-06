@@ -20,7 +20,6 @@ import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.MainActivity
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserChatChannelViewModel
-import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 class ChatFragment : Fragment(), LifecycleOwner {
@@ -32,10 +31,6 @@ class ChatFragment : Fragment(), LifecycleOwner {
 
     private val userChatChannelVM: UserChatChannelViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserChatChannelViewModel() }).get(UserChatChannelViewModel::class.java)
-    }
-
-    private val userVM: UserViewModel by lazy {
-        ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {

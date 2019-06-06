@@ -154,6 +154,8 @@ class BorrowedFragment : Fragment() {
             val intent = ChatActivity.newIntent(activity!!.applicationContext)
             intent.putExtra("user_id", item.userId)
             intent.putExtra("user_name", item.userDisplayName)
+            intent.putExtra("user_pp", item.userPicUrl)
+            intent.putExtra("current_user", LibraryActivity.user)
             startActivity(intent)
         }
 
@@ -206,6 +208,8 @@ class BorrowedFragment : Fragment() {
             val intent = ChatActivity.newIntent(activity!!.applicationContext)
             intent.putExtra("user_id", item.userId)
             intent.putExtra("user_name", item.userDisplayName)
+            intent.putExtra("user_pp", item.userPicUrl)
+            intent.putExtra("current_user", LibraryActivity.user)
             startActivity(intent)
         }
 
