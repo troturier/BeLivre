@@ -2,6 +2,7 @@ package com.openclassrooms.belivre.chat.recyclerViewItems
 
 import android.view.Gravity
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.belivre.R
@@ -46,6 +47,10 @@ abstract class MessageItem(private val message: Message)
             viewHolder.message_root.apply {
                 viewHolder.textView_message_text.background = ContextCompat.getDrawable(viewHolder.containerView.context, R.drawable.rect_round_primary_color)
                 val lParams = FrameLayout.LayoutParams(wrapContent, wrapContent, Gravity.START)
+                val params:RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+                params.addRule(RelativeLayout.ALIGN_START, R.id.textView_message_text)
+                params.addRule(RelativeLayout.BELOW, R.id.textView_message_text)
+                viewHolder.textView_message_time.layoutParams = params
                 this.layoutParams = lParams
             }
         }
