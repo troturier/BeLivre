@@ -1,12 +1,10 @@
 package com.openclassrooms.belivre.controllers.activities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -26,12 +24,10 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.iid.FirebaseInstanceId
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.adapters.MainPagerAdapter
 import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
-import com.openclassrooms.belivre.service.MyFirebaseMessagingService
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.utils.rcSignIn
@@ -41,7 +37,7 @@ import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
 
 
@@ -53,6 +49,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
     private lateinit var toolbar: Toolbar
 
     private lateinit var libraryCount : TextView
+
+    private lateinit var navigationView: NavigationView
 
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
@@ -76,6 +74,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // -------------------------------------------------------------
+        mAuth = FirebaseAuth.getInstance()
+
+        // Check if user is signed in (non-null) and update UI accordingly.
+        currentUser = mAuth?.currentUser
+
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -84,7 +88,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
 
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             // set item as selected to persist highlight
             menuItem.isChecked = true
@@ -114,22 +118,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
         libraryCount = navigationView.menu.findItem(R.id.nav_library).actionView as TextView
 
-        // -------------------------------------------------------------
-
-        mAuth = FirebaseAuth.getInstance()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        currentUser = mAuth?.currentUser
-
-        if(currentUser == null) startSignInActivity(this)
-        else {
-            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
-                val newToken = instanceIdResult.token
-                MyFirebaseMessagingService.addTokenToFirestore(newToken)
-                Log.e("newToken", newToken)
-            }
-            userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)})
-        }
+        userVM.getUser(currentUser!!.uid).observe(this, Observer { checkUserProfileComplete(it)})
 
         configureBottomNav()
     }
@@ -173,24 +162,16 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
     }
 
     private fun checkUserProfileComplete(user2: User?){
-        if(user2?.cityId == null || user2.cityId?.isEmpty()!!
-            || user2.firstname == null || user2.firstname?.isEmpty()!!
-            || user2.lastname == null || user2.lastname?.isEmpty()!!){
-            val intent = com.openclassrooms.belivre.controllers.activities.ProfileActivity.newIntent(this)
-            intent.putExtra("requestCode", rcSignIn)
-            startActivity(intent)
-        }
-        else{
+        if (user2 != null) {
             user = user2
 
-            drawer_username.text = getString(R.string.profile_display_name, user2.firstname, user2.lastname?.substring(0,1))
-            drawer_email.text = user2.email
-            loadProfilePictureIntoImageView(drawer_imageview_profile, this, user2.profilePicURL, user2.id.toString())
+            navigationView.getHeaderView(0).drawer_username.text = getString(R.string.profile_display_name, user2.firstname, user2.lastname?.substring(0,1))
+            navigationView.getHeaderView(0).drawer_email.text = user2.email
+            loadProfilePictureIntoImageView(navigationView.getHeaderView(0).drawer_imageview_profile, this, user2.profilePicURL, user2.id.toString())
 
             userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount)})
         }
     }
-
 
     private fun startSignInActivity(activity: AppCompatActivity) {
         // Choose authentication providers
@@ -210,20 +191,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
                 .setIsSmartLockEnabled(false)
                 .build(),
             rcSignIn)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == rcSignIn) {
-            if (resultCode == Activity.RESULT_OK) {
-                currentUser = mAuth?.currentUser
-                // Successfully signed in
-                userVM.getUser(currentUser!!.uid).observe(this, Observer { user:User? -> checkUserProfileComplete(user)})
-            } else {
-                startSignInActivity(this)
-            }
-        }
+        finish()
     }
 
     override fun onTabSelected(position: Int, wasSelected: Boolean): Boolean {
@@ -250,6 +219,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
     override fun onPageSelected(position: Int) {
         bottom_navigation_main.currentItem = position
+    }
+
+    override fun onBackPressed() {
+
     }
 
     companion object {
