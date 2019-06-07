@@ -1,6 +1,7 @@
 package com.openclassrooms.belivre.controllers.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -67,7 +68,7 @@ class SplashActivity : AppCompatActivity(), LifecycleOwner {
                 .setLogo(R.drawable.logo)
                 .setIsSmartLockEnabled(false)
                 .build(),
-            rcSignIn
+            123
         )
     }
 
@@ -81,14 +82,14 @@ class SplashActivity : AppCompatActivity(), LifecycleOwner {
         }
         else{
             val intent = MainActivity.newIntent(this)
+            finish()
             startActivity(intent)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == rcSignIn) {
+        if (requestCode == 123) {
             if (resultCode == Activity.RESULT_OK) {
                 currentUser = mAuth?.currentUser
                 // Successfully signed in
@@ -96,6 +97,12 @@ class SplashActivity : AppCompatActivity(), LifecycleOwner {
             } else {
                 startSignInActivity(this)
             }
+        }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            return Intent(context, com.openclassrooms.belivre.controllers.activities.SplashActivity::class.java)
         }
     }
 }

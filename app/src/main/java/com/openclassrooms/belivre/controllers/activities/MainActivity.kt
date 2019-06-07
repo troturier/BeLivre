@@ -20,7 +20,6 @@ import androidx.viewpager.widget.ViewPager
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.crashlytics.android.Crashlytics
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -30,7 +29,6 @@ import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
-import com.openclassrooms.belivre.utils.rcSignIn
 import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
@@ -110,7 +108,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
                 }
                 R.id.nav_logout ->{
                     mAuth!!.signOut()
-                    startSignInActivity(this)
+                    val intent = SplashActivity.newIntent(this)
+                    startActivity(intent)
                 }
             }
             true
@@ -171,28 +170,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
 
             userBookVM.getUserBooksByUserId(user.id.toString()).observe(this, Observer { userBooks: List<UserBook>? -> displayNotificationOnDrawer(userBooks, this, this, libraryCount)})
         }
-    }
-
-    private fun startSignInActivity(activity: AppCompatActivity) {
-        // Choose authentication providers
-        val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.FacebookBuilder().build(),
-            AuthUI.IdpConfig.TwitterBuilder().build())
-
-        // Create and launch sign-in intent
-        activity.startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.FirebaseAuthUiCustom)
-                .setLogo(R.drawable.logo)
-                .setIsSmartLockEnabled(false)
-                .build(),
-            rcSignIn)
-
-        finish()
     }
 
     override fun onTabSelected(position: Int, wasSelected: Boolean): Boolean {

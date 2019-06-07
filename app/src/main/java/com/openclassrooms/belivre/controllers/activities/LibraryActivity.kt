@@ -105,7 +105,7 @@ class LibraryActivity : AppCompatActivity(), LifecycleOwner {
                     }
                     R.id.nav_logout ->{
                         mAuth!!.signOut()
-                        val intent = MainActivity.newIntent(this)
+                        val intent = SplashActivity.newIntent(this)
                         startActivity(intent)
                     }
                 }
