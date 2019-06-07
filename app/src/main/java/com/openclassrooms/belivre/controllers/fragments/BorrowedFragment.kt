@@ -16,10 +16,12 @@ import com.openclassrooms.belivre.adapters.RequestRecyclerViewAdapter
 import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
+import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.borrowed_dialog_borrowed_tab.view.*
 import kotlinx.android.synthetic.main.fragment_borrowed.*
 import kotlinx.android.synthetic.main.request_dialog_borrowed_tab.view.*
@@ -33,11 +35,16 @@ class BorrowedFragment : Fragment() {
     private lateinit var linearLayoutManagerRequest: LinearLayoutManager
     private lateinit var adapterBorrowed: BorrowedRecyclerViewAdapter
     private lateinit var adapterRequest: RequestRecyclerViewAdapter
+    private var user: User? = null
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
+    }
+
+    private val userVM: UserViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,8 +69,16 @@ class BorrowedFragment : Fragment() {
         linearLayoutManagerRequest = LinearLayoutManager(activity)
         requestRVBorrowedFragment.layoutManager = linearLayoutManagerRequest
 
-        userBookVM.getRequestUserBooksByRequestSenderId(LibraryActivity.user.id.toString()).observe(this, Observer{
-                userBooks:List<UserBook>? -> configureBorrowedRecyclerView(userBooks)})
+        if (LibraryActivity.user != null) {
+            user = LibraryActivity.user
+            userBookVM.getRequestUserBooksByRequestSenderId(LibraryActivity.user!!.id.toString()).observe(this, Observer{
+                    userBooks:List<UserBook>? -> configureBorrowedRecyclerView(userBooks)})
+        } else {
+            userVM.getUser(currentUser!!.uid).observe(this, Observer {
+                user = it
+                userBookVM.getRequestUserBooksByRequestSenderId(it.id.toString()).observe(this, Observer{
+                    userBooks:List<UserBook>? -> configureBorrowedRecyclerView(userBooks)}) })
+        }
     }
 
     private fun configureBorrowedRecyclerView(userBooks:List<UserBook>?){
@@ -74,7 +89,7 @@ class BorrowedFragment : Fragment() {
             for(ub in userBooks){
                 when(ub.status){
                     3 -> userBooksBorrowed!!.add(ub)
-                    2 -> if(ub.requestSenderId == LibraryActivity.user.id)userBooksRequest!!.add(ub)
+                    2 -> if(ub.requestSenderId == user!!.id)userBooksRequest!!.add(ub)
                     4 -> userBooksRequest!!.add(ub)
                 }
             }

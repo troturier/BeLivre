@@ -215,7 +215,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         }
         else{
             user = userRetrived
-            if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer { city:City? -> cityET.setText(city!!.name); this.city = city
+            if(!user?.cityId.isNullOrEmpty())cityVM.getCity(user?.cityId!!).observe(this, Observer {
+                cityET.setText(it!!.name)
+                this.city = it
             })
             ref = storageReference.child("images/profilePictures/${this.user!!.id.toString()}")
 
