@@ -38,18 +38,30 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import com.openclassrooms.belivre.controllers.activities.ProfileActivity as ProfileActivity1
 
-
+/**
+ * Main Activity containing the 3 tabs : "Map", "List" and "Chat"
+ * @property currentUser FirebaseUser? - Currently logged Firebase User
+ * @property mAuth FirebaseAuth? - The entry point of the Firebase Authentication SDK.
+ * @property toolbar Toolbar - MainActivity's Toolbar
+ * @property libraryCount TextView - Textview for Library Activity notifications count
+ * @property mDrawerLayout DrawerLayout
+ * @property navigationView NavigationView
+ * @property userVM UserViewModel
+ * @property userBookVM UserBookViewModel
+ */
 class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnTabSelectedListener, ViewPager.OnPageChangeListener {
 
-    //FOR DATA
+    // FOR DATA
     private var currentUser: FirebaseUser? = null
+    private var mAuth: FirebaseAuth? = null
 
+    // FOR UI
     private lateinit var toolbar: Toolbar
-
     private lateinit var libraryCount : TextView
-
+    private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
 
+    // VIEW MODELS
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
@@ -58,34 +70,28 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
 
-    private var mAuth: FirebaseAuth? = null
-
-    private lateinit var mDrawerLayout: DrawerLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
 
-        // Action Bar --------------------------------------------------
-
+        // Action Bar
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // -------------------------------------------------------------
+        // Fetching current user from Firebase
         mAuth = FirebaseAuth.getInstance()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
         currentUser = mAuth?.currentUser
 
+        // Configuring the Action Bar
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
+        // Updating / Configuring Navigation Drawer
         mDrawerLayout = findViewById(R.id.drawer_layout)
-
         navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             // set item as selected to persist highlight
@@ -115,40 +121,64 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
             true
         }
 
+        // Updating notification count for books requests (Library Activity)
         libraryCount = navigationView.menu.findItem(R.id.nav_library).actionView as TextView
 
-        userVM.getUser(currentUser!!.uid).observe(this, Observer { checkUserProfileComplete(it)})
+        // Checking if a "currentUser" intent has been passed (starting activity from Chat Activity or Splash Activity)
+        if(intent.hasExtra("currentUser")){
+            val user = intent.getSerializableExtra("currentUser") as User
+            updateNavDrawerHeader(user)
+        }
+        else{
+            userVM.getUser(currentUser!!.uid).observe(this, Observer { updateNavDrawerHeader(it)})
+        }
 
+        // Configuring the BottomNavigationBar
         configureBottomNav()
     }
 
+    /**
+     * Configuring the BottomNavigationBar
+     */
     private fun configureBottomNav(){
+        // Setting up the different tabs
         val mapItem = AHBottomNavigationItem(getString(R.string.map), ContextCompat.getDrawable(this, R.drawable.ic_map), ContextCompat.getColor(this, R.color.colorPrimaryDark))
         val listItem = AHBottomNavigationItem(getString(R.string.list), ContextCompat.getDrawable(this, R.drawable.ic_list), ContextCompat.getColor(this, R.color.colorPrimary))
         val chatItem = AHBottomNavigationItem(getString(R.string.chat), ContextCompat.getDrawable(this, R.drawable.ic_chat), ContextCompat.getColor(this, R.color.colorAccent))
 
+        // Adding them to the BottomNavBar
         bottom_navigation_main.addItem(mapItem)
         bottom_navigation_main.addItem(listItem)
         bottom_navigation_main.addItem(chatItem)
 
+        // Configuring the different colors used by the BottomNavBar
         bottom_navigation_main.defaultBackgroundColor = ContextCompat.getColor(this, R.color.colorPrimaryDark)
         bottom_navigation_main.accentColor = ContextCompat.getColor(this, R.color.colorAccent)
         bottom_navigation_main.inactiveColor = Color.WHITE
 
+        // Color animation when switching tab
         bottom_navigation_main.isColored = true
 
+        // Configuring TabSelectedListener
         bottom_navigation_main.setOnTabSelectedListener(this)
 
+        // Default tab : "Map" (index: 0)
         bottom_navigation_main.currentItem = 0
 
+        // Configuring the ViewPagerAdapter
         val adapter = MainPagerAdapter(supportFragmentManager)
         viewPager_main.adapter = adapter
 
+        // OnPageChangeListener + Offscreen pages limit (2)
         viewPager_main.addOnPageChangeListener(this)
         viewPager_main.offscreenPageLimit = 2
     }
 
-    //appbar - toolbar button click
+    /**
+     * Configuring NavDrawer when clicking on the Navigation Button from the Toolbar
+     * @param item MenuItem
+     * @return Boolean
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -160,7 +190,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         }
     }
 
-    private fun checkUserProfileComplete(user2: User?){
+    /**
+     * Update the Navigation drawer's header with current user's information
+     * @param user2 User?
+     */
+    private fun updateNavDrawerHeader(user2: User?){
         if (user2 != null) {
             user = user2
 
@@ -172,6 +206,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         }
     }
 
+    /**
+     * Change BottomNavBar and Toolbar color according to the selected tab
+     * @param position Int - Selected tab position
+     * @param wasSelected Boolean - Indicates if the tab was already selected
+     * @return Boolean
+     */
     override fun onTabSelected(position: Int, wasSelected: Boolean): Boolean {
         when(position){
             0 -> {
@@ -190,24 +230,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, AHBottomNavigation.OnT
         return true
     }
 
+    // Prevents the pages from changing when scrolled (horizontally)
     override fun onPageScrollStateChanged(state: Int) {}
-
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
     override fun onPageSelected(position: Int) {
         bottom_navigation_main.currentItem = position
     }
 
-    override fun onBackPressed() {
-
-    }
+    // Prevent the user from going back to SplashActivity when pressing the back button
+    override fun onBackPressed() {}
 
     companion object {
         const val TAG = "MainActivity"
 
+        lateinit var user : User
+
         fun newIntent(context: Context): Intent {
             return Intent(context, com.openclassrooms.belivre.controllers.activities.MainActivity::class.java)
         }
-        lateinit var user : User
     }
 }
