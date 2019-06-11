@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.ReviewViewholder
 
+/**
+ * RecyclerViewAdapater for Reviews objects of the Detail Activity
+ */
 class ReviewsRecyclerViewAdapter(private val reviews :List<BookReview>?): RecyclerView.Adapter<ReviewViewholder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewholder {

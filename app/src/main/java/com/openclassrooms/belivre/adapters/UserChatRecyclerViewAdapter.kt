@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.chat.UserChatChannel
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.UserChatViewHolder
 
+/**
+ * RecyclerViewAdapater for UserChatChannels objects of Main Activity's "Chat" tab
+ */
 class UserChatRecyclerViewAdapter(private val userChatChannels :List<UserChatChannel>, private val clickListener: (UserChatChannel, Int) -> Unit): RecyclerView.Adapter<UserChatViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserChatViewHolder {

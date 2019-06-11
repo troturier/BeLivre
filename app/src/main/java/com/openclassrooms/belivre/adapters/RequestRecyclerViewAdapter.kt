@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.RequestViewHolder
 
+/**
+ * RecyclerViewAdapater for UserBooks objects of the Library Activity's "Borrowed" tab
+ */
 class RequestRecyclerViewAdapter (private val userBooks :List<UserBook>, private val clickListener: (UserBook, Int) -> Unit): RecyclerView.Adapter<RequestViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestViewHolder {

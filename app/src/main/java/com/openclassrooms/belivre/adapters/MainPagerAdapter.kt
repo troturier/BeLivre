@@ -2,13 +2,16 @@ package com.openclassrooms.belivre.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.openclassrooms.belivre.R
 import com.openclassrooms.belivre.controllers.fragments.ChatFragment
 import com.openclassrooms.belivre.controllers.fragments.ListFragment
 import com.openclassrooms.belivre.controllers.fragments.MapFragment
 
-class MainPagerAdapter (fm: FragmentManager) : FragmentPagerAdapter(fm) {
+/**
+ * PagerAdapater for the Main Activity
+ */
+class MainPagerAdapter (fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {

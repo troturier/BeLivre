@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.inflate
 import com.openclassrooms.belivre.viewholders.UserBookViewHolder
 
+/**
+ * RecyclerViewAdapater for UserBooks objects of Library Activity's "MyBooks" tab
+ */
 class UserBookRecyclerViewAdapter(private val userBooks :List<UserBook>, private val clickListener: (UserBook, Int) -> Unit): RecyclerView.Adapter<UserBookViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserBookViewHolder {
