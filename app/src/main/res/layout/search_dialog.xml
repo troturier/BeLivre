@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/search_a_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/searchTitleSearchDialog"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/colorAccent"
+            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@id/searchTitleSearchDialog"
+            android:id="@+id/textInputLayout" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/book_title" android:id="@+id/titleSearchDialog"
+        />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textInputLayout3"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/colorAccent"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginTop="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/authors_hint" android:id="@+id/authorsSearchDialog"
+        />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textInputLayout4"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/colorAccent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/publisher_hint" android:id="@+id/publishersSearchDialog"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/seekbarLL"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout4" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@id/categoriesLL" android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp">
+        <TextView
+                android:text="@string/rating_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView11" android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/rangeSeekbarSearchDialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:corner_radius="5"
+                app:min_value="0"
+                app:max_value="5"
+                app:steps="0.1"
+                app:bar_color="#F7BB88"
+                app:bar_highlight_color="@color/colorAccent"
+                app:left_thumb_color="@color/colorPrimary"
+                app:right_thumb_color="@color/colorPrimary"
+                app:left_thumb_color_pressed="@color/colorPrimaryDark"
+                app:right_thumb_color_pressed="@color/colorPrimaryDark"
+                app:data_type="_float"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/minSBsearchDialog" android:layout_weight="1"
+                    android:textAlignment="viewStart"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/maxSBsearchDialog" android:layout_weight="1"
+                    android:textAlignment="viewEnd"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/categoriesLL"
+            app:layout_constraintTop_toBottomOf="@id/seekbarLL" android:layout_marginTop="10dp"
+            android:paddingEnd="8dp" android:paddingStart="16dp">
+        <TextView
+                android:text="@string/categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView8" android:textSize="18sp"
+                android:layout_marginBottom="8dp"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/categoriesCBListLLSearchDialog">
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/categoriesLL"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp" android:layout_marginStart="8dp" android:paddingBottom="10dp">
+        <Button
+                android:text="@string/cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/cancelButtonSearchDialog"
+
+                android:textColor="@android:color/white"
+                android:background="@drawable/rounded_button"
+                android:layout_weight="50"/>
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="10"/>
+        <Button
+                android:text="@string/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/searchButtonSearchDialog"
+
+                android:textColor="@android:color/white"
+                android:background="@drawable/rounded_button_accent"
+                android:layout_weight="50"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
