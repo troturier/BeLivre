@@ -23,7 +23,6 @@ import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.displayNotificationOnDrawer
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
-import com.openclassrooms.belivre.utils.toast
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import com.openclassrooms.belivre.viewmodels.UserViewModel
@@ -95,9 +94,6 @@ class LibraryActivity : AppCompatActivity(), LifecycleOwner {
                     R.id.nav_profile -> {
                         val intent = ProfileActivity.newIntent(this)
                         startActivity(intent)
-                    }
-                    R.id.nav_setting -> {
-                        this.toast(getString(R.string.settings))
                     }
                     R.id.nav_home -> {
                         val intent = MainActivity.newIntent(this)

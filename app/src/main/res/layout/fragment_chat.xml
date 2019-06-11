@@ -16,13 +16,14 @@
                 app:srcCompat="@drawable/ic_mail_outline"
                 android:layout_width="match_parent"
                 android:layout_height="130dp" android:id="@+id/imageViewChat"
-                android:tint="@color/colorPrimary" android:contentDescription="@string/icon"/>
+                android:tint="@android:color/white" android:contentDescription="@string/icon"/>
         <TextView
                 android:text="@string/you_have_not_started_any_conversation_yet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/tvPlaceHolderChatTab"
                 android:textAlignment="center"
                 android:textSize="18sp" android:textStyle="bold" android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp" android:layout_marginTop="10dp"/>
+                android:layout_marginEnd="10dp" android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"/>
     </LinearLayout>
 </LinearLayout>

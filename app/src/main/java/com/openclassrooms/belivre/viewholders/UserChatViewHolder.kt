@@ -1,5 +1,6 @@
 package com.openclassrooms.belivre.viewholders
 
+import android.graphics.Color
 import android.graphics.Typeface
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -34,7 +35,11 @@ class UserChatViewHolder (v: View) : RecyclerView.ViewHolder(v) {
             badgeView.textSize = 12f
             badgeView.show()
 
+            view.messageChatValue.setTextColor(Color.WHITE)
+            view.userDNChat.setTypeface(null, Typeface.BOLD)
+            view.ccLL.background = ContextCompat.getDrawable(view.context, R.drawable.rect_round_primary_transparent_color)
             view.messageChatValue.setTypeface(null, Typeface.BOLD)
+            view.userDNChat.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
         }
 
         loadProfilePictureIntoImageView(view.userPicChat, view.context, userChatChannel.profilePic, userChatChannel.userId.toString())

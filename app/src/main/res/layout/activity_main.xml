@@ -26,8 +26,7 @@
 
             <androidx.viewpager.widget.ViewPager
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/viewPager_main"
-                    android:background="@color/backgroundFilter"/>
+                    android:layout_height="match_parent" android:id="@+id/viewPager_main"/>
             <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
                     android:id="@+id/bottom_navigation_main"
                     android:layout_width="match_parent"

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
     <LinearLayout
+            android:background="@drawable/rect_round_white_transparent"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
         <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
@@ -27,13 +31,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp" android:id="@+id/userDNOffers"
                     android:gravity="center_vertical" android:layout_weight="50" android:text="User DN"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" tools:ignore="HardcodedText"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="0dp" android:layout_weight="50">
                 <TextView
-                        android:text="City :"
+                        android:text="@string/city_title"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" android:id="@+id/cityOffers"
                         android:gravity="center_vertical" android:layout_marginEnd="5dp"/>
@@ -44,8 +48,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" android:id="@+id/view2"/>
 </LinearLayout>
