@@ -20,26 +20,31 @@ import com.openclassrooms.belivre.utils.rcSignIn
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserViewModel
 
+/**
+ * Splash Activity used when launching the application
+ * @property userVM UserViewModel
+ * @property currentUser FirebaseUser?
+ * @property mAuth FirebaseAuth?
+ */
 class SplashActivity : AppCompatActivity(), LifecycleOwner {
 
+    // VIEW MODEL
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
 
+    // FIREBASE
     private var currentUser: FirebaseUser? = null
-
     private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // -------------------------------------------------------------
         mAuth = FirebaseAuth.getInstance()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
         currentUser = mAuth?.currentUser
 
+        // If the user is not signed -> Start the Sign In Activity
         if(currentUser == null) startSignInActivity(this)
         else {
             FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) { instanceIdResult ->
@@ -51,6 +56,10 @@ class SplashActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Starts the Firebase Sign In Activity
+     * @param activity AppCompatActivity
+     */
     private fun startSignInActivity(activity: AppCompatActivity) {
         // Choose authentication providers
         val providers = arrayListOf(
@@ -72,6 +81,11 @@ class SplashActivity : AppCompatActivity(), LifecycleOwner {
         )
     }
 
+    /**
+     * Ensures that the current user's profile is complete
+     * if not, start the ProfileActivity
+     * @param user2 User?
+     */
     private fun checkUserProfileComplete(user2: User?){
         if(user2?.cityId == null || user2.cityId?.isEmpty()!!
             || user2.firstname == null || user2.firstname?.isEmpty()!!

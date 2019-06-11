@@ -25,13 +25,19 @@ import kotlinx.android.synthetic.main.offers_dialog.view.*
 
 class OffersActivity : AppCompatActivity(), LifecycleOwner {
 
+    // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: OffersRecyclerViewAdapter
+
+    // DATA
     private lateinit var user: User
     private lateinit var book: Book
+
+    // FIREBASE
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
+    // VIEW MODEL
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
@@ -58,6 +64,10 @@ class OffersActivity : AppCompatActivity(), LifecycleOwner {
         toolbar_offers.title = book.title
     }
 
+    /**
+     * Configures the Offers RecyclerView
+     * @param userbooks List<UserBook>?
+     */
     private fun configureOffersRecyclerView(userbooks: List<UserBook>?){
         if(userbooks != null){
             val sortedList:MutableList<UserBook>? = mutableListOf()
@@ -74,6 +84,10 @@ class OffersActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Displays an Alert Dialog when clicking on an item of the RecyclerView
+     * @param userBook UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showOffersDialog(userBook:UserBook){
         val layoutInflater = this.layoutInflater

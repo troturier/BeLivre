@@ -23,14 +23,30 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Search Activity used when a user wants to add a new book to his library
+ * @property linearLayoutManager LinearLayoutManager
+ * @property adapter BookRecyclerViewAdapter
+ * @property user User
+ * @property currentUser FirebaseUser?
+ * @property mAuth FirebaseAuth?
+ * @property bookVM BookViewModel
+ * @property userBookVM UserBookViewModel
+ */
 class SearchActivity : AppCompatActivity() {
 
+    // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: BookRecyclerViewAdapter
-    private var currentUser: FirebaseUser? = null
+
+    // DATA
     private lateinit var user: User
+
+    // FIREBASE
+    private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
+    // VIEW MODEL
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
     }
@@ -55,6 +71,9 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Configures the SearchView of the Activity
+     */
     private fun configureSearchView(){
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextChange(newText: String?): Boolean {

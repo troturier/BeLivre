@@ -14,7 +14,11 @@ import org.jetbrains.anko.wrapContent
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Adapter class for Messages
+ * @property message Message
+ * @constructor
+ */
 abstract class MessageItem(private val message: Message)
     : Item() {
 
@@ -23,6 +27,11 @@ abstract class MessageItem(private val message: Message)
         setMessageRootGravity(viewHolder)
     }
 
+    /**
+     * Displays the date or time of the message based on the system date
+     * If the message was sent / received on the system date the time will be displayed; Otherwise, it will be the date
+     * @param viewHolder ViewHolder
+     */
     private fun setTimeText(viewHolder: ViewHolder) {
         val sdfDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -35,6 +44,11 @@ abstract class MessageItem(private val message: Message)
         }
     }
 
+    /**
+     * Modify the gravity of the message layout according to the sender
+     * i.e. : The messages of the current user of the application will be displayed on the right while those of his correspondent will be on the left
+     * @param viewHolder ViewHolder
+     */
     private fun setMessageRootGravity(viewHolder: ViewHolder) {
         if (message.senderId == FirebaseAuth.getInstance().currentUser?.uid) {
             viewHolder.message_root.apply {

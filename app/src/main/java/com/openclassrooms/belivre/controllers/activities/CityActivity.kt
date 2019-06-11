@@ -20,13 +20,25 @@ import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.activity_city.*
 import kotlinx.android.synthetic.main.offers_dialog.view.*
 
+/**
+ * Activity displayed when a user want to see available books in a particular city
+ * @property linearLayoutManager LinearLayoutManager
+ * @property adapter CityRecyclerViewAdapter
+ * @property cityID String
+ * @property user User
+ * @property userBookVM UserBookViewModel
+ */
 class CityActivity : AppCompatActivity(), LifecycleOwner {
 
+    // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CityRecyclerViewAdapter
+
+    // DATA
     private lateinit var cityID: String
     private lateinit var user: User
 
+    // VIEW MODEL
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
@@ -35,27 +47,37 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_city)
 
+        // RECYCLER VIEW
         linearLayoutManager = LinearLayoutManager(this)
         cityRV.layoutManager = linearLayoutManager
 
+        // Retrieving current user's data from intent
         user = intent.getSerializableExtra("user") as User
 
+        // TOOLBAR
         setSupportActionBar(toolbar_city)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
+        // Retrieving city's data from intent
         cityID = intent.getStringExtra("cityID")
         val cityName = intent.getStringExtra("cityName")
 
         toolbar_city.title = cityName
 
+        // Retrieving UserBooks from Firestore
         userBookVM.getUserBooksByCity(cityID).observe(this, Observer { userBooks: List<UserBook>? -> configureRecyclerView(userBooks) })
     }
 
+    /**
+     * Configuring the RecyclerView
+     * @param userBooks List<UserBook>? - Retrieved UserBooks from Firestore
+     */
     private fun configureRecyclerView(userBooks: List<UserBook>?){
         if(userBooks != null){
             val sortedList:MutableList<UserBook>? = mutableListOf()
             for(ub in userBooks) {
+                // Removing UserBooks of the current user
                 if (ub.userId.toString() != user.id) {
                     sortedList!!.add(ub)
                 }
@@ -68,6 +90,10 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Displays an Alert Dialog when the user click on an item from the RecyclerView
+     * @param userBook UserBook - Selected UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showDialog(userBook:UserBook){
         val layoutInflater = this.layoutInflater
@@ -82,6 +108,7 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
         val alertDialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setPositiveButton(getString(R.string.view_details)) { dialog, _ ->
+                // Opening DetailActivity
                 val intent = DetailActivity.newIntent(this)
                 intent.putExtra("id", userBook.bookId)
                 intent.putExtra("user", user)
@@ -92,6 +119,7 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
 
         val dialog = alertDialog.create()
 
+        // Opening ChatActivity
         dialogView.messageButtonOffersDialog.setOnClickListener {
             val intent = ChatActivity.newIntent(this)
             intent.putExtra("user_id", userBook.userId)
@@ -101,6 +129,7 @@ class CityActivity : AppCompatActivity(), LifecycleOwner {
             startActivity(intent)
         }
 
+        // Displaying a new Alert Dialog for request confirmation
         dialogView.requestButtonOffersDialog.setOnClickListener {
             val alertDialogC = AlertDialog.Builder(this)
                 .setTitle(getString(R.string.send_a_borrowing_request))

@@ -27,16 +27,19 @@ import kotlinx.android.synthetic.main.add_review_dialog.view.*
 
 class DetailActivity : AppCompatActivity() {
 
+    // DATA
     private lateinit var user: User
     private lateinit var book: Book
     private var rateSum: Double = 0.0
     private var review: BookReview? = null
-    private var mMenu:Menu? = null
-
     private var wishlistBook: UserWishlistBook? = null
+
+    // UI
+    private var mMenu:Menu? = null
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: ReviewsRecyclerViewAdapter
 
+    // VIEW MODELS
     private val bookVM: BookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookViewModel() }).get(BookViewModel::class.java)
     }
@@ -57,10 +60,13 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        // Retrieving current user's data from intent
         user = intent.getSerializableExtra("user") as User
-        
+
+        // Retrieving selected book's data from Firestore
         bookVM.getBook(intent.getStringExtra("id")).observe(this, Observer { book:Book -> updateUI(book) })
 
+        // REVIEW RECYCLER VIEW
         linearLayoutManager = LinearLayoutManager(this)
         reviewsRecyclerView.layoutManager = linearLayoutManager
 
@@ -68,7 +74,11 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
     }
-    
+
+    /**
+     * Updates UI with retrieved data
+     * @param bookP Book - Book object retrieved from Firestore
+     */
     private fun updateUI(bookP: Book){
         book = bookP
 
@@ -177,6 +187,10 @@ class DetailActivity : AppCompatActivity() {
         wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
     }
 
+    /**
+     * Start OffersActivity with required data
+     * @param userbooks List<UserBook>?
+     */
     private fun configureOffersButton(userbooks:List<UserBook>?){
         val sortedList:MutableList<UserBook>? = mutableListOf()
         if (userbooks != null) {
@@ -201,6 +215,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Add or remove a book to the current user's wish list
+     * @param wishlistBookP UserWishlistBook?
+     */
     private fun updateWishlistUI(wishlistBookP : UserWishlistBook?){
         wishlistBook = wishlistBookP
         if(wishlistBook != null){
@@ -209,6 +227,10 @@ class DetailActivity : AppCompatActivity() {
         else mMenu!!.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_add_wishlist)
     }
 
+    /**
+     * Update the current user's review of the book
+     * @param reviewP BookReview?
+     */
     private fun updateUserReview(reviewP: BookReview?){
         review = reviewP
         if(review != null){
@@ -217,6 +239,10 @@ class DetailActivity : AppCompatActivity() {
         reviewVM.getBookReviews(book.id.toString()).observe(this, Observer { reviews:List<BookReview>? -> configureRecyclerView(reviews) })
     }
 
+    /**
+     * Update rating summary of the book
+     * @param reviews List<BookReview>?
+     */
     private fun updateRateSum(reviews: List<BookReview>?){
         if (reviews != null && reviews.isNotEmpty()) {
             rateSum = 0.0
@@ -236,6 +262,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Configure the RecyclerView
+     * @param reviews List<BookReview>?
+     */
     private fun configureRecyclerView(reviews:List<BookReview>?){
         if(reviews != null && reviews.isNotEmpty()){
             reviewLLDetail.visibility = View.VISIBLE
@@ -252,11 +282,16 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Displays the Review Dialog
+     * Allows the current user to add/update/remove a review
+     */
     @SuppressLint("InflateParams")
     private fun createReviewDialog() {
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.add_review_dialog, null)
 
+        // CHECK IF A REVIEW ALREADY EXIST
         if(review != null){
             dialogView.ratingBarReviewDialog.rating = review!!.rate!!.toFloat()
             if (review!!.content != null){
@@ -265,6 +300,7 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
+        // REVIEW TEXT
         val contentReview = dialogView.contentReviewDialog
         contentReview.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {

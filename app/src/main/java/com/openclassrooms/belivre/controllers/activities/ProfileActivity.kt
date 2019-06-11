@@ -72,6 +72,11 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     private var user: User? = null
     private var names: List<String>? = null
     private var city: City? = null
+    private var filePath: Uri? = null
+    private lateinit var storageReference: StorageReference
+    private lateinit var ref: StorageReference
+    private var libraryCount : TextView? = null
+    private lateinit var filePathURI : Uri
 
     //////////////////////////////////////////////
     // ----------- VIEW MODELS ---------------- //
@@ -88,19 +93,12 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
 
-    private var filePath: Uri? = null
-
-    private lateinit var storageReference: StorageReference
-    private lateinit var ref: StorageReference
-
-    private var libraryCount : TextView? = null
+    //////////////////////////////////////////////
+    // ---------------- UI -------------------- //
+    //////////////////////////////////////////////
 
     private lateinit var addMediaIV:ImageView
     private lateinit var circularProgressDrawable: CircularProgressDrawable
-    private lateinit var filePathURI : Uri
-
-    private var mAuth: FirebaseAuth? = null
-
     private lateinit var mDrawerLayout: DrawerLayout
 
     //////////////////////////////////////////////
@@ -108,7 +106,7 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
     //////////////////////////////////////////////
 
     private var currentUser : FirebaseUser? = null
-
+    private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -341,6 +339,9 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Upload an image to Firestore
+     */
     private fun uploadImage() {
 
         progressBar.visibility = View.VISIBLE
@@ -371,6 +372,10 @@ class ProfileActivity : AppCompatActivity(), LifecycleOwner {
             }
     }
 
+    /**
+     * Displays the AddMedia Alert Dialog
+     * Allows the current user to modify his profile picture
+     */
     @SuppressLint("InflateParams")
     private fun createAddMediaDialog(){
         filePath = null

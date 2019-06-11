@@ -6,10 +6,17 @@ import com.openclassrooms.belivre.chat.TextMessage
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.item_text_message.*
 
-
+/**
+ * Adapter class for Messages
+ * Extends from MessageItem
+ * @property message TextMessage
+ * @property context Context
+ * @constructor
+ */
 class TextMessageItem(val message: TextMessage,
                       val context: Context)
     : MessageItem(message) {
+
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.textView_message_text.text = message.text
         super.bind(viewHolder, position)

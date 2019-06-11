@@ -29,12 +29,23 @@ import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.activity_library.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 
+/**
+ * Activity used to displays "MyBooks" and "Borrowed" fragments (tabs)
+ * @property mDrawerLayout DrawerLayout
+ * @property libraryCount TextView
+ * @property userBookVM UserBookViewModel
+ * @property userVM UserViewModel
+ * @property mAuth FirebaseAuth?
+ */
 class LibraryActivity : AppCompatActivity(), LifecycleOwner {
 
+    // UI
     private lateinit var mDrawerLayout: DrawerLayout
 
+    // DATA
     private lateinit var libraryCount : TextView
 
+    // VIEW MODELS
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
@@ -54,6 +65,7 @@ class LibraryActivity : AppCompatActivity(), LifecycleOwner {
 
         tabs_library.setupWithViewPager(viewpager_library)
 
+        // Used if the activity was started from a notification
         if(intent.hasExtra("tab")){
             viewpager_library.currentItem = intent.getStringExtra("tab").toInt()
         }
@@ -70,6 +82,10 @@ class LibraryActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Updates the NavigationDrawer UI elements
+     * @param user User?
+     */
     private fun updateDrawerUI(user: User?){
         if (user != null) {
             val toolbar: Toolbar = this.findViewById(R.id.toolbar_library)
@@ -115,6 +131,11 @@ class LibraryActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    /**
+     * Updates the NavigationDrawer's header
+     * @param user User
+     * @param nav_view NavigationView
+     */
     private fun updateDrawerNavHeader(user: User, nav_view :NavigationView){
         nav_view.getHeaderView(0).drawer_username.text = getString(R.string.profile_display_name, user.firstname, user.lastname?.substring(0,1))
         nav_view.getHeaderView(0).drawer_email.text = user.email

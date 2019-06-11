@@ -5,6 +5,9 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+/**
+ * Function used to retrieve books from the Google Books API using a string query
+ */
 fun getBooks(callback: Callback<BookResults>, query:String){
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.googleapis.com")
