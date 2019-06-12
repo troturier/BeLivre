@@ -32,14 +32,19 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
+ * MyBooksFragment displayed in the MyBooks tab of the LibraryActivity
  */
 class MyBooksFragment : Fragment(), LifecycleOwner {
 
+    // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: UserBookRecyclerViewAdapter
+
+    // FIREBASE
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
+    // VIEW MODELS
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
@@ -62,6 +67,10 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
 
     }
 
+    /**
+     * Configures the RecyclerView
+     * @param userBooks List<UserBook>?
+     */
     private fun configureRecyclerView(userBooks:List<UserBook>?) {
         if (userBooks != null) {
             val sortedUserBooks = userBooks.sortedWith(compareBy { it.title })
@@ -87,6 +96,11 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         }
     }
 
+    /**
+     * Displays an AlertDialog box when clicking on a RV's item
+     * Will only appear when the status of the selected book is "Available"
+     * @param item UserBook
+     */
     private fun showAvailableDialog(item: UserBook) {
         val alertDialog = AlertDialog.Builder(this.activity!!)
             .setTitle(item.title)
@@ -121,6 +135,11 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         dialog.show()
     }
 
+    /**
+     * Displays an AlertDialog box when clicking on a RV's item
+     * Will only appear when the status of the selected book is "Borrow request pending"
+     * @param item UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showRequestDialog(item : UserBook){
         val layoutInflater = this.layoutInflater
@@ -201,6 +220,11 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         dialog.show()
     }
 
+    /**
+     * Displays an AlertDialog box when clicking on a RV's item
+     * Will only appear when the status of the selected book is "Return request pending"
+     * @param item UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showReturnDialog(item: UserBook){
         val layoutInflater = this.layoutInflater
@@ -254,6 +278,11 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         dialog.show()
     }
 
+    /**
+     * Displays an AlertDialog box when clicking on a RV's item
+     * Will only appear when the status of the selected book is "Borrowed"
+     * @param item UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showBorrowedDialog(item: UserBook){
         val layoutInflater = this.layoutInflater

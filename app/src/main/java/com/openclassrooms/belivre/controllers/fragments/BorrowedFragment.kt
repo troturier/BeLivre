@@ -28,16 +28,25 @@ import kotlinx.android.synthetic.main.request_dialog_borrowed_tab.view.*
 
 /**
  * A simple [Fragment] subclass.
+ * Used to display the "Borrowed" tab of the LibraryActivity
  */
 class BorrowedFragment : Fragment() {
 
+    // UI
     private lateinit var linearLayoutManagerBorrowed: LinearLayoutManager
     private lateinit var linearLayoutManagerRequest: LinearLayoutManager
     private lateinit var adapterBorrowed: BorrowedRecyclerViewAdapter
     private lateinit var adapterRequest: RequestRecyclerViewAdapter
+
+    // DATA
     private var user: User? = null
+
+    // FIREBASE
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
+
+    ///////////////////////////
+    // VIEW MODELS ////////////
 
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
@@ -46,6 +55,8 @@ class BorrowedFragment : Fragment() {
     private val userVM: UserViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
+
+    ///////////////////////////
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -81,6 +92,10 @@ class BorrowedFragment : Fragment() {
         }
     }
 
+    /**
+     * Configuring the RecyclerView
+     * @param userBooks List<UserBook>?
+     */
     private fun configureBorrowedRecyclerView(userBooks:List<UserBook>?){
         if (userBooks != null) {
             val userBooksBorrowed:MutableList<UserBook>? = mutableListOf()
@@ -143,6 +158,11 @@ class BorrowedFragment : Fragment() {
         }
     }
 
+    /**
+     * Action performed when clicking on a Borrowed RV's item
+     * Displays an AlertDialog box
+     * @param item UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showBorrowedDialog(item: UserBook){
         val layoutInflater = this.layoutInflater
@@ -196,6 +216,11 @@ class BorrowedFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * Action performed when clicking on a Request RV's item
+     * Displays an AlertDialog box
+     * @param item UserBook
+     */
     @SuppressLint("InflateParams")
     private fun showRequestDialog(item: UserBook){
         val layoutInflater = this.layoutInflater

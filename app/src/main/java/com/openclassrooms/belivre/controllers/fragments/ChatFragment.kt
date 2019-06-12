@@ -24,11 +24,15 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 
 class ChatFragment : Fragment(), LifecycleOwner {
 
+    // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: UserChatRecyclerViewAdapter
+
+    // FIREBASE
     private var currentUser: FirebaseUser? = null
     private var mAuth: FirebaseAuth? = null
 
+    // VIEW MODELS
     private val userChatChannelVM: UserChatChannelViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserChatChannelViewModel() }).get(UserChatChannelViewModel::class.java)
     }
@@ -51,6 +55,10 @@ class ChatFragment : Fragment(), LifecycleOwner {
         }
     }
 
+    /**
+     * Configures the RecyclerView
+     * @param userChatChannels List<UserChatChannel>?
+     */
     private fun configureChatRecyclerView(userChatChannels: List<UserChatChannel>?){
         if(userChatChannels != null && currentUser != null){
             val sortedList = userChatChannels.sortedWith(compareBy { it.time })
@@ -62,6 +70,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
                 }
             }
 
+            // onClickListener
             adapter = UserChatRecyclerViewAdapter(sortedList2){ item: UserChatChannel, _: Int ->
                 val intent = ChatActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("user_id", item.userId)
@@ -73,6 +82,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
             chatRV_main.adapter = adapter
             adapter.notifyDataSetChanged()
 
+            // Displaying a placeholder if nothing to show
             if(sortedList2.isEmpty()){
                 chatRV_main.visibility = View.GONE
                 phChatTab.visibility = View.VISIBLE
@@ -81,6 +91,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
                 phChatTab.visibility = View.GONE
             }
 
+            // Defines the number of unseen messages
             var count = 0
             for(ucc in sortedList2){
                 if (!ucc.seen){
@@ -88,6 +99,7 @@ class ChatFragment : Fragment(), LifecycleOwner {
                 }
             }
 
+            // Show a notification on the BottomNavigationBar if unseen messages count > 0
             if (count > 0) {
                 activity!!.findViewById<AHBottomNavigation>(R.id.bottom_navigation_main).setNotification(count.toString(),2)
                 activity!!.findViewById<AHBottomNavigation>(R.id.bottom_navigation_main).setNotificationBackgroundColor(ContextCompat.getColor(activity!!.applicationContext, R.color.colorAccent))

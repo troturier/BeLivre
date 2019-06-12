@@ -31,12 +31,20 @@ import com.openclassrooms.belivre.viewmodels.CityViewModel
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
 import kotlinx.android.synthetic.main.fragment_map.*
 
-
+/**
+ * Map Fragment used in MainActivity
+ * @property mMap GoogleMap
+ * @property mFusedLocationProviderClient FusedLocationProviderClient
+ * @property userBookVM UserBookViewModel
+ * @property cityVM CityViewModel
+ */
 class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
 
+    // MAP
     private lateinit var mMap: GoogleMap
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
+    // VIEW MODELS
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
     }
@@ -69,6 +77,9 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
         cityVM.getCities().observe(this, Observer { cities:List<City>? -> setMarkers(cities)})
     }
 
+    /**
+     * Will move the map's camera to last known position of the user
+     */
     private fun moveCameraToUser(){
         if(ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
@@ -91,6 +102,11 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
         }
     }
 
+    /**
+     * Creates markers (with counter) on the Map according to a list of cities
+     * Only cities with at least one available book will be displayed
+     * @param cities List<City>?
+     */
     private fun setMarkers(cities: List<City>?){
         if(cities != null){
             for(city in cities){
@@ -119,7 +135,7 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
                                     val userbook = document.toObject(UserBook::class.java)
                                     userbookList.add(userbook)
                                 }
-                                startOffersActivity(userbookList, marker)
+                                startCityActivity(userbookList, marker)
                             } else {
                                 Log.d(UserBookViewModel.TAG, "Error getting documents: ", task.exception)
                             }
@@ -136,7 +152,13 @@ class MapFragment  : Fragment(), OnMapReadyCallback, LifecycleOwner {
         }
     }
 
-    private fun startOffersActivity(userbooks: List<UserBook>?, marker:Marker){
+    /**
+     * Start the CityActivity
+     * The activity will only start if the number of books available, other than those of the current user, is greater than one
+     * @param userbooks List<UserBook>?
+     * @param marker Marker
+     */
+    private fun startCityActivity(userbooks: List<UserBook>?, marker:Marker){
         if(userbooks != null && userbooks.isNotEmpty()){
             val sortedList:MutableList<UserBook>? = mutableListOf()
             for(ub in userbooks) {
