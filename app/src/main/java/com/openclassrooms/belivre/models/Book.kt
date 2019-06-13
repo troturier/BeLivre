@@ -2,6 +2,20 @@ package com.openclassrooms.belivre.models
 
 import java.io.Serializable
 
+/**
+ * Book Model
+ * @property id String?
+ * @property title String?
+ * @property authors List<String>?
+ * @property categories List<String>?
+ * @property publisher String?
+ * @property publishedDate String?
+ * @property subtitle String?
+ * @property coverUrl String?
+ * @property description String?
+ * @property rating Double
+ * @constructor
+ */
 data class Book (
     var id: String? = null,
     var title: String? = null,

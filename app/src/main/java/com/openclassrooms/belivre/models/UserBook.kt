@@ -1,5 +1,29 @@
 package com.openclassrooms.belivre.models
 
+/**
+ * UserBook Model
+ * @property id String?
+ * @property bookId String?
+ * @property userId String?
+ * @property userDisplayName String?
+ * @property userPicUrl String?
+ * @property cityId String?
+ * @property cityName String?
+ * @property title String?
+ * @property authors List<String>?
+ * @property categories List<String>?
+ * @property publisher String?
+ * @property coverUrl String?
+ * @property status Int?
+ * @property lastBorrowerId String?
+ * @property lastBorrowerDisplayName String?
+ * @property lastBorrowerPicUrl String?
+ * @property lastBorrowedOn String?
+ * @property requestSenderId String?
+ * @property requestSenderDisplayName String?
+ * @property requestSenderPicUrl String?
+ * @constructor
+ */
 data class UserBook (
     var id: String? = null,
     var bookId: String? = null,
