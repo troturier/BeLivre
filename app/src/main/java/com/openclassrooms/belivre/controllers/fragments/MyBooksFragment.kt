@@ -18,10 +18,12 @@ import com.openclassrooms.belivre.controllers.activities.ChatActivity
 import com.openclassrooms.belivre.controllers.activities.DetailActivity
 import com.openclassrooms.belivre.controllers.activities.LibraryActivity
 import com.openclassrooms.belivre.controllers.activities.SearchActivity
+import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.openclassrooms.belivre.viewmodels.BaseViewModelFactory
 import com.openclassrooms.belivre.viewmodels.UserBookViewModel
+import com.openclassrooms.belivre.viewmodels.UserViewModel
 import kotlinx.android.synthetic.main.borrowed_dialog.view.*
 import kotlinx.android.synthetic.main.exchange_request_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_mybooks.*
@@ -36,6 +38,9 @@ import java.util.*
  */
 class MyBooksFragment : Fragment(), LifecycleOwner {
 
+    // DATA
+    private var user: User? = null
+
     // UI
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: UserBookRecyclerViewAdapter
@@ -47,6 +52,10 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
     // VIEW MODELS
     private val userBookVM: UserBookViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { UserBookViewModel() }).get(UserBookViewModel::class.java)
+    }
+
+    private val userVM: UserViewModel by lazy {
+        ViewModelProviders.of(this, BaseViewModelFactory { UserViewModel() }).get(UserViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,8 +72,16 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         linearLayoutManager = LinearLayoutManager(activity)
         mybooksRV.layoutManager = linearLayoutManager
 
-        userBookVM.getUserBooksByUserId(currentUser!!.uid).observe(this, Observer { userBooks:List<UserBook>? -> configureRecyclerView(userBooks)})
 
+
+        if (LibraryActivity.user != null) {
+            user = LibraryActivity.user
+            userBookVM.getUserBooksByUserId(user!!.id!!).observe(this, Observer { userBooks:List<UserBook>? -> configureRecyclerView(userBooks)})
+        } else {
+            userVM.getUser(currentUser!!.uid).observe(this, Observer {
+                user = it
+                userBookVM.getUserBooksByUserId(user!!.id!!).observe(this, Observer { userBooks:List<UserBook>? -> configureRecyclerView(userBooks)})})
+        }
     }
 
     /**
@@ -108,7 +125,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             .setPositiveButton(getString(R.string.view_details)) { dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -154,7 +171,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -194,7 +211,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
             intent.putExtra("user_pp", item.userPicUrl)
-            intent.putExtra("current_user", LibraryActivity.user)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 
@@ -239,7 +256,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -271,7 +288,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
             intent.putExtra("user_pp", item.userPicUrl)
-            intent.putExtra("current_user", LibraryActivity.user)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 
@@ -299,7 +316,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -310,7 +327,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
             intent.putExtra("user_id", item.requestSenderId)
             intent.putExtra("user_name", item.requestSenderDisplayName)
             intent.putExtra("user_pp", item.userPicUrl)
-            intent.putExtra("current_user", LibraryActivity.user)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 
@@ -327,7 +344,7 @@ class MyBooksFragment : Fragment(), LifecycleOwner {
         val id = item.itemId
         if (id == R.id.plus_icon) {
             val intent = Intent(activity, SearchActivity::class.java)
-            intent.putExtra("user", LibraryActivity.user)
+            intent.putExtra("user", user)
             this.startActivity(intent)
             return true
         }

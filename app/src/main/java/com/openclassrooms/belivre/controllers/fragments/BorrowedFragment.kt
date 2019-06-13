@@ -179,7 +179,7 @@ class BorrowedFragment : Fragment() {
             .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -190,7 +190,7 @@ class BorrowedFragment : Fragment() {
             intent.putExtra("user_id", item.userId)
             intent.putExtra("user_name", item.userDisplayName)
             intent.putExtra("user_pp", item.userPicUrl)
-            intent.putExtra("current_user", LibraryActivity.user)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 
@@ -238,7 +238,7 @@ class BorrowedFragment : Fragment() {
             .setPositiveButton(getString(R.string.view_details)){ dialog, _ ->
                 val intent = DetailActivity.newIntent(activity!!.applicationContext)
                 intent.putExtra("id", item.bookId)
-                intent.putExtra("user", LibraryActivity.user)
+                intent.putExtra("user", user)
                 startActivity(intent)
                 dialog.dismiss()
             }
@@ -249,7 +249,7 @@ class BorrowedFragment : Fragment() {
             intent.putExtra("user_id", item.userId)
             intent.putExtra("user_name", item.userDisplayName)
             intent.putExtra("user_pp", item.userPicUrl)
-            intent.putExtra("current_user", LibraryActivity.user)
+            intent.putExtra("current_user", user)
             startActivity(intent)
         }
 
