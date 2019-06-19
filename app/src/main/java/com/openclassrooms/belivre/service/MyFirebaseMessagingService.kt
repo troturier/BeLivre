@@ -6,7 +6,9 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.openclassrooms.belivre.chat.FirestoreUtil
 
-
+/**
+ * Custom FirebaseMessagingService
+ */
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(s: String?) {

@@ -31,6 +31,9 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 }
 
+/**
+ * Function to load the user's current profile picture into a given ImageView
+ */
 fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePicURL : String?, userId: String){
     val circularProgressDrawable = CircularProgressDrawable(context)
     circularProgressDrawable.strokeWidth = 10f
@@ -60,6 +63,9 @@ fun loadProfilePictureIntoImageView(iv : ImageView, context : Context, profilePi
     }
 }
 
+/**
+ * Create a Badge Drawable containing a counter
+ */
 fun setBadgeCount(context: Context, res: Int, badgeCount: Int): Drawable {
     val icon = ContextCompat.getDrawable(context, R.drawable.ic_badge_drawable) as LayerDrawable?
     val mainIcon = ContextCompat.getDrawable(context, res)
@@ -72,6 +78,9 @@ fun setBadgeCount(context: Context, res: Int, badgeCount: Int): Drawable {
     return icon
 }
 
+/**
+ * Display a Badge Notification on the Navigation Button of the DrawerLayout
+ */
 fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, appCompatActivity: AppCompatActivity, libraryCount: TextView){
     var alertCount = 0
     if(userBooks != null){
@@ -94,8 +103,9 @@ fun displayNotificationOnDrawer(userBooks:List<UserBook>?, context: Context, app
     }
 }
 
-
-
+/**
+ * Observer used to observe a LiveData only once
+ */
 fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
     observe(lifecycleOwner, object : Observer<T> {
         override fun onChanged(t: T?) {

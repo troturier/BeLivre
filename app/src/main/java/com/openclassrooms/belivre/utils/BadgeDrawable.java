@@ -10,7 +10,7 @@ import com.openclassrooms.belivre.R;
 
 
 /**
- * Created by Admin on 2/25/2016.
+ * Allows to add Badge Drawable to any View element
  */
 public class BadgeDrawable extends Drawable {
 

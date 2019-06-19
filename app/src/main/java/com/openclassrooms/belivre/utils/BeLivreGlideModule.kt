@@ -8,6 +8,9 @@ import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import java.io.InputStream
 
+/**
+ * Custom GlideModule used to load pictures from Firestore with Glide
+ */
 @GlideModule
 class BeLivreGlideModule : AppGlideModule() {
 
