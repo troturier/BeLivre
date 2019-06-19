@@ -32,7 +32,6 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var book: Book
     private var rateSum: Double = 0.0
     private var review: BookReview? = null
-    private var wishlistBook: UserWishlistBook? = null
 
     // UI
     private var mMenu:Menu? = null
@@ -46,10 +45,6 @@ class DetailActivity : AppCompatActivity() {
 
     private val reviewVM: BookReviewViewModel by lazy {
         ViewModelProviders.of(this, BaseViewModelFactory { BookReviewViewModel() }).get(BookReviewViewModel::class.java)
-    }
-
-    private val wishlistVM: UserWishlistBookViewModel by lazy {
-        ViewModelProviders.of(this, BaseViewModelFactory { UserWishlistBookViewModel() }).get(UserWishlistBookViewModel::class.java)
     }
 
     private val userBookVM: UserBookViewModel by lazy {
@@ -183,8 +178,6 @@ class DetailActivity : AppCompatActivity() {
         ratingBarDetail.rating = rateSum.toFloat()
 
         reviewVM.getBookReview(book.id!!, book.id + user.id).observe(this, Observer { review:BookReview? -> updateUserReview(review) })
-
-        wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
     }
 
     /**
@@ -213,18 +206,6 @@ class DetailActivity : AppCompatActivity() {
         } else {
             offersDetail.text = getString(R.string.offers_count, sortedList!!.size.toString())
         }
-    }
-
-    /**
-     * Add or remove a book to the current user's wish list
-     * @param wishlistBookP UserWishlistBook?
-     */
-    private fun updateWishlistUI(wishlistBookP : UserWishlistBook?){
-        wishlistBook = wishlistBookP
-        if(wishlistBook != null){
-            mMenu!!.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_add_wishlist_full)
-        }
-        else mMenu!!.getItem(1).icon = ContextCompat.getDrawable(this, R.drawable.ic_add_wishlist)
     }
 
     /**
@@ -376,17 +357,6 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.write_review_button -> createReviewDialog()
-            R.id.add_to_wishlist -> {
-                if(wishlistBook == null){
-                    wishlistBook = UserWishlistBook(book.id + user.id, user.id, book.id, book.title, book.authors, book.categories, book.publisher, book.coverUrl)
-                    wishlistVM.addUserWishlistBook(wishlistBook!!)
-                    wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
-                }
-                else{
-                    wishlistVM.deleteUserWishlistBook(wishlistBook!!)
-                    wishlistVM.getUserWishlistBook(book.id + user.id).observe(this, Observer { userWishListP : UserWishlistBook? -> updateWishlistUI(userWishListP) })
-                }
-            }
             else -> return false
         }
         return true
