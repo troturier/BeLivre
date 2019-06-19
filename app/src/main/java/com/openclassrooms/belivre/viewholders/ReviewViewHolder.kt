@@ -6,6 +6,9 @@ import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import kotlinx.android.synthetic.main.detail_review_item_row.view.*
 
+/**
+ * Viewholder used with BookReviews objects in DetailActivity
+ */
 class ReviewViewholder (v: View) : RecyclerView.ViewHolder(v) {
 
     private var view: View = v

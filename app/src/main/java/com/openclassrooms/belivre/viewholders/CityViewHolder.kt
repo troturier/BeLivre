@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.GlideApp
 import kotlinx.android.synthetic.main.city_item_row.view.*
 
+/**
+ * Viewholder used with Books objects in CityActivity
+ */
 class CityViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private var view: View = v
     private var book: UserBook? = null

@@ -7,6 +7,9 @@ import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.utils.GlideApp
 import kotlinx.android.synthetic.main.fragment_list_item_row.view.*
 
+/**
+ * Viewholder used with Books objects in the "List" tab of the MainActivity
+ */
 class BookListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private var view: View = v
     private var book: Book? = null

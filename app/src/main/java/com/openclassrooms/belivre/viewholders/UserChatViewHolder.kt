@@ -11,6 +11,9 @@ import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import com.readystatesoftware.viewbadger.BadgeView
 import kotlinx.android.synthetic.main.chat_fragment_item_row.view.*
 
+/**
+ * Viewholder used with UserChatChannels objects in ChatActivity
+ */
 class UserChatViewHolder (v: View) : RecyclerView.ViewHolder(v) {
     private var view: View = v
     private var userChatChannel : UserChatChannel? = null

@@ -8,6 +8,9 @@ import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.utils.GlideApp
 import kotlinx.android.synthetic.main.search_item_row.view.*
 
+/**
+ * Viewholder used with Books objects in SearchActivity
+ */
 class BookViewholder (v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
 
     private var view: View = v

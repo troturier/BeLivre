@@ -9,6 +9,9 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.GlideApp
 import kotlinx.android.synthetic.main.request_item_row.view.*
 
+/**
+ * Viewholder used with UserBooks objects in LibraryActivity (BorrowedFragment)
+ */
 class RequestViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private var view: View = v
     private var userBook : UserBook? = null

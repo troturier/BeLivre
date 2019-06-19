@@ -6,6 +6,9 @@ import com.openclassrooms.belivre.models.UserBook
 import com.openclassrooms.belivre.utils.loadProfilePictureIntoImageView
 import kotlinx.android.synthetic.main.offers_item_row.view.*
 
+/**
+ * Viewholder used with UserBooks objects in OffersActivity
+ */
 class OffersViewHolder (v: View) : RecyclerView.ViewHolder(v) {
     private var view:View = v
     private var userBook : UserBook? = null
