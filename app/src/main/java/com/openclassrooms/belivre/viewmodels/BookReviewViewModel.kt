@@ -12,6 +12,9 @@ import com.openclassrooms.belivre.models.BookReview
 import com.openclassrooms.belivre.repositories.BookReviewRepository
 import com.openclassrooms.belivre.utils.SingleLiveEvent
 
+/**
+ * BookReview ViewModel
+ */
 class BookReviewViewModel: ViewModel() {
     private var bookreviewRepository = BookReviewRepository()
     private var bookreviews : MutableLiveData<List<BookReview>> = MutableLiveData()
@@ -19,7 +22,9 @@ class BookReviewViewModel: ViewModel() {
 
     private val toastMessage = SingleLiveEvent<Int>()
 
-    // save bookreview to firebase
+    /**
+     * Saves BookReview object in Firestore
+     */
     fun addBookReview(bookreview: BookReview){
         bookreviewRepository.addBookReview(bookreview)
             .addOnFailureListener {
@@ -30,7 +35,9 @@ class BookReviewViewModel: ViewModel() {
             }
     }
 
-    // get realtime updates from firebase regarding saved bookreviews
+    /**
+     * Retrieves all BookReviews from Firestore
+     */
     fun getBookReviews(bookId: String): LiveData<List<BookReview>>{
         bookreviewRepository.getBookReviews(bookId).addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
@@ -50,7 +57,9 @@ class BookReviewViewModel: ViewModel() {
         return bookreviews
     }
 
-    // get realtime updates from firebase regarding bookreview
+    /**
+     * Retrieves one BookReview from Firestore
+     */
     fun getBookReview(bookId: String, id: String): LiveData<BookReview> {
         bookreviewRepository.getBookReview(bookId, id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
@@ -64,7 +73,9 @@ class BookReviewViewModel: ViewModel() {
         return bookreview
     }
 
-    // delete a bookreview from firebase
+    /**
+     * Deletes one BookReview from Firestore
+     */
     fun deleteBookReview(bookreview: BookReview){
         bookreviewRepository.deleteBookReview(bookreview).addOnFailureListener {
             Log.e(TAG,"Failed to delete BookReview")

@@ -13,6 +13,9 @@ import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.repositories.UserChatChannelRepository
 import com.openclassrooms.belivre.utils.SingleLiveEvent
 
+/**
+ * UserChatChannel ViewModel
+ */
 class UserChatChannelViewModel: ViewModel(){
 
     private var userChatChannelRepository = UserChatChannelRepository()
@@ -21,7 +24,9 @@ class UserChatChannelViewModel: ViewModel(){
 
     internal val toastMessage = SingleLiveEvent<Int>()
 
-    // save userChatChannel to firebase
+    /**
+     * Saves UserChatChannel object in Firestore
+     */
     fun addUserChatChannel(uid: String, userChatChannel: UserChatChannel){
         userChatChannelRepository.addUserChatChannel(uid, userChatChannel)
             .addOnFailureListener {
@@ -32,7 +37,9 @@ class UserChatChannelViewModel: ViewModel(){
             }
     }
 
-    // get realtime updates from firebase regarding saved userChatChannels
+    /**
+     * Retrieves all UserChatChannels from Firestore
+     */
     fun getUserChatChannels(uid:String): LiveData<List<UserChatChannel>> {
         userChatChannelRepository.getUserChatChannels(uid).addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
@@ -52,7 +59,9 @@ class UserChatChannelViewModel: ViewModel(){
         return userChatChannels
     }
 
-    // get realtime updates from firebase regarding userChatChannel
+    /**
+     * Retrieves one UserChatChannel from Firestore
+     */
     fun getUserChatChannel(uid: String, id: String): LiveData<UserChatChannel>{
         userChatChannelRepository.getUserChatChannel(uid, id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
@@ -66,7 +75,9 @@ class UserChatChannelViewModel: ViewModel(){
         return userChatChannel
     }
 
-    // delete an userChatChannel from firebase
+    /**
+     * Deletes one UserChatChannel from Firestore
+     */
     fun deleteUserChatChannel(user: User, id: String){
         userChatChannelRepository.deleteUserChatChannel(user, id).addOnFailureListener {
             Log.e(TAG,"Failed to delete UserChatChannel")

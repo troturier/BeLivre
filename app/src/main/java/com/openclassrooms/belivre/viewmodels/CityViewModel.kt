@@ -10,12 +10,17 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.openclassrooms.belivre.models.City
 import com.openclassrooms.belivre.repositories.CityRepository
 
+/**
+ * City ViewModel
+ */
 class CityViewModel : ViewModel() {
     private var cityRepository = CityRepository()
     private var cities : MutableLiveData<List<City>> = MutableLiveData()
     private var city : MutableLiveData<City> = MutableLiveData()
 
-    // save city to firebase
+    /**
+     * Saves City object in Firestore
+     */
     fun addCity(city: City){
         cityRepository.getCity(city.id.toString()).get().addOnSuccessListener { value ->
             if(!value!!.exists()) {
@@ -27,7 +32,9 @@ class CityViewModel : ViewModel() {
         }
     }
 
-    // get realtime updates from firebase regarding saved cities
+    /**
+     * Retrieves all Cities from Firestore
+     */
     fun getCities(): LiveData<List<City>>{
         cityRepository.getCities().addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
@@ -47,7 +54,9 @@ class CityViewModel : ViewModel() {
         return cities
     }
 
-    // get realtime updates from firebase regarding city
+    /**
+     * Retrieves one City from Firestore
+     */
     fun getCity(id: String): LiveData<City>{
         cityRepository.getCity(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
@@ -61,7 +70,9 @@ class CityViewModel : ViewModel() {
         return city
     }
 
-    // delete a city from firebase
+    /**
+     * Deletes one City from Firestore
+     */
     fun deleteCity(city: City){
         cityRepository.deleteCity(city).addOnFailureListener {
             Log.e(TAG,"Failed to delete City")

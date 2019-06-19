@@ -12,6 +12,9 @@ import com.openclassrooms.belivre.models.User
 import com.openclassrooms.belivre.repositories.UserRepository
 import com.openclassrooms.belivre.utils.SingleLiveEvent
 
+/**
+ * User ViewModel
+ */
 class UserViewModel : ViewModel(){
 
     private var userRepository = UserRepository()
@@ -20,7 +23,9 @@ class UserViewModel : ViewModel(){
 
     internal val toastMessage = SingleLiveEvent<Int>()
 
-    // save user to firebase
+    /**
+     * Saves User object in Firestore
+     */
     fun addUser(user: User){
         userRepository.addUser(user)
         .addOnFailureListener {
@@ -31,7 +36,9 @@ class UserViewModel : ViewModel(){
         }
     }
 
-    // get realtime updates from firebase regarding saved users
+    /**
+     * Retrieves all Users from Firestore
+     */
     fun getUsers(): LiveData<List<User>>{
         userRepository.getUsers().addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
@@ -51,7 +58,9 @@ class UserViewModel : ViewModel(){
         return users
     }
 
-    // get realtime updates from firebase regarding user
+    /**
+     * Retrieves one User from Firestore
+     */
     fun getUser(uid: String): LiveData<User>{
         userRepository.getUser(uid).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
@@ -65,7 +74,9 @@ class UserViewModel : ViewModel(){
         return user
     }
 
-    // delete an user from firebase
+    /**
+     * Deletes one User from Firestore
+     */
     fun deleteUser(user: User){
         userRepository.deleteUser(user).addOnFailureListener {
             Log.e(TAG,"Failed to delete User")

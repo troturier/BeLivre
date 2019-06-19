@@ -12,15 +12,19 @@ import com.openclassrooms.belivre.models.Book
 import com.openclassrooms.belivre.repositories.BookRepository
 import com.openclassrooms.belivre.utils.SingleLiveEvent
 
+/**
+ * Book ViewModel
+ */
 class BookViewModel: ViewModel() {
     private var bookRepository = BookRepository()
     private var books : MutableLiveData<List<Book>> = MutableLiveData()
     private var book : MutableLiveData<Book> = MutableLiveData()
-    private var exist : Boolean = false
 
     private val toastMessage = SingleLiveEvent<Int>()
 
-    // save book to firebase
+    /**
+     * Saves Book object in Firestore
+     */
     fun addBook(book: Book){
         bookRepository.getBook(book.id!!).get().addOnSuccessListener { value ->
             if (!value!!.exists()) {
@@ -35,6 +39,9 @@ class BookViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Update a Book rating in Firestore
+     */
     fun updateBookRating(book: Book){
         bookRepository.updateBookRating(book)
             .addOnFailureListener {
@@ -45,7 +52,9 @@ class BookViewModel: ViewModel() {
             }
     }
 
-    // get realtime updates from firebase regarding saved books
+    /**
+     * Retrieves all Books from Firestore
+     */
     fun getBooks(): LiveData<List<Book>>{
         bookRepository.getBooks().addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
             if (e != null) {
@@ -65,7 +74,9 @@ class BookViewModel: ViewModel() {
         return books
     }
 
-    // get realtime updates from firebase regarding book
+    /**
+     * Retrieves one Book from Firestore
+     */
     fun getBook(id: String): LiveData<Book> {
         bookRepository.getBook(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
             if (e != null) {
@@ -79,19 +90,9 @@ class BookViewModel: ViewModel() {
         return book
     }
 
-    fun checkBook(id: String): Boolean {
-        bookRepository.getBook(id).addSnapshotListener(EventListener<DocumentSnapshot> { value, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@EventListener
-            }
-           exist = value!!.exists()
-        })
-
-        return exist
-    }
-
-    // delete a book from firebase
+    /**
+     * Deletes one Book from Firestore
+     */
     fun deleteBook(book: Book){
         bookRepository.deleteBook(book).addOnFailureListener {
             Log.e(TAG,"Failed to delete Book")
