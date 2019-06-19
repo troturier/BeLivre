@@ -6,26 +6,37 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.belivre.models.City
 
+/**
+ * Cities objects Repository for Firestore
+ */
 class CityRepository {
     private var firestoreDB = FirebaseFirestore.getInstance()
 
-    // Add city to firebase
+    /**
+     * Adds/Updates a city to Firestore
+     */
     fun addCity(city: City): Task<Void> {
         val documentReference = firestoreDB.collection("cities").document(city.id.toString())
         return documentReference.set(city)
     }
 
-    // Get cities from firebase
+    /**
+     * Retrieves all cities from Firestore
+     */
     fun getCities(): CollectionReference {
         return firestoreDB.collection("cities")
     }
 
-    // Get city from firebase
+    /**
+     * Retrieves one city from Firestore
+     */
     fun getCity(id: String): DocumentReference {
         return firestoreDB.collection("cities").document(id)
     }
 
-    // Delete city from firebase
+    /**
+     * Deletes one city from Firestore
+     */
     fun deleteCity(city: City): Task<Void> {
         val documentReference =  firestoreDB.collection("cities")
             .document(city.id.toString())

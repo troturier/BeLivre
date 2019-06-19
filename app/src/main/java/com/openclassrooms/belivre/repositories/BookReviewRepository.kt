@@ -6,10 +6,15 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.belivre.models.BookReview
 
+/**
+ * BookReview objects Repository for Firestore
+ */
 class BookReviewRepository {
     private var firestoreDB = FirebaseFirestore.getInstance()
 
-    // Add review to firebase
+    /**
+     * Adds/Updates a new review to Firestore
+     */
     fun addBookReview(bookReview: BookReview): Task<Void> {
         val documentReference = firestoreDB
             .collection("books")
@@ -20,7 +25,9 @@ class BookReviewRepository {
         return documentReference.set(bookReview)
     }
 
-    // Get reviews of a book from firebase
+    /**
+     * Retrieves all reviews from Firestore
+     */
     fun getBookReviews(bookId: String): CollectionReference {
         return firestoreDB
             .collection("books")
@@ -28,7 +35,9 @@ class BookReviewRepository {
             .collection("reviews")
     }
 
-    // Get review of a book from firebase
+    /**
+     * Retrieves one review from Firestore
+     */
     fun getBookReview(bookId: String, id: String): DocumentReference {
         return firestoreDB
             .collection("books")
@@ -37,7 +46,9 @@ class BookReviewRepository {
             .document(id)
     }
 
-    // Delete review from firebase
+    /**
+     * Deletes one review from Firestore
+     */
     fun deleteBookReview(bookReview: BookReview): Task<Void> {
         val documentReference =  firestoreDB
             .collection("books")
