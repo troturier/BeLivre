@@ -188,8 +188,11 @@ class ListFragment : Fragment() , LifecycleOwner{
                 }
 
                 // CATEGORIES CHECKBOX
-                if(!selectedCategories.isNullOrEmpty() && !book.categories!!.isNullOrEmpty()){
-                    found = book.categories!!.intersect(selectedCategories).isNotEmpty()
+                if(!selectedCategories.isNullOrEmpty()){
+                    if (book.categories != null && book.categories!!.isNotEmpty()) {
+                        found = book.categories!!.intersect(selectedCategories).isNotEmpty()
+                    }
+                    else found = false
                 }
 
                 // RATING SEEKBAR
